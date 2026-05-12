@@ -1,4 +1,6 @@
-﻿namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities;
+
+namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;//Pode puxar Enum nesse caso?
 
 public record EventCreateResponseDTO(        
@@ -12,6 +14,6 @@ public record EventCreateResponseDTO(
     StatesEnum State,
     DateTime Date,
     DateTime Hour,
-    User Organizer,
+    UserEntity Organizer,
     DateTime CreatedAt
 );

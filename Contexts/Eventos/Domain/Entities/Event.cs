@@ -13,13 +13,13 @@ public class Event
     public DateTime Date { get; private set; } //dd/mm/yyyy
     public DateTime Hour { get; private set; } //hh:mm
     public EventStatusEnum Status { get; private set; }
-    public User Organizer { get; set; } //devido ao erro oq eu poderia fazer?
+    public UserEntity OrganizerId { get; set; } 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
     public Event(Guid id, string name, string description, string street, string neighborhood, string city, int number,
         StatesEnum state, DateTime
-            date, DateTime hour, EventStatusEnum status, User organizer)
+            date, DateTime hour, EventStatusEnum status, UserEntity organizerId)
     {
         Id = id;
         Name = name;
@@ -32,7 +32,7 @@ public class Event
         Date =DateTime.Parse(date.ToString("dd-MM-yyyy")) ;
         Hour = DateTime.Parse(hour.ToString("HH:mm"));
         Status = EventStatusEnum.Andamento;//Evento já seria criado de padrão em andamento ou organizador precisaria colocar manualmente?
-        Organizer = organizer;
+        OrganizerId = organizerId;
         CreatedAt = DateTime.UtcNow;
         
 
