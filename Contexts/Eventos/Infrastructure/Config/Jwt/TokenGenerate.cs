@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 
 namespace IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt
 {
@@ -20,7 +21,11 @@ namespace IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt
         public string GenerateToken(Guid userId, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler(); // Cria um manipulador de tokens JWT
-            var key = System.Text.Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]); // Obtém a chave secreta do arquivo de configuração
+            var secret = _configuration["JwtSettings:SecretKey"] ?? _configuration["Jwt:SecretKey"];
+            if (string.IsNullOrEmpty(secret))
+                throw new ArgumentNullException("JWT Secret não configurada!");
+
+            var key = System.Text.Encoding.ASCII.GetBytes(secret); // Obtém a chave secreta do arquivo de configuração
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new System.Security.Claims.ClaimsIdentity(new[]
