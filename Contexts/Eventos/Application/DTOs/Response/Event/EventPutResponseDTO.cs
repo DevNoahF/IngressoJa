@@ -1,4 +1,5 @@
-﻿using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities;
+using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 
@@ -13,7 +14,7 @@ public record EventPutResponseDTO(
     StatesEnum State,
     DateTime Date,
     DateTime Hour,
-    User Organizer,
+    UserEntity Organizer,
     EventStatusEnum Status,
     DateTime CreatedAt,
     DateTime UpdatedAt
