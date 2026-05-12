@@ -9,5 +9,6 @@ public interface IEventRepository
     Task<EventPutResponseDTO> UpdateEvent(EventPutRequestDTO eventPutRequestDto);
     Task<IEnumerable<EventSummaryResponseDTO>> GetAllEvents();//Pega todos os eventos
     Task<EventDetailResponseDTO> GetEventById(Guid id);//Pega Somente 1 evento 
+    Task<EventSummaryResponseDTO> GetEventByName(string name);
     
 }
