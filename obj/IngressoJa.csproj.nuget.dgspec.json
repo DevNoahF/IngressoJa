@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\leo\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj": {}
+    "C:\\Users\\perin\\OneDrive\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj": {}
   },
   "projects": {
-    "C:\\Users\\leo\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj": {
+    "C:\\Users\\perin\\OneDrive\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\leo\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj",
+        "projectUniqueName": "C:\\Users\\perin\\OneDrive\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj",
         "projectName": "IngressoJa",
-        "projectPath": "C:\\Users\\leo\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj",
-        "packagesPath": "C:\\Users\\leo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\leo\\Documents\\GitHub\\IngressoJa\\obj\\",
+        "projectPath": "C:\\Users\\perin\\OneDrive\\Documents\\GitHub\\IngressoJa\\IngressoJa.csproj",
+        "packagesPath": "C:\\Users\\perin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\perin\\OneDrive\\Documents\\GitHub\\IngressoJa\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\leo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\perin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
