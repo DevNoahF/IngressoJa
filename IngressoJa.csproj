@@ -80,7 +80,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Contexts\Eventos\Application\" />
       <Folder Include="Contexts\Vendas\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Contexts\Eventos\Infrastructure\Persistence\Repositories\EventRepository.cs" />
     </ItemGroup>
 
 </Project>
