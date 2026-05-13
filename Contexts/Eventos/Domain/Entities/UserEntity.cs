@@ -13,7 +13,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
 
         public EmailVO Email { get; private set; }
         
-        public PasswordVO Passoword_hash { get; private set; }
+        public PasswordVO Password_hash { get; private set; }
 
         public String Token { get; private set; }
 
@@ -25,7 +25,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
             Role = role;
             CompleteName = completeName;
             Email = email;
-            Passoword_hash = password;
+            Password_hash = password;
             Token = String.Empty;
             DateBirth = DateTime.Parse(dateBirth.ToString("dd-MM-yyyy"));
         }
