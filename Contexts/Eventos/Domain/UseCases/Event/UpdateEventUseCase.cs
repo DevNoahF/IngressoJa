@@ -1,4 +1,6 @@
-﻿namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
+﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+
+namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
@@ -18,7 +20,7 @@ public class UpdateEventUseCase
             var existingEvent = await _eventRepository.GetEventById(id);
         
             if (existingEvent is null)
-                throw new Exception("Event not found");
+                throw new EventNotFoundException(id);
             
             return await _eventRepository.UpdateEvent(eventPutRequestDto);
         }
