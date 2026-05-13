@@ -1,4 +1,6 @@
-﻿namespace IngressoJa.Contexts.Eventos.Domain.Entities;
+﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+
+namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 
 public class Event
@@ -23,53 +25,54 @@ public class Event
     {
         // Nome
         if (string.IsNullOrWhiteSpace(name))
-            throw new Exception("Name is required");
+            throw new EventFieldNameRequiredException("Name");
         if (name.Length > 55)
-            throw new Exception("Name cannot exceed 55 characters");
+            throw new EventMaxLenghtExceededException("Name", 55);
 
         // Descrição
         if (string.IsNullOrWhiteSpace(description))
-            throw new Exception("Description is required");
+            throw new EventFieldNameRequiredException("Description");
         if (description.Length > 255)
-            throw new Exception("Description cannot exceed 255 characters");
+            throw new EventMaxLenghtExceededException("Description", 255);
 
         // Rua
         if (string.IsNullOrWhiteSpace(street))
-            throw new Exception("Street is required");
+            throw new EventFieldNameRequiredException("Street name");
         if (street.Length > 55)
-            throw new Exception("Street cannot exceed 55 characters");
+            throw new EventMaxLenghtExceededException("Street name", 55);
 
         // Bairro
         if (string.IsNullOrWhiteSpace(neighborhood))
-            throw new Exception("Neighborhood is required");
+            throw new EventFieldNameRequiredException("Neighborhood");
         if (neighborhood.Length > 55)
-            throw new Exception("Neighborhood cannot exceed 55 characters");
+            throw new EventMaxLenghtExceededException("Neighborhood", 55);
 
         // Cidade
         if (string.IsNullOrWhiteSpace(city))
-            throw new Exception("City is required");
+            throw new EventFieldNameRequiredException("City");
         if (city.Length > 55)
-            throw new Exception("City cannot exceed 55 characters");
+            throw new EventMaxLenghtExceededException("City", 55);
 
         // Número
         if (number < 0)
-            throw new Exception("Number cannot be negative");
+            throw new Exception("Number cannot be negative");//é necessário uma exception?
 
         // Data
-        if (date < DateTime.UtcNow)
-            throw new Exception("Event date must be in the future");
+        if (date.Date < DateTime.UtcNow.Date)
+            throw new EventDateInPastException(date);
 
         // Hora
         if (date.Date == DateTime.UtcNow.Date && hour.TimeOfDay < DateTime.UtcNow.TimeOfDay)
-            throw new Exception("Event hour must be in the future");
+            throw new EventHourInPastException(hour);
 
         // Estado
-        if (!Enum.IsDefined(typeof(StatesEnum), state))
+        
+        if (!Enum.IsDefined(typeof(StatesEnum), state))//é necessário uma exception?
             throw new Exception("Invalid state");
 
         // Organizador
         if (organizerId is null)
-            throw new Exception("Organizer is required");
+            throw new  EventFieldNameRequiredException("OrganizerId");
 
         Id = id;
         Name = name;

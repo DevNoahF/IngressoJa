@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
@@ -17,7 +18,7 @@ public class DeleteEventUseCase
     {
         var eventToDelete = await _eventRepository.GetEventById(id);
         if (eventToDelete == null)
-            throw new Exception("Event not found");
+            throw new EventNotFoundException(id);
         await _eventRepository.DeleteEvent(id);
     }
 }
