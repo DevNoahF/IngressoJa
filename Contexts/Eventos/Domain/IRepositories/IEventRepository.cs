@@ -1,14 +1,18 @@
-﻿namespace IngressoJa.Contexts.Eventos.Domain.IRepositories;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities;
+
+namespace IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
 public interface IEventRepository
 {
-    Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto);
+    Task<Event> CreateEvent(Event eventEntity);
+
     Task DeleteEvent(Guid id);
-    Task<EventPutResponseDTO> UpdateEvent(EventPutRequestDTO eventPutRequestDto);
-    Task<IEnumerable<EventSummaryResponseDTO>> GetAllEvents();//Pega todos os eventos
-    Task<EventDetailResponseDTO> GetEventById(Guid id);//Pega Somente 1 evento 
-    Task<EventSummaryResponseDTO> GetEventByName(string name);
-    
+
+    Task<Event> UpdateEvent(Event eventEntity);
+
+    Task<IEnumerable<Event>> GetAllEvents();
+
+    Task<Event?> GetEventById(Guid id);
+
+    Task<Event?> GetEventByName(string name);
 }
