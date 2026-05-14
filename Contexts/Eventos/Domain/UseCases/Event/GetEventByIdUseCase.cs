@@ -1,4 +1,5 @@
 ﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
@@ -22,7 +23,7 @@ public class GetEventByIdUseCase
                 throw new EventNotFoundException(id);
 
             return Event;
-            
+
         }
         catch (Exception ex)
         {
