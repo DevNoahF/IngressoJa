@@ -1,4 +1,5 @@
-﻿using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+﻿using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
@@ -16,15 +17,13 @@ public class CreateEventUseCase
     {
         try
         {
-           return await _eventRepository.CreateEvent(eventCreateRequestDto);
+            var eventEntity = eventCreateRequestDto.ToEntity();
+            var createdEvent = await _eventRepository.CreateEvent(eventEntity);
+            return createdEvent.ToCreateResponse();
         }
         catch (Exception ex)
         {
             throw new Exception("Error creating event", ex);
         }
     }
-
-    
-        
-    
 }

@@ -1,5 +1,7 @@
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+
 
 namespace IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
 
@@ -73,6 +75,40 @@ public static class EventMapper
             eventEntity.UpdatedAt
             );
     }
+    public static Event ToEntity(this EventPutRequestDTO dto, Event existingEvent)
+    {
+        return new Event(
+            existingEvent.Id,
+            dto.Name,
+            dto.Description,
+            dto.Street,
+            dto.Neighborhood,
+            dto.City,
+            dto.Number,
+            dto.State,
+            dto.Date,
+            dto.Hour,
+            existingEvent.OrganizerId
+        );
+    }
+    
+    public static Event ToEntity(this EventCreateRequestDTO dto)
+    {
+        return new Event(
+            Guid.NewGuid(),
+            dto.Name,
+            dto.Description,
+            dto.Street,
+            dto.Neighborhood,
+            dto.City,
+            dto.Number,
+            dto.State,
+            dto.Date,
+            dto.Hour,
+            dto.Organizer
+        );
+    }
+    
     
     
 }

@@ -1,10 +1,11 @@
 ﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
-using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
+
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
 
 public class GetEventByIdUseCase
 {
@@ -18,11 +19,11 @@ public class GetEventByIdUseCase
     {
         try
         {
-            var Event = await _eventRepository.GetEventById(id);
-            if(Event == null)
+            var eventEntity = await _eventRepository.GetEventById(id);
+            if(eventEntity == null)
                 throw new EventNotFoundException(id);
 
-            return Event;
+            return eventEntity.ToDetailResponse();
 
         }
         catch (Exception ex)
