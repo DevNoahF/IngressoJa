@@ -17,7 +17,7 @@ public class PaymentEntity
     {
         //Venda
         if (VendaId == null)
-            throw new Exception("No Sale assigned");
+            throw new NoSaleAssignedException(id);
         
         //Valor
         if (Value < 0)
@@ -28,8 +28,8 @@ public class PaymentEntity
             throw new InvalidPaymentMethodException();//Necessário inserir algo no método?
         
         //StatusPagamento
-        if (!Enum.IsDefined(typeof(PaymentStatusEnum),status))
-            throw new Exception("Invalid payment Status");
+        if (!Enum.IsDefined(typeof(PaymentStatusEnum), status))
+            throw new InvalidPaymentStatusException();
         
         
         

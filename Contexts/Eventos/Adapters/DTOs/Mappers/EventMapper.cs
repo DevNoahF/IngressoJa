@@ -5,7 +5,7 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 
 namespace IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
 
-//Problema usando Mapper no UseCase
+
 
 public static class EventMapper
 {
@@ -72,7 +72,7 @@ public static class EventMapper
             eventEntity.OrganizerId,
             eventEntity.Status,
             eventEntity.CreatedAt,
-            eventEntity.UpdatedAt
+            eventEntity.UpdatedAt!.Value
             );
     }
     public static Event ToEntity(this EventPutRequestDTO dto, Event existingEvent)
