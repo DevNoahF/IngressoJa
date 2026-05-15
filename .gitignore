@@ -1,5 +1,10 @@
 .vscode
 .idea
 .env
-.bin
-.obj
+.[Bb]in
+.[Oo]bj
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
