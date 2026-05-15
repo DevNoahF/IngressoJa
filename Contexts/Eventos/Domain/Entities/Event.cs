@@ -18,7 +18,7 @@ public class Event
     public EventStatusEnum Status { get; private set; }
     public UserEntity OrganizerId { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
 
     public Event(Guid id, string name, string description, string street, string neighborhood, string city, int number,
         StatesEnum state, DateTime date, DateTime hour, UserEntity organizerId)
@@ -87,6 +87,6 @@ public class Event
         Status = EventStatusEnum.Andamento;
         OrganizerId = organizerId;
         CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAt = null;
     }
 }
