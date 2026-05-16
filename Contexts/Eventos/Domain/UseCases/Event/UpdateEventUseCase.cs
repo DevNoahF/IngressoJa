@@ -1,8 +1,8 @@
 ﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
-using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 
@@ -35,7 +35,7 @@ public class UpdateEventUseCase
         }
         catch (Exception ex)
         {
-            throw new Exception("Error updating event", ex);
+            throw new Exception(ex.InnerException?.Message ?? ex.Message);
         }
     }
 }

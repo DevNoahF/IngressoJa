@@ -5,6 +5,6 @@ public record EventSummaryResponseDTO(
     Guid Id,
     string Name,
     string City,
-    DateTime Date,
+    string Date,
     EventStatusEnum Status
-    );
+);

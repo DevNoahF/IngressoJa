@@ -44,6 +44,8 @@ public class VendasDbContext : DbContext
             entity.Property(venda => venda.StatusCompra)
                 .HasMaxLength(20)
                 .IsRequired();
+            
+            
         });
     }
 }

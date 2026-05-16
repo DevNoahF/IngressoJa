@@ -52,9 +52,11 @@ public class EventDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.Date)
+                .HasColumnType("date")
                 .IsRequired();
 
             entity.Property(e => e.Hour)
+                .HasColumnType("time")
                 .IsRequired();
 
             entity.Property(e => e.Status)
@@ -67,7 +69,7 @@ public class EventDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.UpdatedAt)
-                .IsRequired();
+                .IsRequired(false);
         });
     }
 }
