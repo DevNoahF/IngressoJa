@@ -80,12 +80,35 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="DotNetEnv" Version="3.1.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Contexts\Eventos\Application\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Contexts\Eventos\Application\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Contexts\Eventos\Application\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Contexts\Eventos\Application\**" />
     </ItemGroup>
 
 </Project>
