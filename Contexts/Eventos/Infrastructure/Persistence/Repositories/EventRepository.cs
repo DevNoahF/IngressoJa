@@ -1,13 +1,56 @@
-﻿using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using IngressoJa.Contexts.Eventos.Domain.Entities;
+using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 
-public class EventRepository: IEventRepository
+public class EventRepository : IEventRepository
 {
-    private readonly AppDbContext _context;
-
-    public EventRepository(AppDbContext context)
+    private readonly EventDbContext _context;
+    public EventRepository(EventDbContext context)
     {
         _context = context;
+    }
+
+    public async Task<Event> CreateEvent(Event eventEntity)
+    {
+        await _context.Events.AddAsync(eventEntity);
+        await _context.SaveChangesAsync();
+        return eventEntity;
+    }
+
+    public async Task DeleteEvent(Guid id)
+    {
+        var eventEntity = await _context.Events.FindAsync(id);
+        if (eventEntity == null)
+            throw new EventNotFoundException(id);
+        
+        _context.Events.Remove(eventEntity);
+        await _context.SaveChangesAsync();
+    
+    }
+
+    public async Task<Event> UpdateEvent(Event eventEntity)
+    {
+        _context.Events.Update(eventEntity);
+        await _context.SaveChangesAsync();
+        return eventEntity;
+    }
+
+    public async Task<IEnumerable<Event>> GetAllEvents()
+    {
+        return await _context.Events.ToListAsync();
+    }
+
+    public async Task<Event?> GetEventById(Guid id)
+    {
+        return await _context.Events.FindAsync(id);
+    }
+
+    public async Task<Event?> GetEventByName(string name)
+    {
+        return await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
     }
 }
