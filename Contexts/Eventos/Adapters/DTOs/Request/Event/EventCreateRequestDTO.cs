@@ -13,5 +13,5 @@ public record EventCreateRequestDTO(
         StatesEnum State,
         DateTime Date,
         DateTime Hour,
-        UserEntity Organizer
+        Guid Organizer
     );

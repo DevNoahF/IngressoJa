@@ -2,10 +2,7 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 
-
 namespace IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
-
-
 
 public static class EventMapper
 {
@@ -24,7 +21,6 @@ public static class EventMapper
             eventEntity.Hour,
             eventEntity.Status
         );
-
     }
 
     public static EventSummaryResponseDTO ToSummaryResponse(this Event eventEntity)
@@ -35,7 +31,7 @@ public static class EventMapper
             eventEntity.City,
             eventEntity.Date,
             eventEntity.Status
-            );
+        );
     }
 
     public static EventCreateResponseDTO ToCreateResponse(this Event eventEntity)
@@ -73,8 +69,9 @@ public static class EventMapper
             eventEntity.Status,
             eventEntity.CreatedAt,
             eventEntity.UpdatedAt!.Value
-            );
+        );
     }
+
     public static Event ToEntity(this EventPutRequestDTO dto, Event existingEvent)
     {
         return new Event(
@@ -91,8 +88,8 @@ public static class EventMapper
             existingEvent.OrganizerId
         );
     }
-    
-    public static Event ToEntity(this EventCreateRequestDTO dto)
+
+    public static Event ToEntity(this EventCreateRequestDTO dto, Guid organizerId)
     {
         return new Event(
             Guid.NewGuid(),
@@ -105,10 +102,7 @@ public static class EventMapper
             dto.State,
             dto.Date,
             dto.Hour,
-            dto.Organizer
+            organizerId
         );
     }
-    
-    
-    
 }

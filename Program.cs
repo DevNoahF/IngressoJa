@@ -4,9 +4,12 @@ using IngressoJa.Contexts.Vendas.Application.UseCases;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 using IngressoJa.Contexts.Vendas.Infrastructure.Persistence.DbContexts;
 using IngressoJa.Contexts.Vendas.Infrastructure.Persistence.Repositories;
+using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,12 @@ builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 builder.Services.AddScoped<RealizarVendaUseCase>();
 builder.Services.AddScoped<ObterVendaUseCase>();
 builder.Services.AddScoped<ProcessarPagamentoUseCase>();
+
+
+//Evento
+builder.Services.AddDbContext<EventDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("EventosConnection")));
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 
 // JWT auth and token generator
 builder.Services.AddJwtAuthentication(builder.Configuration);

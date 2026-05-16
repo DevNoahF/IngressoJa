@@ -14,6 +14,6 @@ public record EventCreateResponseDTO(
     StatesEnum State,
     DateTime Date,
     DateTime Hour,
-    UserEntity Organizer,
+    Guid Organizer,
     DateTime CreatedAt
 );

@@ -14,7 +14,7 @@ public record EventPutResponseDTO(
     StatesEnum State,
     DateTime Date,
     DateTime Hour,
-    UserEntity Organizer,
+    Guid Organizer,
     EventStatusEnum Status,
     DateTime CreatedAt,
     DateTime UpdatedAt
