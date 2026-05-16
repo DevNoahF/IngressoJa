@@ -1,9 +1,10 @@
-﻿using IngressoJa.Contexts.Eventos.Adapters.DTOs.Mappers;
+﻿
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 public class GetEventByNameUseCase
 {

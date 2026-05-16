@@ -9,7 +9,7 @@ public record EventDetailResponseDTO(
     string City,
     int Number,
     StatesEnum State,
-    DateTime Date,
-    DateTime Hour,
+    string Date,
+    string Hour,
     EventStatusEnum Status
-    );
+);

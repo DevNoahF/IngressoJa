@@ -30,17 +30,18 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> CreateEvent([FromBody] EventCreateRequestDTO dto)
     {
         try
         {
-            var organizerId = Guid.Parse(User.FindFirst("sub")!.Value);
+            var organizerId = dto.Organizer; //Trocar mais tarde assim que tiver user 100% impementado
             var result = await _createEventUseCase.CreateEvent(dto, organizerId);
             return Ok(result);
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(ex.InnerException?.Message ?? ex.Message);
         }
     }
 
@@ -68,7 +69,7 @@ public class EventController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(ex.InnerException?.Message ?? ex.Message);
         }
     }
 

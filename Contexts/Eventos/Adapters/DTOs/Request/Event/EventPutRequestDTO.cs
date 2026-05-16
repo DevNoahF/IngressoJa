@@ -9,7 +9,6 @@ public record EventPutRequestDTO(
     string City,
     int Number,
     StatesEnum State,
-    DateTime Date,
-    DateTime Hour,
-    EventStatusEnum Status
-    );
+    string Date,
+    string Hour
+);

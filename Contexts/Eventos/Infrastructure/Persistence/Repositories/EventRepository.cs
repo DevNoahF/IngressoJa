@@ -34,9 +34,13 @@ public class EventRepository : IEventRepository
 
     public async Task<Event> UpdateEvent(Event eventEntity)
     {
-        _context.Events.Update(eventEntity);
+        var existing = await _context.Events.FindAsync(eventEntity.Id);
+        if (existing is null)
+            throw new EventNotFoundException(eventEntity.Id);
+
+        _context.Entry(existing).CurrentValues.SetValues(eventEntity);
         await _context.SaveChangesAsync();
-        return eventEntity;
+        return existing;
     }
 
     public async Task<IEnumerable<Event>> GetAllEvents()
