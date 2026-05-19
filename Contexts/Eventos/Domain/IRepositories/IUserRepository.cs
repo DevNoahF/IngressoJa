@@ -13,7 +13,6 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories
     {
         Task RegisterUser(UserRegisterRequestDTO userRegisterRequestDTO);
         Task RegisterOrganizer(UserRegisterRequestDTO userRegisterRequestDTO);
-        Task RegisterAdmin(UserRegisterRequestDTO userRegisterRequestDTO);
         Task LoginUser(UserAuthRequestDTO userAuthRequestDTO);
         Task<UserRecordedResponseDTO> getUserById(Guid id);
         Task<UserEntity> getUserByEmail(EmailVO email);
