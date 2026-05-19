@@ -2,6 +2,7 @@ using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
@@ -14,7 +15,7 @@ public class EventRepository : IEventRepository
         _context = context;
     }
 
-    public async Task<Event> CreateEvent(Event eventEntity)
+    public async Task<EventModel> CreateEvent(EventModel eventEntity)
     {
         await _context.Events.AddAsync(eventEntity);
         await _context.SaveChangesAsync();

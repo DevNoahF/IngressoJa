@@ -111,4 +111,8 @@
       <None Remove="Contexts\Eventos\Application\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Contexts\Vendas\Adapter\DTOs\Mappers\" />
+    </ItemGroup>
+
 </Project>

@@ -1,12 +1,12 @@
-using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response.EventEntity;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request.EventEntity;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 public static class EventMapper
 {
-    public static EventDetailResponseDTO ToDetailResponse(this Event eventEntity)//Tela detalhada aonde o usuário poderia ir depois para a tela de pagamento
+    public static EventDetailResponseDTO ToDetailResponse(this EventEntity eventEntity)//Tela detalhada aonde o usuário poderia ir depois para a tela de pagamento
     {
         return new EventDetailResponseDTO(
             eventEntity.Id,
@@ -23,7 +23,7 @@ public static class EventMapper
         );
     }
 
-    public static EventSummaryResponseDTO ToSummaryResponse(this Event eventEntity)//Pensado para apresentar uma "tela geral" com todos os eventos
+    public static EventSummaryResponseDTO ToSummaryResponse(this EventEntity eventEntity)//Pensado para apresentar uma "tela geral" com todos os eventos
     {
         return new EventSummaryResponseDTO(
             eventEntity.Id,
@@ -34,7 +34,7 @@ public static class EventMapper
         );
     }
 
-    public static EventCreateResponseDTO ToCreateResponse(this Event eventEntity)
+    public static EventCreateResponseDTO ToCreateResponse(this EventEntity eventEntity)
     {
         return new EventCreateResponseDTO(
             eventEntity.Id,
@@ -52,7 +52,7 @@ public static class EventMapper
         );
     }
 
-    public static EventPutResponseDTO ToPutResponse(this Event eventEntity)
+    public static EventPutResponseDTO ToPutResponse(this EventEntity eventEntity)
     {
         return new EventPutResponseDTO(
             eventEntity.Id,
@@ -72,9 +72,9 @@ public static class EventMapper
         );
     }
 
-    public static Event ToEntity(this EventCreateRequestDTO dto, Guid organizerId)
+    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid organizerId)
     {
-        return new Event(
+        return new EventEntity(
             Guid.NewGuid(),
             dto.Name,
             dto.Description,
@@ -89,7 +89,7 @@ public static class EventMapper
         );
     }
 
-    public static Event ToEntity(this EventPutRequestDTO dto, Event existingEvent)
+    public static EventEntity ToEntity(this EventPutRequestDTO dto, EventEntity existingEvent)
     {
         existingEvent.Update(//Precisei criar método Update na entidade, estava dando erro ou pegando outro id diferente, ver como resolver
             dto.Name,
