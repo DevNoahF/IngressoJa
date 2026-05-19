@@ -9,17 +9,18 @@ namespace IngressoJa.Data.Model
 {
     public class UserModel
     {
-        public Guid Id { get; private set; }
-        public RoleEnum Role { get; private set; }
+        public Guid Id { get;  set; }
+        public RoleEnum Role { get;  set; }
 
         public String FirstName { get; set; }
         public String LastName { get; set; }
 
-        public EmailVO Email { get; private set; }
+        public CpfVO Cpf { get; set; }
+        public EmailVO Email { get; set; }
         
-        public PasswordVO PasswordHash { get; private set; }
+        public PasswordVO PasswordHash { get; set; }
 
-        public String Token { get; private set; }
+        public String Token { get; set; }
 
         public DateTime DateBirth { get; set; }
     }
