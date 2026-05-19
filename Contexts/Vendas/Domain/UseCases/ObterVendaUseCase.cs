@@ -1,3 +1,6 @@
+using IngressoJa.Contexts.Vendas.Domain.Entities;
+using IngressoJa.Contexts.Vendas.Domain.IRepositories;
+
 namespace IngressoJa.Contexts.Vendas.Application.UseCases;
 
 public sealed class ObterVendaUseCase
@@ -14,3 +17,5 @@ public sealed class ObterVendaUseCase
         return await _vendaRepository.ObterPorIdAsync(id, cancellationToken);
     }
 }
+
+
