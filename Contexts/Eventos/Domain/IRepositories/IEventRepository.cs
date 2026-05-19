@@ -4,15 +4,15 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
 public interface IEventRepository
 {
-    Task<Event> CreateEvent(Event eventEntity);
+    Task<EventEntity> CreateEvent(EventEntity eventEntity);
 
     Task DeleteEvent(Guid id);
 
-    Task<Event> UpdateEvent(Event eventEntity);
+    Task<EventEntity> UpdateEvent(EventEntity eventEntity);
 
-    Task<IEnumerable<Event>> GetAllEvents();
+    Task<IEnumerable<EventEntity>> GetAllEvents();
 
-    Task<Event?> GetEventById(Guid id);
+    Task<EventEntity?> GetEventById(Guid id);
 
-    Task<Event?> GetEventByName(string name);
+    Task<EventEntity?> GetEventByName(string name);
 }

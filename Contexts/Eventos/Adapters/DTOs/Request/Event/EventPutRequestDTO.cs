@@ -10,5 +10,7 @@ public record EventPutRequestDTO(
     int Number,
     StatesEnum State,
     string Date,
-    string Hour
+    string Hour,
+    double TicketValue,
+    int TotalTicketQuantity
 );

@@ -1,7 +1,6 @@
-﻿using IngressoJa.Contexts.Eventos.Domain.Entities;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
-using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;//Pode puxar Enum nesse caso?
 
 public record EventCreateRequestDTO(
     string Name,
@@ -13,5 +12,6 @@ public record EventCreateRequestDTO(
     StatesEnum State,
     string Date,
     string Hour,
-    Guid Organizer
+    double TicketValue,
+    int TotalTicketQuantity
 );
