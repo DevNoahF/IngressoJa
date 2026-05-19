@@ -1,6 +1,3 @@
-using IngressoJa.Contexts.Vendas.Domain.Entities;
-using IngressoJa.Contexts.Vendas.Domain.IRepositories;
-
 namespace IngressoJa.Contexts.Vendas.Application.UseCases;
 
 public sealed class ObterVendaUseCase
