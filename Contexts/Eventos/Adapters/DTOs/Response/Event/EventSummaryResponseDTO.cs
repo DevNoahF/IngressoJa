@@ -5,7 +5,9 @@ public record EventSummaryResponseDTO(
     Guid Id,
     string Name,
     string City,
+    StatesEnum State,
     string Date,
     EventStatusEnum Status,
-    bool 
+    double TicketValue,
+    string BannerImage
 );

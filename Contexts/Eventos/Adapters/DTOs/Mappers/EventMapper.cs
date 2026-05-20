@@ -21,6 +21,7 @@ public static class EventMapper
             eventEntity.Hour.ToString("HH:mm"),
             eventEntity.TicketValue,
             eventEntity.AvailableTickets,
+            eventEntity.BannerImage,
             eventEntity.Status
         );
     }
@@ -31,10 +32,11 @@ public static class EventMapper
             eventEntity.Id,
             eventEntity.Name,
             eventEntity.City,
+            eventEntity.State,
             eventEntity.Date.ToString("dd/MM/yyyy"),
+            eventEntity.Status,
             eventEntity.TicketValue,
-            eventEntity.AvailableTickets,
-            eventEntity.Status
+            eventEntity.BannerImage
         );
     }
 
@@ -53,7 +55,10 @@ public static class EventMapper
             eventEntity.Hour.ToString("HH:mm"),
             eventEntity.TicketValue,
             eventEntity.TotalTicketQuantity,
-            eventEntity.OrganizerId,
+            eventEntity.AvailableTickets,
+            eventEntity.BannerImage,
+            eventEntity.Status,
+            eventEntity.UserId,
             eventEntity.CreatedAt
         );
     }
@@ -74,14 +79,15 @@ public static class EventMapper
             eventEntity.TicketValue,
             eventEntity.TotalTicketQuantity,
             eventEntity.AvailableTickets,
-            eventEntity.OrganizerId,
+            eventEntity.BannerImage,
+            eventEntity.UserId,
             eventEntity.Status,
             eventEntity.CreatedAt,
             eventEntity.UpdatedAt
         );
     }
-
-    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid organizerId)
+    
+    public static EventEntity ToEntity(this EventCreateRequestDTO dto)
     {
         return new EventEntity(
             dto.Name,
@@ -95,7 +101,9 @@ public static class EventMapper
             TimeOnly.Parse(dto.Hour),
             dto.TicketValue,
             dto.TotalTicketQuantity,
-            organizerId
+            dto.UserId,                  
+            dto.TotalTicketQuantity,    
+            dto.BannerImage              
         );
     }
 

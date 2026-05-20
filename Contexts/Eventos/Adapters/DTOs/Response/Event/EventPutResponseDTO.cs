@@ -14,7 +14,11 @@ public record EventPutResponseDTO(
     StatesEnum State,
     string Date,
     string Hour,
-    Guid OrganizerId,
+    double TicketValue,
+    int TotalTicketQuantity,
+    int AvailableTicketQuantity,
+    string BannerImage,
+    Guid UserId,
     EventStatusEnum Status,
     DateTime CreatedAt,
     DateTime? UpdatedAt

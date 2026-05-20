@@ -1,4 +1,6 @@
-﻿using IngressoJa.Contexts.Eventos.Domain.Entities;
+﻿using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Contexts.Eventos.Domain.Entities;
 
 namespace IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
@@ -15,4 +17,5 @@ public interface IEventRepository
     Task<EventEntity?> GetEventById(Guid id);
 
     Task<EventEntity?> GetEventByName(string name);
+    Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO eventChangeStatusOfEventRequestDto);
 }

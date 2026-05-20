@@ -1,4 +1,5 @@
 using IngressoJa.Contexts.Eventos.Domain.Entities;
+using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
@@ -10,13 +11,13 @@ public class EventDbContext : DbContext
     {
     }
 
-    public DbSet<Event> Events => Set<Event>();
+    public DbSet<EventModel> Events => Set<EventModel>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Event>(entity =>
+        modelBuilder.Entity<EventModel>(entity =>
         {
             entity.ToTable("Events");
 
@@ -25,7 +26,7 @@ public class EventDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever();
 
-            entity.Property(e => e.Name)
+            entity.Property(e => e.Name )
                 .HasMaxLength(55)
                 .IsRequired();
 
@@ -33,7 +34,7 @@ public class EventDbContext : DbContext
                 .HasMaxLength(255)
                 .IsRequired();
 
-            entity.Property(e => e.Street)
+            entity.Property(e => e.StreetName)
                 .HasMaxLength(55)
                 .IsRequired();
 

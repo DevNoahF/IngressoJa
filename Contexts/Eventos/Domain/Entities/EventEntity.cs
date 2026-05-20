@@ -16,7 +16,7 @@ public class EventEntity
     public int Number { get; private set; }
     public StatesEnum State { get; private set; }
     public DateOnly Date { get; private set; }
-    public TimeOnly Hour { get; private set; }
+   public TimeOnly Hour { get; private set; }
     public double TicketValue { get; private set; }
     public int TotalTicketQuantity { get; private set; }
     public int AvailableTickets { get; private set; }
@@ -74,6 +74,9 @@ public class EventEntity
         if (userId == Guid.Empty)
             throw new EventFieldNameRequiredException("OrganizerId");
 
+        if (bannerImage.Length > 255)
+            throw new Exception("Invalid URL Length");
+
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
@@ -87,6 +90,7 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         AvailableTickets = totalTicketQuantity;
+        BannerImage = bannerImage;
         Status = EventStatusEnum.Andamento;
         UserId = userId;
         CreatedAt = DateTime.UtcNow;
@@ -160,6 +164,12 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         AvailableTickets = totalTicketQuantity - soldTickets;
+        UpdatedAt = DateTime.UtcNow;
+    }
+    
+    public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações
+    {
+        Status = newStatus;
         UpdatedAt = DateTime.UtcNow;
     }
 }

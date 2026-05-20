@@ -14,5 +14,6 @@ public record EventDetailResponseDTO(
     string Hour,
     double TicketValue,
     int AvailableTickets,
+    string BannerImage,
     EventStatusEnum Status
 );

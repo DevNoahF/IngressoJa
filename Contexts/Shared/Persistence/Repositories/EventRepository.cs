@@ -33,7 +33,7 @@ public class EventRepository : IEventRepository
     
     }
 
-    public async Task<Event> UpdateEvent(Event eventEntity)
+    public async Task<EventModel> UpdateEvent(EventModel eventEntity)
     {
         var existing = await _context.Events.FindAsync(eventEntity.Id);
         if (existing is null)
@@ -44,17 +44,17 @@ public class EventRepository : IEventRepository
         return existing;
     }
 
-    public async Task<IEnumerable<Event>> GetAllEvents()
+    public async Task<IEnumerable<EventModel>> GetAllEvents()
     {
         return await _context.Events.ToListAsync();
     }
 
-    public async Task<Event?> GetEventById(Guid id)
+    public async Task<EventModel?> GetEventById(Guid id)
     {
         return await _context.Events.FindAsync(id);
     }
 
-    public async Task<Event?> GetEventByName(string name)
+    public async Task<EventModel?> GetEventByName(string name)
     {
         return await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
     }

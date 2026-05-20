@@ -13,5 +13,7 @@ public record EventCreateRequestDTO(
     string Date,
     string Hour,
     double TicketValue,
-    int TotalTicketQuantity
+    int TotalTicketQuantity,
+    string BannerImage,
+    Guid UserId
 );

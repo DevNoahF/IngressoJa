@@ -17,7 +17,7 @@ public class CreateEventUseCase
     {
         try
         {
-            var eventEntity = eventCreateRequestDto.ToEntity(organizerId);
+            var eventEntity = eventCreateRequestDto.ToEntity();
             var createdEvent = await _eventRepository.CreateEvent(eventEntity);
             return createdEvent.ToCreateResponse();
         }
