@@ -19,7 +19,6 @@ public class EventEntity
    public TimeOnly Hour { get; private set; }
     public double TicketValue { get; private set; }
     public int TotalTicketQuantity { get; private set; }
-    public int AvailableTickets { get; private set; }
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
     public string BannerImage { get; private set; }
     public Guid UserId { get; private set; }
@@ -89,7 +88,6 @@ public class EventEntity
         Hour = hour;
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
-        AvailableTickets = totalTicketQuantity;
         BannerImage = bannerImage;
         Status = EventStatusEnum.Andamento;
         UserId = userId;
@@ -148,10 +146,6 @@ public class EventEntity
         if (totalTicketQuantity <= 0)
             throw new Exception("Total ticket quantity must be greater than zero");
 
-        int soldTickets = TotalTicketQuantity - AvailableTickets;
-        if (totalTicketQuantity < soldTickets)
-            throw new Exception($"Total ticket quantity cannot be less than the number of tickets already sold ({soldTickets})");
-
         Name = name;
         Description = description;
         Street = street;
@@ -163,7 +157,6 @@ public class EventEntity
         Hour = hour;
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
-        AvailableTickets = totalTicketQuantity - soldTickets;
         UpdatedAt = DateTime.UtcNow;
     }
     

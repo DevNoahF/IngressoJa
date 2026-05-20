@@ -20,6 +20,6 @@ public class EventModel
     public EventStatusEnum Status { get;  set; }
     public string BannerImage {get; set;}
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get;  set; }
+    public DateTime? UpdatedAt { get;  set; }
 
 }

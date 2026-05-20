@@ -16,7 +16,6 @@ public record EventPutResponseDTO(
     string Hour,
     double TicketValue,
     int TotalTicketQuantity,
-    int AvailableTicketQuantity,
     string BannerImage,
     Guid UserId,
     EventStatusEnum Status,

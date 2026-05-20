@@ -1,6 +1,7 @@
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Data.Model;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
@@ -20,7 +21,6 @@ public static class EventMapper
             eventEntity.Date.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
             eventEntity.TicketValue,
-            eventEntity.AvailableTickets,
             eventEntity.BannerImage,
             eventEntity.Status
         );
@@ -55,7 +55,6 @@ public static class EventMapper
             eventEntity.Hour.ToString("HH:mm"),
             eventEntity.TicketValue,
             eventEntity.TotalTicketQuantity,
-            eventEntity.AvailableTickets,
             eventEntity.BannerImage,
             eventEntity.Status,
             eventEntity.UserId,
@@ -78,7 +77,6 @@ public static class EventMapper
             eventEntity.Hour.ToString("HH:mm"),
             eventEntity.TicketValue,
             eventEntity.TotalTicketQuantity,
-            eventEntity.AvailableTickets,
             eventEntity.BannerImage,
             eventEntity.UserId,
             eventEntity.Status,
@@ -86,8 +84,8 @@ public static class EventMapper
             eventEntity.UpdatedAt
         );
     }
-    
-    public static EventEntity ToEntity(this EventCreateRequestDTO dto)
+
+    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId)
     {
         return new EventEntity(
             dto.Name,
@@ -101,9 +99,9 @@ public static class EventMapper
             TimeOnly.Parse(dto.Hour),
             dto.TicketValue,
             dto.TotalTicketQuantity,
-            dto.UserId,                  
-            dto.TotalTicketQuantity,    
-            dto.BannerImage              
+            userId,
+            dto.TotalTicketQuantity,
+            dto.BannerImage
         );
     }
 
@@ -123,5 +121,49 @@ public static class EventMapper
             dto.TotalTicketQuantity
         );
         return existingEvent;
+    }
+
+    public static EventModel ToModel(this EventEntity entity)
+    {
+        return new EventModel
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+            StreetName = entity.Street,
+            Neighborhood = entity.Neighborhood,
+            City = entity.City,
+            Number = entity.Number,
+            State = entity.State,
+            Date = entity.Date,
+            Hour = entity.Hour,
+            TicketValue = entity.TicketValue,
+            TotalTicketQuantity = entity.TotalTicketQuantity,
+            BannerImage = entity.BannerImage,
+            Status = entity.Status,
+            UserId = entity.UserId,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
+    }
+
+    public static EventEntity ModelToEntity(this EventModel model)
+    {
+        return new EventEntity(
+            model.Name,
+            model.Description,
+            model.StreetName,
+            model.Neighborhood,
+            model.City,
+            model.Number,
+            model.State,
+            model.Date,
+            model.Hour,
+            model.TicketValue,
+            model.TotalTicketQuantity,
+            model.UserId,
+            model.TotalTicketQuantity,
+            model.BannerImage
+        );
     }
 }
