@@ -1,205 +1,165 @@
-# Contexto de Vendas
+# Contexto de Sales
 
-Este contexto cuida do fluxo principal de uma venda de ingresso.
+Este contexto representa a venda de ingressos dentro do sistema. Ele foi simplificado para funcionar como um fluxo acadêmico, com foco em regra de negócio clara e pouca complexidade de infraestrutura.
 
-A ideia atual esta simples:
+Hoje o contexto está organizado assim:
 
-1. Criar uma venda.
-2. A venda nasce com status `Pendente`.
-3. Processar o pagamento.
-4. Se o pagamento for processado, a venda vira `Aprovado`.
-5. Buscar uma venda pelo `Id`.
+1. A venda nasce com status `Pending`.
+2. A criação valida a quantidade pedida contra os ingressos disponíveis.
+3. O pagamento não faz mais parte do contexto como agregado próprio (virou um Enum de status na Venda).
+4. O update do status da venda simula o resultado do financeiro com `Approved` ou `Denied`.
+5. Quando a venda for aprovada, o domínio dispara o evento `SalePaidEvent`.
+6. O agregado de ingressos será responsável por consumir esse evento depois.
 
-## Estrutura
+## O que foi feito (Refatoração)
+
+O contexto antigo estava muito preso a nomes em português e a uma modelagem com `Guid` no identificador da venda. Ele também carregava uma estrutura de `payment` que não fazia mais sentido para o desenho final.
+
+O desenho atual também deixa dois pontos importantes bem definidos:
+- `availableTickets` não é propriedade da venda e não vai para o banco; ele entra só como informação de validação do caso de uso na criação.
+- A entidade mantém uma coleção interna de `DomainEvents` para registrar eventos como `SalePaidEvent` antes do despacho por repositório, interceptador ou mediator.
+
+A refatoração atual fez o seguinte:
+- `VendasEntidy` virou `SaleEntity`.
+- O identificador da venda passou a ser `int`.
+- `UserId` e `EventId` também passaram a ser `int`.
+- O campo `IngressoId` foi removido da venda.
+- O status da venda passou a ser o enum `SaleStatus`.
+- Os enums e eventos foram traduzidos para o inglês.
+- O controller, request, response, use cases e repository foram alinhados com essa nova linguagem.
+
+## Estrutura Atual de Pastas
 
 ```text
 Contexts/Vendas
 +-- Adapter
 |   +-- Controllers
-|   |   +-- VendasController.cs
+|   |   +-- SalesController.cs
 |   +-- DTOs
 |       +-- Request
-|       |   +-- RealizarVendaRequestDTO.cs
+|       |   +-- CreateSaleRequestDTO.cs
 |       +-- Response
-|           +-- VendaResponseDTO.cs
+|           +-- SaleResponseDTO.cs
 +-- Domain
 |   +-- Entities
-|   |   +-- VendasEntidy.cs
+|   |   +-- SaleEntity.cs
+|   |   +-- Enums
+|   |       +-- SaleStatusEnum.cs
+|   +-- Events
+|   |   +-- IDomainEvent.cs
+|   |   +-- SalePaidEvent.cs
 |   +-- IRepositories
-|   |   +-- IVendaRepository.cs
+|   |   +-- ISaleRepository.cs
 |   +-- UseCases
-|       +-- ObterVendaUseCase.cs
-|       +-- ProcessarPagamentoUseCase.cs
-|       +-- RealizarVendaUseCase.cs
-+-- Infrastructure
-    +-- dbContext
-    |   +-- VendasDbContext.cs
-    +-- Persistence
-        +-- Repositories
-            +-- VendaRepository.cs
+|       +-- CreateSaleUseCase.cs
+|       +-- GetSaleByIdUseCase.cs
+|       +-- UpdateSaleStatusUseCase.cs
++-- Data
+  +-- SaleContext
+  |   +-- SaleContext.cs
+  +-- Persistence
+    +-- Repositories
+      +-- SaleRepository.cs
+
 ```
 
-## Entidade
+## Entidade Principal
 
-A entidade principal e `VendasEntidy`.
+A entidade principal é `SaleEntity`.
 
 Ela guarda:
 
-- `Id`
-- `UserId`
-- `EventoId`
-- `IngressoId`
-- `Quantidade`
-- `DataVenda`
-- `StatusCompra`
+* `Id` (`int`)
+* `UserId` (`int`)
+* `EventId` (`int`)
+* `SelectedTicketsUser` (`int`)
+* `TotalPrice` (`double`/`decimal`)
+* `CreatedAt` (`DateTime`)
+* `SaleStatus` (`Enum`)
 
-Os status atuais sao:
+O parâmetro `availableTickets` é usado apenas no caso de uso de criação para validar estoque do evento antes de instanciar a venda.
 
-- `Pendente`
-- `Aprovado`
+O status sempre inicia como `Pending`.
 
-Quando uma venda e criada, ela sempre comeca como `Pendente`.
+### Regras da entidade (Domain Validations)
 
-## Regras de Negocio
+* `UserId` deve ser maior que zero.
+* `EventId` deve ser maior que zero.
+* `SelectedTicketsUser` deve ser maior que zero.
+* `TotalPrice` não pode ser negativo.
+* `SelectedTicketsUser` não pode ser maior que `AvailableTickets`.
+* Apenas vendas em status `Pending` podem mudar de status.
+* O status pode virar `Approved` ou `Denied`.
+* Se virar `Approved`, a entidade gera e registra o evento `SalePaidEvent`.
 
-As regras ficam dentro da entidade `VendasEntidy`.
+## Domain Events
 
-Ao criar uma venda:
+A entidade mantém uma coleção interna de eventos de domínio para acumular o que aconteceu dentro dela.
 
-- `UserId` nao pode ser vazio.
-- `EventoId` nao pode ser vazio.
-- `IngressoId` nao pode ser vazio.
-- `Quantidade` deve ser maior que zero.
-- `Quantidade` nao pode ser maior que `IngressosDisponiveis`.
+* `DomainEvents` guarda os eventos disparados pela `SaleEntity`.
+* `ClearDomainEvents()` limpa a coleção depois do despacho.
+* O mapeamento do EF ignora essa coleção, então ela não vira coluna de banco.
 
-Ao aprovar pagamento:
+## Fluxo Atual da Venda
 
-- Apenas vendas com status `Pendente` podem ser aprovadas.
+### Criação
+
+O controller recebe `CreateSaleRequestDTO` e chama `CreateSaleUseCase`.
+
+1. Recebe `UserId`, `EventId`, quantidade (`SelectedTicketsUser`), valor total e os ingressos disponíveis para validação.
+2. Valida se há ingressos suficientes no domínio.
+3. Cria a venda com status `Pending`.
+4. Persiste no banco via `ISaleRepository`.
+5. Retorna a venda criada mapeada para `SaleResponseDTO`.
+
+### Atualização de Status (Simulação)
+
+O endpoint de status simula o resultado do pagamento.
+
+1. Busca a venda pelo `Id`. Se não encontrar, retorna `NotFound`.
+2. Sorteia (Random) entre `Approved` ou `Denied`.
+3. Executa o método de alteração de status na `SaleEntity`.
+4. Se o status mudar para `Approved`, a entidade dispara o `SalePaidEvent`.
+5. Salva a alteração no banco.
+
+### Consulta
+
+O endpoint de busca retorna a venda pelo `Id` inteiro.
 
 ## DTOs
 
-Os DTOs ficam no `Adapter`, porque eles representam a entrada e saida da API.
-
 ### Request
-
-`RealizarVendaRequestDTO` recebe os dados para criar uma venda:
 
 ```json
 {
-  "userId": "guid-do-usuario",
-  "eventoId": "guid-do-evento",
-  "ingressoId": "guid-do-ingresso",
-  "quantidade": 2,
-  "ingressosDisponiveis": 50
+  "userId": 1,
+  "eventId": 10,
+  "selectedTicketsUser": 2,
+  "totalPrice": 120.0,
+  "availableTickets": 50
 }
-```
 
-Esse DTO nao tem regra de negocio e nao tem mensagem de erro. Ele so transporta dados.
+```
 
 ### Response
 
-`VendaResponseDTO` devolve os dados principais da venda:
-
 ```json
 {
-  "id": "guid-da-venda",
-  "userId": "guid-do-usuario",
-  "eventoId": "guid-do-evento",
-  "ingressoId": "guid-do-ingresso",
-  "quantidade": 2,
-  "statusCompra": "Pendente",
-  "dataVenda": "2026-05-14T22:00:00Z"
+  "id": 1,
+  "userId": 1,
+  "eventId": 10,
+  "selectedTicketsUser": 2,
+  "totalPrice": 120.0,
+  "saleStatus": "Pending",
+  "createdAt": "2026-05-20T00:00:00Z"
 }
+
 ```
-
-## Use Cases
-
-### RealizarVendaUseCase
-
-Cria uma venda nova e salva no banco.
-
-Fluxo:
-
-1. Recebe os dados do controller.
-2. Cria a entidade `VendasEntidy`.
-3. A entidade valida as regras.
-4. O repositorio salva a venda.
-5. Retorna a entidade criada.
-
-### ObterVendaUseCase
-
-Busca uma venda pelo `Id`.
-
-Se nao encontrar, retorna `null`.
-
-### ProcessarPagamentoUseCase
-
-Aprova uma venda pendente.
-
-Fluxo:
-
-1. Busca a venda pelo `Id`.
-2. Se nao encontrar, retorna `null`.
-3. Chama `ConfirmarPagamento()`.
-4. Salva a venda atualizada.
-5. Retorna a venda aprovada.
-
-Hoje nao existe fluxo de recusa nesse contexto.
 
 ## Endpoints
 
-### Criar venda
+* `POST /sales` -> Criar venda
+* `GET /sales/{id}` -> Buscar venda por id
+* `PATCH /sales/{id}/status` -> Simular/Atualizar status da venda
 
-```http
-POST /vendas
-```
-
-Body:
-
-```json
-{
-  "userId": "guid-do-usuario",
-  "eventoId": "guid-do-evento",
-  "ingressoId": "guid-do-ingresso",
-  "quantidade": 2,
-  "ingressosDisponiveis": 50
-}
-```
-
-Resposta esperada:
-
-- `201 Created`
-- Retorna a venda criada.
-
-### Buscar venda por Id
-
-```http
-GET /vendas/{id}
-```
-
-Resposta esperada:
-
-- `200 OK` com a venda.
-- `404 NotFound` se nao encontrar.
-
-### Aprovar pagamento
-
-```http
-PATCH /vendas/{id}/pagamento
-```
-
-Nao precisa enviar body.
-
-Resposta esperada:
-
-- `200 OK` com a venda aprovada.
-- `404 NotFound` se nao encontrar.
-- `400 BadRequest` se a venda nao puder ser aprovada.
-
-## Tratamento de Erros
-
-As mensagens de erro ficam nas regras de negocio da entidade.
-
-O controller captura `ArgumentException` e `InvalidOperationException`, escreve a mensagem no console com `Console.WriteLine()` e retorna `BadRequest`.
-
-Assim os DTOs continuam simples e sem responsabilidade de validacao.
+---

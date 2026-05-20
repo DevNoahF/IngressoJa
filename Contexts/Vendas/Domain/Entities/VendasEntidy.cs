@@ -1,53 +1,80 @@
 namespace IngressoJa.Contexts.Vendas.Domain.Entities;
+using Enums;
+using Events;
 
-public class VendasEntidy
+public class SaleEntity
 {
-    public const string StatusPendente = "Pendente";
-    public const string StatusAprovado = "Aprovado";
+    private readonly List<IDomainEvent> _domainEvents = new();
 
-    public Guid Id { get; private set; }
-    public Guid UserId { get; private set; }
-    public Guid EventoId { get; private set; }
-    public Guid IngressoId { get; private set; }
-    public int Quantidade { get; private set; }
-    public DateTime DataVenda { get; private set; }
-    public string StatusCompra { get; private set; } = string.Empty;
+    public int Id { get; private set; }
+    public int UserId { get; private set; }
+    public int EventId { get; private set; }
+    public int SelectedTicketsUser { get; private set; }
+    public double TotalPrice { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public SaleStatusEnum SaleStatus { get; private set; } = SaleStatusEnum.Pending;
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected VendasEntidy()
+    protected SaleEntity()
     {
     }
 
-    public VendasEntidy(Guid userId, Guid eventoId, Guid ingressoId, int quantidade, int ingressosDisponiveis)
+    public SaleEntity(
+        int userId,
+        int eventId,
+        int selectedTicketsUser,
+        double totalPrice)
     {
-        if (userId == Guid.Empty)
-            throw new ArgumentException("O usuario e obrigatorio.", nameof(userId));
+        if (userId <= 0)
+            throw new ArgumentException("The user is required.", nameof(userId));
 
-        if (eventoId == Guid.Empty)
-            throw new ArgumentException("O evento e obrigatorio.", nameof(eventoId));
+        if (eventId <= 0)
+            throw new ArgumentException("The event is required.", nameof(eventId));
 
-        if (ingressoId == Guid.Empty)
-            throw new ArgumentException("O ingresso e obrigatorio.", nameof(ingressoId));
+        if (selectedTicketsUser <= 0)
+            throw new ArgumentException("The quantity must be greater than zero.", nameof(selectedTicketsUser));
 
-        if (quantidade <= 0)
-            throw new ArgumentException("A quantidade deve ser maior que zero.", nameof(quantidade));
+        if (totalPrice < 0)
+            throw new ArgumentException("The total value cannot be negative.", nameof(totalPrice));
 
-        if (quantidade > ingressosDisponiveis)
-            throw new InvalidOperationException("Nao ha ingressos suficientes disponiveis.");
-
-        Id = Guid.NewGuid();
         UserId = userId;
-        EventoId = eventoId;
-        IngressoId = ingressoId;
-        Quantidade = quantidade;
-        DataVenda = DateTime.UtcNow;
-        StatusCompra = StatusPendente;
+        EventId = eventId;
+        SelectedTicketsUser = selectedTicketsUser;
+        TotalPrice = totalPrice;
+        CreatedAt = DateTime.UtcNow;
+        SaleStatus = SaleStatusEnum.Pending;
+
     }
 
-    public void ConfirmarPagamento()
+    public void UpdateStatus(SaleStatusEnum novoStatus)
     {
-        if (StatusCompra != StatusPendente)
-            throw new InvalidOperationException("Apenas vendas pendentes podem ser aprovadas.");
+        if (SaleStatus != SaleStatusEnum.Pending)
+            throw new InvalidOperationException("Only pending sales can have their status changed.");
 
-        StatusCompra = StatusAprovado;
+        if (novoStatus is not (SaleStatusEnum.Approved or SaleStatusEnum.Denied))
+            throw new ArgumentException("Invalid status.", nameof(novoStatus));
+
+        SaleStatus = novoStatus;
+
+        if (novoStatus == SaleStatusEnum.Approved)
+        {
+            AdicionarEvento(new SalePaidEvent(
+                Id,
+                UserId,
+                EventId,
+                SelectedTicketsUser,
+                TotalPrice,
+                DateTime.UtcNow));
+        }
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
+
+    private void AdicionarEvento(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
     }
 }
