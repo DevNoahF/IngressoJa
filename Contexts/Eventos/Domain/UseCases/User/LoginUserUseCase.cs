@@ -1,0 +1,46 @@
+using System;
+using System.Threading.Tasks;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+
+namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
+{
+    public class LoginUserUseCase : ILoginUserUseCase
+    {
+        private readonly IUserRepository _repository;
+        private readonly ITokenGenerate _tokenGenerate;
+        private readonly IUserMapper _userMapper;
+
+        public LoginUserUseCase(IUserRepository repository, ITokenGenerate tokenGenerate, IUserMapper userMapper)
+        {
+            _repository = repository;
+            _tokenGenerate = tokenGenerate;
+            _userMapper = userMapper;
+        }
+
+        public async Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto)
+        {
+            try
+            {
+                var userExisting = await _repository.getUserByEmail(dto.Email);
+                if (userExisting == null)
+                    throw new Exception("User not found.");
+
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password.Value, userExisting.PasswordHash.Value);
+                if (!isPasswordValid)
+                    throw new Exception("Invalid password.");
+
+                var token = _tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
+                    
+                var response = _userMapper.AuthResponse(userExisting, token);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when trying to login: " + ex.Message);
+            }
+        }
+    }
+}
