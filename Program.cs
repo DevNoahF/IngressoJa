@@ -2,11 +2,11 @@ using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Vendas.Application.UseCases;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
-using IngressoJa.Contexts.Vendas.Infrastructure.Persistence.DbContexts;
-using IngressoJa.Contexts.Vendas.Infrastructure.Persistence.Repositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+using IngressoJa.Data.Persistence.Repositories;
+using IngressoJa.Data.Sales;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
@@ -20,12 +20,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Vendas
-builder.Services.AddDbContext<VendasDbContext>(options =>
+builder.Services.AddDbContext<SaleContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("VendasConnection")));
-builder.Services.AddScoped<IVendaRepository, VendaRepository>();
-builder.Services.AddScoped<RealizarVendaUseCase>();
-builder.Services.AddScoped<ObterVendaUseCase>();
-builder.Services.AddScoped<ProcessarPagamentoUseCase>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<CreateSaleUseCase>();
+builder.Services.AddScoped<GetSaleByIdUseCase>();
+builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 
 // Eventos
 builder.Services.AddDbContext<EventDbContext>(options =>
