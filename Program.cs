@@ -1,6 +1,5 @@
 using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
-using IngressoJa.Contexts.Eventos.Application.UseCases.User;
 using IngressoJa.Contexts.Vendas.Application.UseCases;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
@@ -11,7 +10,6 @@ using IngressoJa.Data.Sales;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
-using IngressoJa.Data.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,14 +36,6 @@ builder.Services.AddScoped<DeleteEventUseCase>();
 builder.Services.AddScoped<UpdateEventUseCase>();
 builder.Services.AddScoped<GetAllEventsUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
-
-// User UseCases
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
-builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
-builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
-builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
-builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
 
 // JWT
 builder.Services.AddJwtAuthentication(builder.Configuration);
