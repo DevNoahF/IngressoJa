@@ -2,24 +2,24 @@ using IngressoJa.Contexts.Vendas.Domain.Entities;
 
 namespace IngressoJa.Contexts.Vendas.Adapter.DTOs.Response;
 
-public sealed record VendaResponseDTO(
-    Guid Id,
-    Guid UserId,
-    Guid EventoId,
-    Guid IngressoId,
-    int Quantidade,
-    string StatusCompra,
-    DateTime DataVenda)
+public sealed record SaleResponseDTO(
+    int Id,
+    int UserId,
+    int EventId,
+    int SelectedTicketsUser,
+    double TotalPrice,
+    string SaleStatus,
+    DateTime CreatedAt)
 {
-    public static VendaResponseDTO FromEntity(VendasEntidy venda)
+    public static SaleResponseDTO FromEntity(SaleEntity venda)
     {
-        return new VendaResponseDTO(
+        return new SaleResponseDTO(
             venda.Id,
             venda.UserId,
-            venda.EventoId,
-            venda.IngressoId,
-            venda.Quantidade,
-            venda.StatusCompra,
-            venda.DataVenda);
+            venda.EventId,
+            venda.SelectedTicketsUser,
+            venda.TotalPrice,
+            venda.SaleStatus.ToString(),
+            venda.CreatedAt);
     }
 }
