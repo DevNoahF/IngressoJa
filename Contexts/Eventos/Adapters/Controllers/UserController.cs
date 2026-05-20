@@ -16,11 +16,24 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserUseCase _userUseCase;
+        private readonly IRegisterUserUseCase _registerUserUseCase;
+        private readonly IRegisterOrganizerUseCase _registerOrganizerUseCase;
+        private readonly ILoginUserUseCase _loginUserUseCase;
+        private readonly IGetUserByEmailUseCase _getUserByEmailUseCase;
+        private readonly IGetUserUseCase _getUserUseCase;
 
-        public UserController(IUserUseCase userUseCase)
+        public UserController(
+            IRegisterUserUseCase registerUserUseCase,
+            IRegisterOrganizerUseCase registerOrganizerUseCase,
+            ILoginUserUseCase loginUserUseCase,
+            IGetUserByEmailUseCase getUserByEmailUseCase,
+            IGetUserUseCase getUserUseCase)
         {
-            _userUseCase = userUseCase;
+            _registerUserUseCase = registerUserUseCase;
+            _registerOrganizerUseCase = registerOrganizerUseCase;
+            _loginUserUseCase = loginUserUseCase;
+            _getUserByEmailUseCase = getUserByEmailUseCase;
+            _getUserUseCase = getUserUseCase;
         }
 
         [HttpPost("/register")]
@@ -28,7 +41,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             try
             {
-                await _userUseCase.RegisterUser(dto);
+                await _registerUserUseCase.RegisterUser(dto);
                 return Ok();
             }
             catch (Exception ex)
@@ -42,7 +55,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             try
             {
-                await _userUseCase.RegisterOrganizer(dto);
+                await _registerOrganizerUseCase.RegisterOrganizer(dto);
                 return Ok();
             }
             catch (Exception ex)
@@ -58,7 +71,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             try
             {
-                var result = await _userUseCase.getUser(id);
+                var result = await _getUserUseCase.getUser(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -72,7 +85,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             try
             {
-                var result = await _userUseCase.getUserByEmail(email);
+                var result = await _getUserByEmailUseCase.getUserByEmail(email);
                 return Ok(result);
             }
             catch (Exception ex)
