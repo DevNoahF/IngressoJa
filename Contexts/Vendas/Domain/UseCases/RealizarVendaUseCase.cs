@@ -3,29 +3,31 @@ using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Vendas.Application.UseCases;
 
-public sealed class RealizarVendaUseCase
+public sealed class CreateSaleUseCase
 {
-    private readonly IVendaRepository _vendaRepository;
+    private readonly ISaleRepository _vendaRepository;
 
-    public RealizarVendaUseCase(IVendaRepository vendaRepository)
+    public CreateSaleUseCase(ISaleRepository vendaRepository)
     {
         _vendaRepository = vendaRepository;
     }
 
-    public async Task<VendasEntidy> ExecuteAsync(
-        Guid userId,
-        Guid eventoId,
-        Guid ingressoId,
-        int quantidade,
-        int ingressosDisponiveis,
+    public async Task<SaleEntity> ExecuteAsync(
+        int userId,
+        int eventId,
+        int selectedTicketsUser,
+        double totalPrice,
+        int availableTickets,
         CancellationToken cancellationToken = default)
     {
-        var venda = new VendasEntidy(
+        if (selectedTicketsUser > availableTickets)
+            throw new InvalidOperationException("There are not enough tickets available.");
+
+        var venda = new SaleEntity(
             userId,
-            eventoId,
-            ingressoId,
-            quantidade,
-            ingressosDisponiveis);
+            eventId,
+            selectedTicketsUser,
+            totalPrice);
 
         await _vendaRepository.AdicionarAsync(venda, cancellationToken);
 

@@ -2,9 +2,9 @@ using IngressoJa.Contexts.Vendas.Domain.Entities;
 
 namespace IngressoJa.Contexts.Vendas.Domain.IRepositories;
 
-public interface IVendaRepository
+public interface ISaleRepository
 {
-    Task AdicionarAsync(VendasEntidy venda, CancellationToken cancellationToken = default);
-    Task AtualizarAsync(VendasEntidy venda, CancellationToken cancellationToken = default);
-    Task<VendasEntidy?> ObterPorIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task AdicionarAsync(SaleEntity venda, CancellationToken cancellationToken = default);
+    Task AtualizarAsync(SaleEntity venda, CancellationToken cancellationToken = default);
+    Task<SaleEntity?> ObterPorIdAsync(int id, CancellationToken cancellationToken = default);
 }

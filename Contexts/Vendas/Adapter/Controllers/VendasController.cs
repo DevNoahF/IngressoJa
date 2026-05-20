@@ -6,38 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngressoJa.Contexts.Vendas.Presentation.Controllers;
 
 [ApiController]
-[Route("vendas")]
-public class VendasController : ControllerBase
+[Route("sales")]
+public class SalesController : ControllerBase
 {
-    private readonly RealizarVendaUseCase _realizarVendaUseCase;
-    private readonly ObterVendaUseCase _obterVendaUseCase;
-    private readonly ProcessarPagamentoUseCase _processarPagamentoUseCase;
+    private readonly CreateSaleUseCase _realizarVendaUseCase;
+    private readonly GetSaleByIdUseCase _obterVendaUseCase;
+    private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
 
-    public VendasController(
-        RealizarVendaUseCase realizarVendaUseCase,
-        ObterVendaUseCase obterVendaUseCase,
-        ProcessarPagamentoUseCase processarPagamentoUseCase)
+    public SalesController(
+        CreateSaleUseCase realizarVendaUseCase,
+        GetSaleByIdUseCase obterVendaUseCase,
+        UpdateSaleStatusUseCase updateSaleStatusUseCase)
     {
         _realizarVendaUseCase = realizarVendaUseCase;
         _obterVendaUseCase = obterVendaUseCase;
-        _processarPagamentoUseCase = processarPagamentoUseCase;
+        _updateSaleStatusUseCase = updateSaleStatusUseCase;
     }
 
     [HttpPost]
-    public async Task<IActionResult> RealizarVenda([FromBody] RealizarVendaRequestDTO request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateSale([FromBody] CreateSaleRequestDTO request, CancellationToken cancellationToken)
     {
         try
         {
             var venda = await _realizarVendaUseCase.ExecuteAsync(
                 request.UserId,
-                request.EventoId,
-                request.IngressoId,
-                request.Quantidade,
-                request.IngressosDisponiveis,
+                request.EventId,
+                request.SelectedTicketsUser,
+                request.TotalPrice,
+                request.AvailableTickets,
                 cancellationToken);
-            var response = VendaResponseDTO.FromEntity(venda);
+            var response = SaleResponseDTO.FromEntity(venda);
 
-            return CreatedAtAction(nameof(ObterPorId), new { id = response.Id }, response);
+            return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
         }
         catch (ArgumentException exception)
         {
@@ -51,26 +51,26 @@ public class VendasController : ControllerBase
         }
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> ObterPorId(Guid id, CancellationToken cancellationToken)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var venda = await _obterVendaUseCase.ExecuteAsync(id, cancellationToken);
 
-        return venda is null ? NotFound() : Ok(VendaResponseDTO.FromEntity(venda));
+        return venda is null ? NotFound() : Ok(SaleResponseDTO.FromEntity(venda));
     }
 
-    [HttpPatch("{id:guid}/pagamento")]
-    public async Task<IActionResult> ProcessarPagamento(
-        Guid id,
+    [HttpPatch("{id:int}/status")]
+    public async Task<IActionResult> UpdateStatus(
+        int id,
         CancellationToken cancellationToken)
     {
         try
         {
-            var venda = await _processarPagamentoUseCase.ExecuteAsync(
+            var venda = await _updateSaleStatusUseCase.ExecuteAsync(
                 id,
                 cancellationToken);
 
-            return venda is null ? NotFound() : Ok(VendaResponseDTO.FromEntity(venda));
+            return venda is null ? NotFound() : Ok(SaleResponseDTO.FromEntity(venda));
         }
         catch (ArgumentException exception)
         {

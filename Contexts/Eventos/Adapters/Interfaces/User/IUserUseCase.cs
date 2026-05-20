@@ -15,5 +15,7 @@ namespace IngressoJa.Contexts.Eventos.Application.Interfaces.User
         Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO userAuthRequestDTO);
         Task<UserRecordedResponseDTO> getUser(Guid id);
         Task<UserEntity> getUserByEmail(EmailVO email);
+        Task RegisterOrganizer(UserRegisterRequestDTO userRegisterRequestDTO);
+    
     }
 }

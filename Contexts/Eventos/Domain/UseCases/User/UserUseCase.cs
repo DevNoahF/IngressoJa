@@ -11,6 +11,8 @@ using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases
 {
@@ -18,16 +20,32 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
     {
     private readonly IUserRepository __repository;
     private readonly ITokenGenerate __tokenGenerate;
-    public UserUseCase(IUserRepository repository, ITokenGenerate tokenGenerate)
+    private readonly IUserMapper __userMapper;
+    public UserUseCase(IUserRepository repository, ITokenGenerate tokenGenerate, IUserMapper userMapper)
         {
             __repository = repository;
             __tokenGenerate = tokenGenerate;
+            __userMapper = userMapper;
         }
         public async Task RegisterUser(UserRegisterRequestDTO dto)
         {
             try
             {
-                await __repository.RegisterUser(dto);
+                var user = __userMapper.RegisterUserToEntity(dto);
+                await __repository.RegisterUser(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when trying to register: " + ex.Message);
+            }
+        }
+
+        public async Task RegisterOrganizer(UserRegisterRequestDTO dto)
+        {
+            try
+            {
+                var user = __userMapper.RegisterOrganizerToEntity(dto);
+                await __repository.RegisterUser(user);
             }
             catch (Exception ex)
             {
@@ -43,12 +61,14 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
                 if (userExisting == null)
                     throw new Exception("User not found.");
 
-                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password.Value, userExisting.Passoword_hash.Value);
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password.Value, userExisting.PasswordHash.Value);
                 if (!isPasswordValid)
                     throw new Exception("Invalid password.");
 
                 var token = __tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
-                return new UserAuthResponseDTO(token);
+                    
+                var response = __userMapper.AuthResponse(userExisting, token);
+                return response;
             }
             catch (Exception ex)
             {
