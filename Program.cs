@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Data.Persistence.Repositories;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,10 @@ Env.Load();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//db
+builder.Services.AddDbContext<IngressoJaDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Vendas
 builder.Services.AddDbContext<VendasDbContext>(options =>
