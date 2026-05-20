@@ -12,8 +12,9 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories
     public interface IUserRepository
     {
         Task RegisterUser(UserRegisterRequestDTO userRegisterRequestDTO);
+        Task RegisterOrganizer(UserRegisterRequestDTO userRegisterRequestDTO);
         Task LoginUser(UserAuthRequestDTO userAuthRequestDTO);
-        Task<UserRecordedResponseDTO> getUserById(Guid id);
-        Task<UserEntity> getUserByEmail(EmailVO email);
+        Task<UserRecordedResponseDTO?> getUserById(Guid id);
+        Task<UserEntity?> getUserByEmail(EmailVO email);
     }
 }

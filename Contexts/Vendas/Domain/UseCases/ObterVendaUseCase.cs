@@ -3,17 +3,19 @@ using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Vendas.Application.UseCases;
 
-public sealed class ObterVendaUseCase
+public sealed class GetSaleByIdUseCase
 {
-    private readonly IVendaRepository _vendaRepository;
+    private readonly ISaleRepository _vendaRepository;
 
-    public ObterVendaUseCase(IVendaRepository vendaRepository)
+    public GetSaleByIdUseCase(ISaleRepository vendaRepository)
     {
         _vendaRepository = vendaRepository;
     }
 
-    public async Task<VendasEntidy?> ExecuteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<SaleEntity?> ExecuteAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _vendaRepository.ObterPorIdAsync(id, cancellationToken);
     }
 }
+
+

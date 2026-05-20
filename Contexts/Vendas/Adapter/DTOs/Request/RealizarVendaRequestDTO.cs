@@ -1,8 +1,8 @@
 namespace IngressoJa.Contexts.Vendas.Adapter.DTOs.Request;
 
-public sealed record RealizarVendaRequestDTO(
-    Guid UserId,
-    Guid EventoId,
-    Guid IngressoId,
-    int Quantidade,
-    int IngressosDisponiveis);
+public sealed record CreateSaleRequestDTO(
+    int UserId,
+    int EventId,
+    int SelectedTicketsUser,
+    double TotalPrice,
+    int AvailableTickets);

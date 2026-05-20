@@ -7,7 +7,10 @@ using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Request
 {
     public record UserRegisterRequestDTO(
-        String CompleteName, 
+        string FirstName,
+        string LastName,
+        CpfVO Cpf,
+        PhotoProfileVO PhotoProfile,
         EmailVO Email, 
         PasswordVO Password, 
         DateTime DateBirth
