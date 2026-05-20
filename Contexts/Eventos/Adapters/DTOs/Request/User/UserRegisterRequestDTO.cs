@@ -10,6 +10,7 @@ namespace IngressoJa.Contexts.Eventos.Application.DTOs.Request
         string FirstName,
         string LastName,
         CpfVO Cpf,
+        PhotoProfileVO PhotoProfile,
         EmailVO Email, 
         PasswordVO Password, 
         DateTime DateBirth

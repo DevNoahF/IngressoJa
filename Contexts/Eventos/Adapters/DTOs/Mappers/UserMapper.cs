@@ -2,15 +2,17 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Data.Model;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
+using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 public static class UserMapper
 {
-    /// <summary>
-    /// Converte UserEntity para UserModel
-    /// </summary>
-    public static UserModel ToModel(this UserEntity entity)
+    
+    //Converte UserEntity para UserModel
+    public static UserModel  EntityToUserModel(this UserEntity entity)
     {
         return new UserModel
         {
@@ -20,16 +22,15 @@ public static class UserMapper
             LastName = entity.LastName,
             Cpf = entity.Cpf,
             Email = entity.Email,
-            PasswordHash = entity.Password_hash,
+            PasswordHash = entity.PasswordHash,
             Token = entity.Token,
             DateBirth = entity.DateBirth
         };
     }
 
-    /// <summary>
-    /// Converte UserModel para UserEntity
-    /// </summary>
-    public static UserEntity ToEntity(this UserModel model)
+    
+    //Converte UserEntity para UserModel  
+    public static UserEntity ModelToEntity(this UserModel model)
     {
         return new UserEntity(
             model.Id,
@@ -39,34 +40,107 @@ public static class UserMapper
             model.Cpf,
             model.Email,
             model.PasswordHash,
+            model.PhotoProfile,
             model.Token,
             model.DateBirth
         );
     }
 
-    /// <summary>
-    /// Converte UserEntity para UserRecordedResponseDTO
-    /// </summary>
-    public static UserRecordedResponseDTO ToRecordedResponse(this UserEntity entity)
+    //Converte UserRecordedResponseDTO para UserEntity  
+    public static UserRecordedResponseDTO EntityToRecordedResponse(this UserEntity entity)
     {
         return new UserRecordedResponseDTO(
             entity.Id,
-            $"{entity.FirstName} {entity.LastName}",
-            entity.Email.Value,
+            entity.FirstName,
+            entity.LastName,
+            entity.Cpf,
+            entity.Email,
+            entity.PhotoProfile,
             entity.DateBirth
         );
     }
 
-    /// <summary>
-    /// Converte UserModel para UserRecordedResponseDTO
-    /// </summary>
-    public static UserRecordedResponseDTO ToRecordedResponse(this UserModel model)
+    // AuthUserRequestDTO para UserEntity
+    public static UserAuthRequestDTO EntityToAuthRequestDTO(this UserEntity entity)
     {
-        return new UserRecordedResponseDTO(
-            model.Id,
-            $"{model.FirstName} {model.LastName}",
-            model.Email.Value,
-            model.DateBirth
+        return new UserAuthRequestDTO(
+            entity.Email,
+            entity.PasswordHash
         );
     }
+
+    // UserAuthUser para UserEntity
+    public static UserEntity UserAuthRequestUserToEntity(this UserAuthRequestDTO dto)
+    {
+        return new UserEntity(
+            Guid.NewGuid(),
+            RoleEnum.User,
+            string.Empty,
+            string.Empty,
+            new CpfVO(string.Empty),
+            dto.Email,
+            dto.Password,
+            new PhotoProfileVO(string.Empty),
+            string.Empty,
+            DateTime.MinValue
+        );
+    }
+
+    // UserAuthOrganizer para UserEntity
+    public static UserEntity UserAuthRequestOrganizerToEntity(this UserAuthRequestDTO dto)
+    {
+        return new UserEntity(
+            Guid.NewGuid(),
+            RoleEnum.Organizer,
+            string.Empty,
+            string.Empty,
+            new CpfVO(string.Empty),
+            dto.Email,
+            dto.Password,
+            new PhotoProfileVO(string.Empty),
+            string.Empty,
+            DateTime.MinValue
+        );
+    }
+
+    // UserRegisterRequestDTO para UserEntity
+    public static UserEntity RegisterUserToEntity(this UserRegisterRequestDTO dto)
+    {
+        return new UserEntity(
+            Guid.NewGuid(),
+            RoleEnum.User,
+            dto.FirstName,
+            dto.LastName,
+            dto.Cpf,
+            dto.Email,
+            dto.Password,
+            dto.PhotoProfile,
+            string.Empty,
+            dto.DateBirth
+        );
+    }
+
+    // UserRegisterOrganizer para UserEntity
+    public static UserEntity RegisterOrganizerToEntity(this UserRegisterRequestDTO dto)
+    {
+        return new UserEntity(
+            Guid.NewGuid(),
+            RoleEnum.Organizer,
+            dto.FirstName,
+            dto.LastName,
+            dto.Cpf,
+            dto.Email,
+            dto.Password,
+            dto.PhotoProfile,
+            string.Empty,
+            dto.DateBirth
+        );
+    }
+
+    // responseAuth to UserEntity
+    public static UserAuthResponseDTO EntityToAuthResponseDTO(this UserEntity entity, string token)
+    {
+        return new UserAuthResponseDTO(token);
+    }
+    
 }
