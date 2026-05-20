@@ -21,12 +21,13 @@ public class EventEntity
     public int TotalTicketQuantity { get; private set; }
     public int AvailableTickets { get; private set; }
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
-    public Guid OrganizerId { get; private set; }
+    public string BannerImage { get; private set; }
+    public Guid UserId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
     public EventEntity(string name, string description, string street, string neighborhood, string city, int number,
-        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity, Guid organizerId)
+        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity, Guid userId, int availableTickets, string bannerImage)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new EventFieldNameRequiredException("Name");
@@ -70,7 +71,7 @@ public class EventEntity
         if (totalTicketQuantity <= 0)
             throw new Exception("Total ticket quantity must be greater than zero");
 
-        if (organizerId == Guid.Empty)
+        if (userId == Guid.Empty)
             throw new EventFieldNameRequiredException("OrganizerId");
 
         Id = Guid.NewGuid();
@@ -87,7 +88,7 @@ public class EventEntity
         TotalTicketQuantity = totalTicketQuantity;
         AvailableTickets = totalTicketQuantity;
         Status = EventStatusEnum.Andamento;
-        OrganizerId = organizerId;
+        UserId = userId;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
     }

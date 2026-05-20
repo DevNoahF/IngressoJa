@@ -16,6 +16,7 @@ public class EventModel
     public int TotalTicketQuantity { get; private set; }
     public Guid UserId { get; private set; }
     public EventStatusEnum Status { get; private set; }
+    public string BannerImage {get; private set;}
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 

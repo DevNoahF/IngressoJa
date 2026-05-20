@@ -6,5 +6,6 @@ public record EventSummaryResponseDTO(
     string Name,
     string City,
     string Date,
-    EventStatusEnum Status
+    EventStatusEnum Status,
+    bool 
 );
