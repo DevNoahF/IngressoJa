@@ -17,3 +17,5 @@ public sealed class GetSaleByIdUseCase
         return await _vendaRepository.ObterPorIdAsync(id, cancellationToken);
     }
 }
+
+
