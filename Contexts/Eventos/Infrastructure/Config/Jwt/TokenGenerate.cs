@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 
@@ -20,7 +20,7 @@ namespace IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt
 
         public string GenerateToken(Guid userId, string email)
         {
-            var tokenHandler = new JwtSecurityTokenHandler(); // Cria um manipulador de tokens JWT
+            var tokenHandler = new JsonWebTokenHandler(); // Cria um manipulador de tokens JWT
             var secret = _configuration["JwtSettings:SecretKey"] ?? _configuration["Jwt:SecretKey"];
             if (string.IsNullOrEmpty(secret))
                 throw new ArgumentNullException("JWT Secret não configurada!");
@@ -38,8 +38,7 @@ namespace IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature) // Define as credenciais de assinatura usando a chave secreta e o algoritmo HMAC SHA256
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor); // Cria o token JWT com base na descrição do token
-            return tokenHandler.WriteToken(token); 
+                    return tokenHandler.CreateToken(tokenDescriptor); // Cria o token JWT com base na descrição do token
         }
         
     }

@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS builder
+
+WORKDIR /app
+
+# nuget
+COPY *.csproj ./
+RUN dotnet restore 
+
+COPY . ./
+RUN dotnet publish -c Realease -o out
+
+# runtime
+
+FROM mcr.microsoft.com/dotnet/net:10.0-alpine
+WORKDIR /app
+
+COPY --from=builder /app/out ./
+
+ENTRYPOINT [ "dotnet", "IngressoJa.dll" ]
+
+
+# docker build -t ingressoja:latest .
