@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers;
 
 [ApiController]
-[Route("api/events")]
+[Route("events")]
 public class EventController : ControllerBase
 {
     private readonly CreateEventUseCase _createEventUseCase;
