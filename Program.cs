@@ -5,7 +5,7 @@ using IngressoJa.Contexts.Vendas.Application.UseCases;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
-using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+
 using IngressoJa.Data.Persistence.Repositories;
 using IngressoJa.Data.Sales;
 using Microsoft.EntityFrameworkCore;
