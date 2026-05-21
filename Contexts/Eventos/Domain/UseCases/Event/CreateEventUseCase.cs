@@ -13,11 +13,11 @@ public class CreateEventUseCase
         _eventRepository = eventRepository;
     }
 
-    public async Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto, Guid organizerId)
+    public async Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto, Guid UserId)
     {
         try
         {
-            var eventEntity = eventCreateRequestDto.ToEntity(organizerId);
+            var eventEntity = eventCreateRequestDto.ToEntity(UserId);
             var createdEvent = await _eventRepository.CreateEvent(eventEntity);
             return createdEvent.ToCreateResponse();
         }

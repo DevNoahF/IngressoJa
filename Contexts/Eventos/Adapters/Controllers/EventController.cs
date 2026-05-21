@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers;
 
 [ApiController]
-[Route("api/events")]
+[Route("events")]
 public class EventController : ControllerBase
 {
     private readonly CreateEventUseCase _createEventUseCase;
@@ -14,28 +14,31 @@ public class EventController : ControllerBase
     private readonly UpdateEventUseCase _updateEventUseCase;
     private readonly GetAllEventsUseCase _getAllEventsUseCase;
     private readonly GetEventByIdUseCase _getEventByIdUseCase;
+    private readonly ChangeEventStatusUseCase _changeStatusOfEventUseCase;
 
     public EventController(
         CreateEventUseCase createEventUseCase,
         DeleteEventUseCase deleteEventUseCase,
         UpdateEventUseCase updateEventUseCase,
         GetAllEventsUseCase getAllEventsUseCase,
-        GetEventByIdUseCase getEventByIdUseCase)
+        GetEventByIdUseCase getEventByIdUseCase,
+        ChangeEventStatusUseCase changeStatusOfEventUseCase
+    )
     {
         _createEventUseCase = createEventUseCase;
         _deleteEventUseCase = deleteEventUseCase;
         _updateEventUseCase = updateEventUseCase;
         _getAllEventsUseCase = getAllEventsUseCase;
         _getEventByIdUseCase = getEventByIdUseCase;
+        _changeStatusOfEventUseCase = changeStatusOfEventUseCase;
     }
 
-    [HttpPost]
     [HttpPost]
     public async Task<IActionResult> CreateEvent([FromBody] EventCreateRequestDTO dto)
     {
         try
         {
-            var organizerId = dto.Organizer; //Trocar mais tarde assim que tiver user 100% impementado
+            var organizerId = dto.UserId; //Trocar mais tarde assim que tiver user 100% impementado
             var result = await _createEventUseCase.CreateEvent(dto, organizerId);
             return Ok(result);
         }
@@ -98,6 +101,22 @@ public class EventController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> ChangeStatusOfEvent(Guid id, [FromBody] EventChangeStatusOfEventRequestDTO dto)
+    {
+        try
+        {
+            var dtoWithId = dto with { EventId = id };
+            await _changeStatusOfEventUseCase.ChangeStatus(dtoWithId);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.InnerException?.Message ?? ex.Message);
         }
     }
 }

@@ -2,7 +2,7 @@
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;//Pode puxar Enum nesse caso?
 
 public record EventPutRequestDTO(
-    string Name,
+    string Name, 
     string Description,
     string Street,
     string Neighborhood,
@@ -10,5 +10,8 @@ public record EventPutRequestDTO(
     int Number,
     StatesEnum State,
     string Date,
-    string Hour
+    string Hour,
+    double TicketValue,
+    int TotalTicketQuantity,
+    string BannerImage
 );

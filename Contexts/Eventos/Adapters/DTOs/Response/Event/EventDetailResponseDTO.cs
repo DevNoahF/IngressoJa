@@ -1,5 +1,6 @@
 ﻿namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+
 public record EventDetailResponseDTO(
     Guid Id,
     string Name,
@@ -11,5 +12,7 @@ public record EventDetailResponseDTO(
     StatesEnum State,
     string Date,
     string Hour,
+    double TicketValue,
+    string BannerImage,
     EventStatusEnum Status
 );
