@@ -1,4 +1,4 @@
-using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Vendas.Domain.Entities.Enums;
 
 namespace IngressoJa.Contexts.Vendas.Adapter.DTOs.Response.EventSale;
 

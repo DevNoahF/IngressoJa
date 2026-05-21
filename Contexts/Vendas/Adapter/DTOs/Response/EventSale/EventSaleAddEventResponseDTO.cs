@@ -7,6 +7,6 @@ public record EventSaleAddEventResponseDTO(
     string EventName,
     double TicketValue,
     int TotalTicketQuantity,
-    EventStatusEnum EventStatus
+    EventStatusEnum Status
     
     );
