@@ -1,60 +1,82 @@
 using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
-using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 
 public class EventRepository : IEventRepository
 {
-    private readonly EventDbContext _context;
-    public EventRepository(EventDbContext context)
+    private readonly DataContext _context;
+
+    public EventRepository(DataContext context)
     {
         _context = context;
     }
 
-    public async Task<Event> CreateEvent(Event eventEntity)
+    public async Task<EventEntity> CreateEvent(EventEntity eventEntity)
     {
-        await _context.Events.AddAsync(eventEntity);
+        var model = eventEntity.ToModel();
+        await _context.Events.AddAsync(model);
         await _context.SaveChangesAsync();
-        return eventEntity;
+        return model.ModelToEntity();
     }
 
     public async Task DeleteEvent(Guid id)
     {
-        var eventEntity = await _context.Events.FindAsync(id);
-        if (eventEntity == null)
+        var model = await _context.Events.FindAsync(id);
+        if (model is null)
             throw new EventNotFoundException(id);
-        
-        _context.Events.Remove(eventEntity);
+
+        _context.Events.Remove(model);
         await _context.SaveChangesAsync();
-    
     }
 
-    public async Task<Event> UpdateEvent(Event eventEntity)
+    public async Task<EventEntity> UpdateEvent(EventEntity eventEntity)
     {
         var existing = await _context.Events.FindAsync(eventEntity.Id);
         if (existing is null)
             throw new EventNotFoundException(eventEntity.Id);
 
-        _context.Entry(existing).CurrentValues.SetValues(eventEntity);
+        var model = eventEntity.ToModel();
+        _context.Entry(existing).CurrentValues.SetValues(model);
         await _context.SaveChangesAsync();
-        return existing;
+        return existing.ModelToEntity();
     }
 
-    public async Task<IEnumerable<Event>> GetAllEvents()
+    public async Task<IEnumerable<EventEntity>> GetAllEvents()
     {
-        return await _context.Events.ToListAsync();
+        var models = await _context.Events.ToListAsync();
+        return models.Select(m => m.ModelToEntity());
     }
 
-    public async Task<Event?> GetEventById(Guid id)
+    public async Task<EventEntity?> GetEventById(Guid id)
     {
-        return await _context.Events.FindAsync(id);
+        var model = await _context.Events.FindAsync(id);
+        return model?.ModelToEntity();
     }
 
-    public async Task<Event?> GetEventByName(string name)
+    public async Task<EventEntity?> GetEventByName(string name)
     {
-        return await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+        var model = await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+        return model?.ModelToEntity();
+    }
+
+    public async Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO dto)
+    {
+        var model = await _context.Events.FindAsync(dto.EventId);
+        if (model is null)
+            throw new EventNotFoundException(dto.EventId);
+
+        var entity = model.ModelToEntity();
+        entity.ChangeStatus(dto.Status);
+
+        _context.Entry(model).CurrentValues.SetValues(entity.ToModel());
+        await _context.SaveChangesAsync();
+        return entity.ToPutResponse();
     }
 }
