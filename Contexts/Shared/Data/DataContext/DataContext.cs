@@ -11,6 +11,7 @@ namespace IngressoJa.Data.dbContext
         }
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<EventModel> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
