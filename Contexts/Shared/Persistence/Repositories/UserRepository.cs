@@ -13,67 +13,43 @@ using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Data.Model;
 using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Data.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly IUserMapper userMapper;
 
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, IUserMapper userMapper)
         {
             _context = context;
+            this.userMapper = userMapper;
         }
 
-        public async Task RegisterUser(UserRegisterRequestDTO userRegisterRequestDTO)
+            public async Task RegisterUser(UserEntity user)
+            {
+                try
+                {
+
+                    var newUser = userMapper.EntityToUserModel(user);
+
+                    _context.Users.Add(newUser);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error registering user: {ex.Message}", ex);
+                }
+            }
+
+        public async Task RegisterOrganizer(UserEntity user)
         {
             try
             {
 
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegisterRequestDTO.Password.Value);
-                var passwordVO = new PasswordVO(hashedPassword);
-
-                var userModel = new UserModel
-                {
-                    Id = Guid.NewGuid(),
-                    Role = RoleEnum.User,
-                    FirstName = userRegisterRequestDTO.FirstName,
-                    LastName = userRegisterRequestDTO.LastName,
-                    Cpf = userRegisterRequestDTO.Cpf,
-                    Email = userRegisterRequestDTO.Email,
-                    PasswordHash = passwordVO,
-                    Token = string.Empty,
-                    DateBirth = userRegisterRequestDTO.DateBirth
-                };
-
-                _context.Users.Add(userModel);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error registering user: {ex.Message}", ex);
-            }
-        }
-
-        public async Task RegisterOrganizer(UserRegisterRequestDTO userRegisterRequestDTO)
-        {
-            try
-            {
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegisterRequestDTO.Password.Value);
-                var passwordVO = new PasswordVO(hashedPassword);
-
-                var userModel = new UserModel
-                {
-                    Id = Guid.NewGuid(),
-                    Role = RoleEnum.Organizer,
-                    FirstName = userRegisterRequestDTO.FirstName,
-                    LastName = userRegisterRequestDTO.LastName,
-                    Cpf = userRegisterRequestDTO.Cpf,
-                    Email = userRegisterRequestDTO.Email,
-                    PasswordHash = passwordVO,
-                    Token = string.Empty,
-                    DateBirth = userRegisterRequestDTO.DateBirth
-                };
+                var userModel = userMapper.EntityToUserModel(user);
 
                 _context.Users.Add(userModel);
                 await _context.SaveChangesAsync();
@@ -84,25 +60,9 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
-        public async Task LoginUser(UserAuthRequestDTO userAuthRequestDTO)
-        {
-            try
-            {
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email.Value == userAuthRequestDTO.Email.Value);
+        // Login should be handled at UseCase layer: repository exposes getUserByEmail and persistence methods
 
-                if (user == null)
-                    throw new Exception("User not found.");
-
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error during login: {ex.Message}", ex);
-            }
-        }
-
-        public async Task<UserRecordedResponseDTO?> getUserById(Guid id)
+        public async Task<UserEntity?> getUserById(Guid id)
         {
             try
             {
@@ -110,9 +70,9 @@ namespace IngressoJa.Data.Persistence.Repositories
                     .FirstOrDefaultAsync(u => u.Id == id);
 
                 if (user == null)
-                    return null;
+                        return null;
 
-                return user.ToRecordedResponse();
+                return userMapper.ModelToEntity(user);
             }
             catch (Exception ex)
             {
@@ -128,14 +88,16 @@ namespace IngressoJa.Data.Persistence.Repositories
                     .FirstOrDefaultAsync(u => u.Email.Value == email.Value);
 
                 if (user == null)
-                    return null;
+                    throw new Exception("User not found.");
 
-                return user.ToEntity();
+                return userMapper.ModelToEntity(user);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error getting user by email: {ex.Message}", ex);
             }
         }
+
+    
     }
 }
