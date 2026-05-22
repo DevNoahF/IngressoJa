@@ -7,7 +7,7 @@ function Header() {
       <div className="header-container">
         <div className="logo">
           <Ticket size={18} />
-          <span>TicketPro</span>
+          <span>IngressoJá</span>
         </div>
 
         <nav className="nav-buttons">
