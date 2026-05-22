@@ -1,5 +1,5 @@
 
-//Moccei uns dados para testar o banner e os cards, depois a gente pode trocar por dados reais da API
+//Mockei uns dados para testar o banner e os cards, depois a gente pode trocar por dados reais da API
 export const events = [
   {
     id: 1,
