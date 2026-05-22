@@ -14,6 +14,10 @@ public record EventCreateResponseDTO(
     StatesEnum State,
     string Date,
     string Hour,
-    Guid OrganizerId,
+    double TicketValue,
+    int TotalTicketQuantity,
+    string BannerImage,
+    EventStatusEnum Status,
+    Guid UserId,
     DateTime CreatedAt
 );

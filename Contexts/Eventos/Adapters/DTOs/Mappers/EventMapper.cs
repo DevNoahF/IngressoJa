@@ -1,12 +1,13 @@
-using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
-using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
+using IngressoJa.Contexts.Eventos.Domain.Entities;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Data.Model;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 public static class EventMapper
 {
-    public static EventDetailResponseDTO ToDetailResponse(this Event eventEntity)//Tela detalhada aonde o usuário poderia ir depois para a tela de pagamento
+    public static EventDetailResponseDTO ToDetailResponse(this EventEntity eventEntity)
     {
         return new EventDetailResponseDTO(
             eventEntity.Id,
@@ -19,22 +20,27 @@ public static class EventMapper
             eventEntity.State,
             eventEntity.Date.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
+            eventEntity.TicketValue,
+            eventEntity.BannerImage,
             eventEntity.Status
         );
     }
 
-    public static EventSummaryResponseDTO ToSummaryResponse(this Event eventEntity)//Pensado para apresentar uma "tela geral" com todos os eventos
+    public static EventSummaryResponseDTO ToSummaryResponse(this EventEntity eventEntity)
     {
         return new EventSummaryResponseDTO(
             eventEntity.Id,
             eventEntity.Name,
             eventEntity.City,
+            eventEntity.State,
             eventEntity.Date.ToString("dd/MM/yyyy"),
-            eventEntity.Status
+            eventEntity.Status,
+            eventEntity.TicketValue,
+            eventEntity.BannerImage
         );
     }
 
-    public static EventCreateResponseDTO ToCreateResponse(this Event eventEntity)
+    public static EventCreateResponseDTO ToCreateResponse(this EventEntity eventEntity)
     {
         return new EventCreateResponseDTO(
             eventEntity.Id,
@@ -47,12 +53,16 @@ public static class EventMapper
             eventEntity.State,
             eventEntity.Date.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
-            eventEntity.OrganizerId,
+            eventEntity.TicketValue,
+            eventEntity.TotalTicketQuantity,
+            eventEntity.BannerImage,
+            eventEntity.Status,
+            eventEntity.UserId,
             eventEntity.CreatedAt
         );
     }
 
-    public static EventPutResponseDTO ToPutResponse(this Event eventEntity)
+    public static EventPutResponseDTO ToPutResponse(this EventEntity eventEntity)
     {
         return new EventPutResponseDTO(
             eventEntity.Id,
@@ -65,17 +75,19 @@ public static class EventMapper
             eventEntity.State,
             eventEntity.Date.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
-            eventEntity.OrganizerId,
+            eventEntity.TicketValue,
+            eventEntity.TotalTicketQuantity,
+            eventEntity.BannerImage,
+            eventEntity.UserId,
             eventEntity.Status,
             eventEntity.CreatedAt,
             eventEntity.UpdatedAt
         );
     }
 
-    public static Event ToEntity(this EventCreateRequestDTO dto, Guid organizerId)
+    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId)
     {
-        return new Event(
-            Guid.NewGuid(),
+        return new EventEntity(
             dto.Name,
             dto.Description,
             dto.Street,
@@ -85,13 +97,17 @@ public static class EventMapper
             dto.State,
             DateOnly.Parse(dto.Date),
             TimeOnly.Parse(dto.Hour),
-            organizerId
+            dto.TicketValue,
+            dto.TotalTicketQuantity,
+            userId,
+            dto.TotalTicketQuantity,
+            dto.BannerImage
         );
     }
 
-    public static Event ToEntity(this EventPutRequestDTO dto, Event existingEvent)
+    public static EventEntity ToEntity(this EventPutRequestDTO dto, EventEntity existingEvent)
     {
-        existingEvent.Update(//Precisei criar método Update na entidade, estava dando erro ou pegando outro id diferente, ver como resolver
+        existingEvent.Update(
             dto.Name,
             dto.Description,
             dto.Street,
@@ -100,8 +116,54 @@ public static class EventMapper
             dto.Number,
             dto.State,
             DateOnly.Parse(dto.Date),
-            TimeOnly.Parse(dto.Hour)
+            TimeOnly.Parse(dto.Hour),
+            dto.TicketValue,
+            dto.TotalTicketQuantity
         );
         return existingEvent;
+    }
+
+    public static EventModel ToModel(this EventEntity entity)
+    {
+        return new EventModel
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+            StreetName = entity.Street,
+            Neighborhood = entity.Neighborhood,
+            City = entity.City,
+            Number = entity.Number,
+            State = entity.State,
+            Date = entity.Date,
+            Hour = entity.Hour,
+            TicketValue = entity.TicketValue,
+            TotalTicketQuantity = entity.TotalTicketQuantity,
+            BannerImage = entity.BannerImage,
+            Status = entity.Status,
+            UserId = entity.UserId,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
+    }
+
+    public static EventEntity ModelToEntity(this EventModel model)
+    {
+        return new EventEntity(
+            model.Name,
+            model.Description,
+            model.StreetName,
+            model.Neighborhood,
+            model.City,
+            model.Number,
+            model.State,
+            model.Date,
+            model.Hour,
+            model.TicketValue,
+            model.TotalTicketQuantity,
+            model.UserId,
+            model.TotalTicketQuantity,
+            model.BannerImage
+        );
     }
 }

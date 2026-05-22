@@ -24,7 +24,18 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
 
         public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateTime dateBirth)
         {
-            Id = id;
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new Exception("First name is required");
+            if (firstName.Length > 55)
+                throw new Exception("First name must be less than 55 characters");
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new Exception("Last name is required");
+            if (lastName.Length > 55)                
+                throw new Exception("Last name must be less than 55 characters");
+            if (dateBirth >= DateTime.Now || dateBirth <= DateTime.Parse("01-01-1900"))
+                throw new Exception("Invalid date of birth");
+            
+            Id = new Guid();
             Role = role;
             FirstName = firstName;
             LastName = lastName;

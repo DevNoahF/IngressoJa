@@ -5,12 +5,13 @@ using IngressoJa.Contexts.Vendas.Application.UseCases;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
-using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.DbContexts;
+
 using IngressoJa.Data.Persistence.Repositories;
 using IngressoJa.Data.Sales;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
+using IngressoJa.Contexts.Vendas.Application.UseCases.EventSale;
 using IngressoJa.Data.Persistence.Repositories;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
@@ -43,7 +44,14 @@ builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
 builder.Services.AddScoped<UpdateEventUseCase>();
 builder.Services.AddScoped<GetAllEventsUseCase>();
+
+//Eventos em Vendas
 builder.Services.AddScoped<GetEventByIdUseCase>();
+builder.Services.AddScoped<AddEventSaleUseCase>();
+builder.Services.AddScoped<DeleteEventSaleUseCase>();
+builder.Services.AddScoped<GetAllEventSalesUseCase>();
+builder.Services.AddScoped<GetEventSaleByIdUseCase>();
+builder.Services.AddScoped<UpdateEventUseCase>();
 
 // User UseCases
 builder.Services.AddScoped<IUserRepository, UserRepository>();
