@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f8f8f8;
+}
+
+.home {
+  width: 1280px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+.hero {
+  margin-bottom: 40px;
+}
+
+.hero h1 {
+  font-size: 52px;
+  color: #05051a;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #777;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
