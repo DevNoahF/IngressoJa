@@ -2,8 +2,8 @@ namespace IngressoJa.Contexts.Vendas.Domain.Events;
 
 public sealed record SalePaidEvent(
     int SaleId,
-    int UserId,
-    int EventId,
+    Guid UserId,
+    Guid EventId,
     int SelectedTicketsUser,
     double TotalPrice,
     DateTime PaidAt) : IDomainEvent;

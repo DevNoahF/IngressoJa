@@ -34,6 +34,7 @@ public class SalesController : ControllerBase
                 request.SelectedTicketsUser,
                 request.TotalPrice,
                 request.AvailableTickets,
+                request.IngressoId,
                 cancellationToken);
             var response = SaleResponseDTO.FromEntity(venda);
 
