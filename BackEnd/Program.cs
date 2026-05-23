@@ -37,8 +37,6 @@ builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 
 // Eventos
-builder.Services.AddDbContext<EventDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("EventosConnection")));
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
