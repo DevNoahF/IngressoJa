@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Vendas.Application.UseCases.EventSale;
-using IngressoJa.Data.Persistence.Repositories;
 using UpdateEventUseCase = IngressoJa.Contexts.Eventos.Application.UseCases.Event.UpdateEventUseCase;
 using IngressoJa.Data.dbContext;
 
@@ -24,8 +23,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // db
-builder.Services.AddDbContext<IngressoJaContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("EventosConnection")));
+
+builder.Services.AddDbContext<SaleContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("VendasConnection")));
 
 // Vendas
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();

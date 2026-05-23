@@ -1,6 +1,6 @@
 using IngressoJa.Contexts.Vendas.Domain.Entities;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
-using IngressoJa.Data.Sales;
+using IngressoJa.Data.dbContext;
 
 namespace IngressoJa.Data.Persistence.Repositories;
 
