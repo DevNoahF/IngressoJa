@@ -1,43 +1,28 @@
 using System;
 using System.Threading.Tasks;
 
-using IngressoJa.Contexts.Vendas.Adapter.DTOs.Request.Ingresso;
-using IngressoJa.Contexts.Vendas.Adapter.DTOs.Response.Ingresso;
-
+using IngressoJa.Contexts.Vendas.Adapter.Interfaces;
 using IngressoJa.Contexts.Vendas.Domain.Entities;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 
-namespace IngressoJa.Contexts.Vendas.Domain.UseCases.CreateIngresso
+namespace IngressoJa.Contexts.Vendas.Domain.UseCases.CreateTicket
 {
-    public class CreateIngressoUseCase : ICreateIngressoUseCase
+    public class CreateTicketUseCase : ICreateTicketUseCase
     {
-        private readonly IIngressoRepository _repository;
+        private readonly ITicketRepository _repository;
 
-        public CreateIngressoUseCase(IIngressoRepository repository)
+        public CreateTicketUseCase(ITicketRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<CreateIngressoResponseDTO> ExecuteAsync(CreateIngressoRequestDTO dto)
+        public async Task<TicketEntity> ExecuteAsync(Guid userId)
         {
-            var ingresso = new IngressoEntity(
-                Guid.NewGuid(),
-                dto.EventoId,
-                dto.Tipo,
-                dto.Preco,
-                dto.QuantidadeDisponivel
-            );
+            var ticket = new TicketEntity(Guid.NewGuid(), userId);
 
-            await _repository.CreateAsync(ingresso);
+            await _repository.CreateAsync(ticket);
 
-            return new CreateIngressoResponseDTO
-            {
-                Id = ingresso.Id,
-                EventoId = ingresso.EventoId,
-                Tipo = ingresso.Tipo,
-                Preco = ingresso.Preco,
-                QuantidadeDisponivel = ingresso.QuantidadeDisponivel
-            };
+            return ticket;
         }
     }
 }
