@@ -1,5 +1,5 @@
+using IngressoJa.Contexts.Vendas.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Vendas.Adapter.DTOs.Request;
-using IngressoJa.Contexts.Vendas.Adapter.DTOs.Response;
 using IngressoJa.Contexts.Vendas.Application.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +36,7 @@ public class SalesController : ControllerBase
                 request.AvailableTickets,
                 request.IngressoId,
                 cancellationToken);
-            var response = SaleResponseDTO.FromEntity(venda);
+            var response = venda.ToResponse();
 
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
         }
@@ -57,7 +57,7 @@ public class SalesController : ControllerBase
     {
         var venda = await _obterVendaUseCase.ExecuteAsync(id, cancellationToken);
 
-        return venda is null ? NotFound() : Ok(SaleResponseDTO.FromEntity(venda));
+        return venda is null ? NotFound() : Ok(venda.ToResponse());
     }
 
     [HttpPatch("{id:int}/status")]
@@ -71,7 +71,7 @@ public class SalesController : ControllerBase
                 id,
                 cancellationToken);
 
-            return venda is null ? NotFound() : Ok(SaleResponseDTO.FromEntity(venda));
+            return venda is null ? NotFound() : Ok(venda.ToResponse());
         }
         catch (ArgumentException exception)
         {
