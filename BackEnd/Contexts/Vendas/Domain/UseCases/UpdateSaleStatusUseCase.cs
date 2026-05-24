@@ -3,6 +3,7 @@ using IngressoJa.Contexts.Vendas.Domain.Entities.Enums;
 using IngressoJa.Contexts.Vendas.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Vendas.Application.UseCases;
+// colocar em alguma pasta
 
 public class UpdateSaleStatusUseCase
 {
