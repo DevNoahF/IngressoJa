@@ -6,7 +6,7 @@ using IngressoJa.Contexts.Vendas.Domain.Entities.Enums;
 
 namespace IngressoJa.Data.Model
 {
-    public class SalesModel
+    public class SaleModel
     {
         public int Id { get; set; }
         public int UserId { get; set; }
