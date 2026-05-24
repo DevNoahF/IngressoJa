@@ -6,6 +6,7 @@ namespace IngressoJa.Contexts.Vendas.Application.UseCases;
 public sealed class GetSaleByIdUseCase
 {
     private readonly ISaleRepository _vendaRepository;
+    // colocar em alguma pasta
 
     public GetSaleByIdUseCase(ISaleRepository vendaRepository)
     {
