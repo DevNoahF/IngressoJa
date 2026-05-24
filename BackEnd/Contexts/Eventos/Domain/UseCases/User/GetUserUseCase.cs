@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
@@ -19,11 +20,10 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
         {
             try
             {
-                var userDto = await _repository.getUserById(id);
-                if (userDto == null)
+                var userEntity = await _repository.getUserById(id);
+                if (userEntity == null)
                     throw new Exception("User not found.");
-
-                return userDto;
+                return userEntity.EntityToRecordedResponse();
             }
             catch (Exception ex)
             {

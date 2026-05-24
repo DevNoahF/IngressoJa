@@ -9,7 +9,12 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
     {
         public String Value { get; private set; }
 
-        public PasswordVO(String value)
+        private PasswordVO(String value)
+        {
+            Value = value;
+        }
+
+        public static PasswordVO CreatePassword(String value)
         {
             if (string.IsNullOrEmpty(value))
                 throw new Exception("Password must not be empty.");
@@ -20,7 +25,13 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
             if (value.Length > 12)
                 throw new Exception("Password must be no more than 12 characters long.");
             
-            Value = value;
+            var hash = BCrypt.Net.BCrypt.HashPassword(value);
+            return new PasswordVO(hash);
         }
+
+        public static bool VerifyPassword(String password, String hash)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hash);
+        }  
     }
 }

@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Vendas.Application.UseCases.EventSale;
-using UpdateEventUseCase = IngressoJa.Contexts.Eventos.Application.UseCases.Event.UpdateEventUseCase;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Data.dbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +23,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// db
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("EventosConnection")));
-
-builder.Services.AddDbContext<SaleContext>(options =>
+// Database Configuration -> 
+builder.Services.AddDbContext<IngressoJaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("VendasConnection")));
 
 // Vendas
@@ -39,7 +37,7 @@ builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
-builder.Services.AddScoped<UpdateEventUseCase>();
+//builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
 builder.Services.AddScoped<GetAllEventsUseCase>();
 
 //Eventos em Vendas
@@ -48,7 +46,7 @@ builder.Services.AddScoped<AddEventSaleUseCase>();
 builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
-builder.Services.AddScoped<UpdateEventUseCase>();
+//builder.Services.AddScoped<UpdateEventUseCase>(); ->ta dando erro
 
 // User UseCases
 builder.Services.AddScoped<IUserRepository, UserRepository>();

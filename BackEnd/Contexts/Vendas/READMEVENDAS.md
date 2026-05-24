@@ -1,165 +1,215 @@
-# Contexto de Sales
+# Contexto de Vendas
 
-Este contexto representa a venda de ingressos dentro do sistema. Ele foi simplificado para funcionar como um fluxo acadêmico, com foco em regra de negócio clara e pouca complexidade de infraestrutura.
+Este contexto representa o fluxo de venda de ingressos do sistema. A responsabilidade dele e criar vendas, consultar vendas, simular a aprovacao ou negacao da venda e manter uma visao simples dos eventos disponiveis para venda.
 
-Hoje o contexto está organizado assim:
+## Como funciona hoje
 
-1. A venda nasce com status `Pending`.
-2. A criação valida a quantidade pedida contra os ingressos disponíveis.
-3. O pagamento não faz mais parte do contexto como agregado próprio (virou um Enum de status na Venda).
-4. O update do status da venda simula o resultado do financeiro com `Approved` ou `Denied`.
-5. Quando a venda for aprovada, o domínio dispara o evento `SalePaidEvent`.
-6. O agregado de ingressos será responsável por consumir esse evento depois.
+1. A venda e criada com status `Pending`.
+2. O caso de uso de criacao valida se a quantidade escolhida pelo usuario nao ultrapassa os ingressos disponiveis.
+3. A venda guarda os identificadores do usuario, do evento e, opcionalmente, do ingresso gerado.
+4. O endpoint de status simula o resultado financeiro, alternando entre `Approved` e `Denied`.
+5. Quando a venda e aprovada, a entidade registra o evento de dominio `SalePaidEvent`.
+6. O contexto tambem possui o fluxo `EventSale`, usado para cadastrar, listar, atualizar e remover eventos no recorte de vendas.
 
-## O que foi feito (Refatoração)
-
-O contexto antigo estava muito preso a nomes em português e a uma modelagem com `Guid` no identificador da venda. Ele também carregava uma estrutura de `payment` que não fazia mais sentido para o desenho final.
-
-O desenho atual também deixa dois pontos importantes bem definidos:
-- `availableTickets` não é propriedade da venda e não vai para o banco; ele entra só como informação de validação do caso de uso na criação.
-- A entidade mantém uma coleção interna de `DomainEvents` para registrar eventos como `SalePaidEvent` antes do despacho por repositório, interceptador ou mediator.
-
-A refatoração atual fez o seguinte:
-- `VendasEntidy` virou `SaleEntity`.
-- O identificador da venda passou a ser `int`.
-- `UserId` e `EventId` também passaram a ser `int`.
-- O campo `IngressoId` foi removido da venda.
-- O status da venda passou a ser o enum `SaleStatus`.
-- Os enums e eventos foram traduzidos para o inglês.
-- O controller, request, response, use cases e repository foram alinhados com essa nova linguagem.
-
-## Estrutura Atual de Pastas
+## Estrutura atual de pastas
 
 ```text
 Contexts/Vendas
 +-- Adapter
 |   +-- Controllers
-|   |   +-- SalesController.cs
+|   |   +-- EventSaleController.cs
+|   |   +-- VendasController.cs
 |   +-- DTOs
-|       +-- Request
-|       |   +-- CreateSaleRequestDTO.cs
-|       +-- Response
-|           +-- SaleResponseDTO.cs
+|   |   +-- Mapper
+|   |   |   +-- EventSaleMapper.cs
+|   |   |   +-- SaleMapper.cs
+|   |   +-- Request
+|   |   |   +-- RealizarVendaRequestDTO.cs
+|   |   |   +-- EventSale
+|   |   +-- Response
+|   |       +-- VendaResponseDTO.cs
+|   |       +-- EventSale
+|   +-- Interfaces
 +-- Domain
 |   +-- Entities
+|   |   +-- EventSaleEntity.cs
 |   |   +-- SaleEntity.cs
+|   |   +-- TicketEntity.cs
+|   |   +-- UserSaleEntity.cs
 |   |   +-- Enums
-|   |       +-- SaleStatusEnum.cs
 |   +-- Events
 |   |   +-- IDomainEvent.cs
 |   |   +-- SalePaidEvent.cs
 |   +-- IRepositories
-|   |   +-- ISaleRepository.cs
 |   +-- UseCases
-|       +-- CreateSaleUseCase.cs
-|       +-- GetSaleByIdUseCase.cs
-|       +-- UpdateSaleStatusUseCase.cs
-+-- Data
-  +-- SaleContext
-  |   +-- SaleContext.cs
-  +-- Persistence
-    +-- Repositories
-      +-- SaleRepository.cs
-
+|       +-- ApproveSale
+|       +-- CreateSale
+|       +-- CreateTicket
+|       +-- EventSale
++-- Infrastructure
 ```
 
-## Entidade Principal
+## Entidades principais
 
-A entidade principal é `SaleEntity`.
+### SaleEntity
 
-Ela guarda:
+Representa uma venda criada pelo usuario.
+
+Campos principais:
 
 * `Id` (`int`)
-* `UserId` (`int`)
-* `EventId` (`int`)
+* `UserId` (`Guid`)
+* `EventId` (`Guid`)
+* `IngressoId` (`Guid?`)
 * `SelectedTicketsUser` (`int`)
-* `TotalPrice` (`double`/`decimal`)
+* `TotalPrice` (`double`)
 * `CreatedAt` (`DateTime`)
-* `SaleStatus` (`Enum`)
+* `SaleStatus` (`SaleStatusEnum`)
+* `DomainEvents` (`IReadOnlyCollection<IDomainEvent>`)
 
-O parâmetro `availableTickets` é usado apenas no caso de uso de criação para validar estoque do evento antes de instanciar a venda.
+Regras principais:
 
-O status sempre inicia como `Pending`.
-
-### Regras da entidade (Domain Validations)
-
-* `UserId` deve ser maior que zero.
-* `EventId` deve ser maior que zero.
+* `UserId` nao pode ser vazio.
+* `EventId` nao pode ser vazio.
 * `SelectedTicketsUser` deve ser maior que zero.
-* `TotalPrice` não pode ser negativo.
-* `SelectedTicketsUser` não pode ser maior que `AvailableTickets`.
-* Apenas vendas em status `Pending` podem mudar de status.
-* O status pode virar `Approved` ou `Denied`.
-* Se virar `Approved`, a entidade gera e registra o evento `SalePaidEvent`.
+* `TotalPrice` nao pode ser negativo.
+* `IngressoId`, quando informado, nao pode ser `Guid.Empty`.
+* Somente vendas `Pending` podem mudar de status.
+* O novo status so pode ser `Approved` ou `Denied`.
+* Ao aprovar uma venda, a entidade registra `SalePaidEvent`.
 
-## Domain Events
+### TicketEntity
 
-A entidade mantém uma coleção interna de eventos de domínio para acumular o que aconteceu dentro dela.
+Representa um ingresso gerado para um usuario.
 
-* `DomainEvents` guarda os eventos disparados pela `SaleEntity`.
-* `ClearDomainEvents()` limpa a coleção depois do despacho.
-* O mapeamento do EF ignora essa coleção, então ela não vira coluna de banco.
+Campos principais:
 
-## Fluxo Atual da Venda
+* `Code` (`Guid`)
+* `UserId` (`Guid`)
 
-### Criação
+### EventSaleEntity
 
-O controller recebe `CreateSaleRequestDTO` e chama `CreateSaleUseCase`.
+Representa os dados do evento que o contexto de vendas precisa conhecer.
 
-1. Recebe `UserId`, `EventId`, quantidade (`SelectedTicketsUser`), valor total e os ingressos disponíveis para validação.
-2. Valida se há ingressos suficientes no domínio.
-3. Cria a venda com status `Pending`.
-4. Persiste no banco via `ISaleRepository`.
-5. Retorna a venda criada mapeada para `SaleResponseDTO`.
+Campos principais:
 
-### Atualização de Status (Simulação)
+* `EventId` (`Guid`)
+* `EventName` (`string`)
+* `TicketValue` (`double`)
+* `TotalTicketQuantity` (`int`)
+* `Status` (`EventStatusEnum`)
 
-O endpoint de status simula o resultado do pagamento.
+## DTOs e Mappers
 
-1. Busca a venda pelo `Id`. Se não encontrar, retorna `NotFound`.
-2. Sorteia (Random) entre `Approved` ou `Denied`.
-3. Executa o método de alteração de status na `SaleEntity`.
-4. Se o status mudar para `Approved`, a entidade dispara o `SalePaidEvent`.
-5. Salva a alteração no banco.
+Os mappers ficam em `Adapter/DTOs/Mapper`.
 
-### Consulta
+### SaleMapper
 
-O endpoint de busca retorna a venda pelo `Id` inteiro.
+Responsavel por converter os objetos do fluxo de venda:
 
-## DTOs
+* `CreateSaleRequestDTO` -> `SaleEntity`
+* `SaleEntity` -> `SaleResponseDTO`
+* `IEnumerable<SaleEntity>` -> `IEnumerable<SaleResponseDTO>`
 
-### Request
+O controller de vendas usa `SaleMapper` para montar a resposta da API. Assim o DTO nao precisa conhecer a entidade de dominio.
+
+### EventSaleMapper
+
+Responsavel por converter os objetos do fluxo de eventos para venda:
+
+* `EventSaleAddEventRequestDTO` -> `EventSaleEntity`
+* `EventSaleUpdateRequestDTO` -> `EventSaleEntity`
+* `EventSaleEntity` -> responses de criacao, consulta e atualizacao
+* `EventSaleEntity` -> atualizacao de `EventModel`, quando necessario sincronizar dados do evento
+
+## Fluxo de venda
+
+### Criacao
+
+Endpoint:
+
+```text
+POST /sales
+```
+
+Request:
 
 ```json
 {
-  "userId": 1,
-  "eventId": 10,
+  "userId": "6c6f85f8-2dd2-4e86-9eb8-7d71dd09c111",
+  "eventId": "7403c4e1-fd37-4d99-88a0-010f5d4b8f22",
   "selectedTicketsUser": 2,
   "totalPrice": 120.0,
-  "availableTickets": 50
+  "availableTickets": 50,
+  "ingressoId": "6b1ba66b-d66e-4b3f-b857-9c49a2d6b4dd"
 }
-
 ```
 
-### Response
+Passos:
+
+1. O controller recebe `CreateSaleRequestDTO`.
+2. `CreateSaleUseCase` valida `SelectedTicketsUser` contra `AvailableTickets`.
+3. O caso de uso cria `SaleEntity`.
+4. A venda e salva via `ISaleRepository`.
+5. O controller converte a entidade com `SaleMapper.ToResponse()`.
+
+Response:
 
 ```json
 {
   "id": 1,
-  "userId": 1,
-  "eventId": 10,
+  "userId": "6c6f85f8-2dd2-4e86-9eb8-7d71dd09c111",
+  "eventId": "7403c4e1-fd37-4d99-88a0-010f5d4b8f22",
+  "ingressoId": "6b1ba66b-d66e-4b3f-b857-9c49a2d6b4dd",
   "selectedTicketsUser": 2,
   "totalPrice": 120.0,
   "saleStatus": "Pending",
-  "createdAt": "2026-05-20T00:00:00Z"
+  "createdAt": "2026-05-23T12:00:00Z"
 }
-
 ```
 
-## Endpoints
+### Consulta por id
 
-* `POST /sales` -> Criar venda
-* `GET /sales/{id}` -> Buscar venda por id
-* `PATCH /sales/{id}/status` -> Simular/Atualizar status da venda
+Endpoint:
 
----
+```text
+GET /sales/{id}
+```
+
+Busca a venda pelo `Id` inteiro e retorna `404` quando nao encontrar.
+
+### Atualizacao de status
+
+Endpoint:
+
+```text
+PATCH /sales/{id}/status
+```
+
+Passos:
+
+1. Busca a venda pelo `Id`.
+2. Sorteia o novo status entre `Approved` e `Denied`.
+3. Executa `SaleEntity.UpdateStatus`.
+4. Salva a alteracao via `ISaleRepository`.
+5. Retorna a venda atualizada mapeada com `SaleMapper`.
+
+## Fluxo EventSale
+
+Endpoints:
+
+* `POST /event-sales`
+* `GET /event-sales`
+* `GET /event-sales/{id}`
+* `PUT /event-sales/{id}`
+* `DELETE /event-sales/{id}`
+
+Esse fluxo usa `EventSaleMapper` para converter requests em `EventSaleEntity` e entidades em DTOs de resposta.
+
+## Observacoes
+
+* O contexto de Vendas usa `Guid` para `UserId`, `EventId` e `IngressoId`.
+* O identificador da venda (`SaleEntity.Id`) e `int`.
+* O status da venda fica em `SaleStatusEnum`.
+* Eventos de dominio sao mantidos somente na entidade e nao devem virar coluna de banco.
+* Alteracoes recentes ficaram restritas ao contexto de Vendas.

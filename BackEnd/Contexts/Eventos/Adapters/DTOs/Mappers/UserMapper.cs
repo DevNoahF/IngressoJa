@@ -142,5 +142,14 @@ public static class UserMapper
     {
         return new UserAuthResponseDTO(token);
     }
+
+    // UserAuthRequestDTO para UserAuthResponseDTO
+    public static UserAuthRequestDTO UserAuthRequestToAuthResponse(this UserAuthRequestDTO dto)
+    {
+        return new UserAuthRequestDTO(
+            dto.Email,
+            dto.Password
+        );
+    }
     
 }

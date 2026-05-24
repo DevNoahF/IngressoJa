@@ -96,10 +96,11 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
         {
             try
             {
-                var userDto = await __repository.getUserById(id);
-                if (userDto == null)
+                var userEntity = await __repository.getUserById(id);
+                if (userEntity == null)
                     throw new Exception("User not found.");
 
+                var userDto = userEntity.EntityToRecordedResponse();
                 return userDto;
             }
             catch (Exception ex)
