@@ -64,7 +64,7 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("password_hash")
                     .HasConversion(
                         password => password.Value,
-                        value => new PasswordVO(value))
+                        value => PasswordVO.CreatePassword(value))
                     .HasMaxLength(12)
                     .IsRequired();
 
