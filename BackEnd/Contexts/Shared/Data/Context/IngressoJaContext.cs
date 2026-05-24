@@ -1,19 +1,23 @@
-using IngressoJa.Contexts.Vendas.Domain.Entities;
 using IngressoJa.Data.Model;
+using IngressoJa.Contexts.Shared.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Data.dbContext
 {
-    public class IngressoJaContext : DbContext 
+    public class DataContext : DbContext 
     {
 
-        public IngressoJaContext(DbContextOptions<IngressoJaContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<EventModel> Events { get; set; }
-        public DbSet<SalesModel> Sales { get; set; }
+<<<<<<< Updated upstream:Contexts/Shared/Data/DataContext/DataContext.cs
+=======
+        public DbSet<SaleModel> Sales { get; set; }
+        public DbSet<TicketModel> Tickets { get; set; }
+>>>>>>> Stashed changes:BackEnd/Contexts/Shared/Data/Context/IngressoJaContext.cs
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +55,7 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e => e.Token)
                     .HasMaxLength(255);
             });
+
             modelBuilder.Entity<EventModel>(entity =>
             {
                 entity.ToTable("Events");
@@ -65,15 +70,21 @@ namespace IngressoJa.Data.dbContext
                     .IsRequired();
 
                 entity.Property(e => e.Description)
-                    .HasMaxLength(255).IsRequired();
+                    .HasMaxLength(255)
+                    .IsRequired();
                 
-                entity.Property(e=>e.StreetName)
-                    .HasMaxLength(55).IsRequired();
+                entity.Property(e => e.StreetName)
+                    .HasMaxLength(55)
+                    .IsRequired();
 
                 entity.Property(e => e.Neighborhood)
-                    .HasMaxLength(55).IsRequired();
-                entity.Property(e=>e.City)
-                    .HasMaxLength(55).IsRequired();
+                    .HasMaxLength(55)
+                    .IsRequired();
+
+                entity.Property(e => e.City)
+                    .HasMaxLength(55)
+                    .IsRequired();
+
                 entity.Property(e => e.Number)
                     .HasMaxLength(5)
                     .IsRequired();
@@ -112,39 +123,55 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e => e.Status)
                     .IsRequired();
             });
-            //SALE
+<<<<<<< Updated upstream:Contexts/Shared/Data/DataContext/DataContext.cs
+=======
+
             modelBuilder.Entity<SaleEntity>(entity =>
-        {
-            entity.ToTable("Sales");
+            {
+                entity.ToTable("Sales");
 
-            entity.HasKey(sale => sale.Id);
+                entity.HasKey(sale => sale.Id);
 
-            entity.Property(sale => sale.Id)
-                .ValueGeneratedOnAdd();
+                entity.Property(sale => sale.Id)
+                    .ValueGeneratedOnAdd();
 
-            entity.Property(sale => sale.UserId)
-                .IsRequired();
+                entity.Property(sale => sale.UserId)
+                    .IsRequired();
 
-            entity.Property(sale => sale.EventId)
-                .IsRequired();
+                entity.Property(sale => sale.EventId)
+                    .IsRequired();
 
-            entity.Property(sale => sale.SelectedTicketsUser)
-                .IsRequired();
+                entity.Property(sale => sale.SelectedTicketsUser)
+                    .IsRequired();
 
-            entity.Property(sale => sale.TotalPrice)
-                .IsRequired();
+                entity.Property(sale => sale.TotalPrice)
+                    .IsRequired();
 
-            entity.Property(sale => sale.CreatedAt)
-                .HasColumnType("timestamp with time zone")
-                .IsRequired();
+                entity.Property(sale => sale.CreatedAt)
+                    .HasColumnType("timestamp with time zone")
+                    .IsRequired();
 
-            entity.Property(sale => sale.SaleStatus)
-                .HasConversion<string>()
-                .HasMaxLength(20)
-                .IsRequired();
+                entity.Property(sale => sale.SaleStatus)
+                    .HasConversion<string>()
+                    .HasMaxLength(20)
+                    .IsRequired();
 
-            entity.Ignore(sale => sale.DomainEvents);
-        });
+                entity.Ignore(sale => sale.DomainEvents);
+            });
+
+            modelBuilder.Entity<TicketModel>(entity =>
+            {
+                entity.ToTable("Tickets");
+
+                entity.HasKey(e => e.Codigo);
+
+                entity.Property(e => e.Codigo)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.UserId)
+                    .IsRequired();
+            });
+>>>>>>> Stashed changes:BackEnd/Contexts/Shared/Data/Context/IngressoJaContext.cs
         }
     }
 }
