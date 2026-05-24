@@ -11,8 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Vendas.Application.UseCases.EventSale;
-using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Data.dbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +24,7 @@ builder.Services.AddSwaggerGen();
 // data configuration - esta com autoDetect do pomelo
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddDbContext<IngressoJaContext>(options =>
     options.UseMySql(connectionString, 
     serverVersion: ServerVersion.AutoDetect(connectionString)));
 

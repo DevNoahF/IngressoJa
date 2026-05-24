@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Data.dbContext
 {
-    public class DataContext : DbContext 
+    public class IngressoJaContext : DbContext 
     {
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public IngressoJaContext(DbContextOptions<IngressoJaContext> options) : base(options)
         {
         }
 
