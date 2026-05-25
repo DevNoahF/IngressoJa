@@ -1,8 +1,8 @@
 using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.UseCases.User;
-using IngressoJa.Contexts.Vendas.Application.UseCases;
-using IngressoJa.Contexts.Vendas.Domain.IRepositories;
+using IngressoJa.Contexts.Sales.Application.UseCases.Sale;
+using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 
@@ -10,7 +10,7 @@ using IngressoJa.Data.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
-using IngressoJa.Contexts.Vendas.Application.UseCases.EventSale;
+using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,9 +29,10 @@ builder.Services.AddDbContext<IngressoJaContext>(options =>
     serverVersion: ServerVersion.AutoDetect(connectionString)));
 
 
-// Vendas
+// Sales
 
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<CreateSaleUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
@@ -44,7 +45,7 @@ builder.Services.AddScoped<DeleteEventUseCase>();
 //builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
 builder.Services.AddScoped<GetAllEventsUseCase>();
 
-//Eventos em Vendas
+// Events in sales
 
 builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<AddEventSaleUseCase>();
