@@ -1,21 +1,13 @@
 import "./HomePage.css";
-<<<<<<< HEAD:FrontEnd/src/pages/HomePage.jsx
 import { useEffect, useState } from "react";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
-import Header from '../components/Home/Header';
-import Footer from "../components/Home/Footer";
-import EventCard from "../components/Home/EventCard";
-import { getEventById, getEvents, getStateCode } from "../api/events";
-import { setStoredEventId } from "../utils/eventContext";
-
-const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
-=======
 import Header from '../../components/Home/Header';
 import Footer from "../../components/Home/Footer";
 import EventCard from "../../components/Home/EventCard";
+import { getEventById, getEvents, getStateCode } from "../../api/events";
+import { setStoredEventId } from "../../utils/eventContext";
 
-import { events } from "../../data/events";
->>>>>>> 0b47d1e94059111bd8e0c7755a65a6aa01aeb292:FrontEnd/src/pages/home/HomePage.jsx
+const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
 function Home() {
   const [events, setEvents] = useState([]);
