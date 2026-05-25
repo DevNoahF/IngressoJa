@@ -9,7 +9,7 @@ namespace IngressoJa.Data.dbContext
 {
     public class IngessojaContext : DbContext
     {
-        public IngressoJaContext(DbContextOptions<IngressoJaContext> options) : base(options)
+        public IngessojaContext(DbContextOptions<IngressoJaContext> options) : base(options)
         {
         }
 
