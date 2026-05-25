@@ -1,0 +1,290 @@
+/* Estrutura Geral da Página */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fcfcfc;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background-color: white;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  font-size: 14px;
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-criar-evento {
+  border: 1px solid #e0e0e0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-cadastrar {
+  background-color: #090b0e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Container do Card Central */
+.checkout-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.checkout-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ícone superior */
+.checkout-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.checkout-icon span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: #f1f3f5;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.checkout-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+  margin: 0 0 6px 0;
+}
+
+.checkout-subtitle {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin: 0 0 28px 0;
+}
+
+/* Formulário e Grupos */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid #eef0f2;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f4f5f7;
+  color: #333;
+  outline: none;
+}
+
+/* Caixa de Resumo de Valores */
+.summary-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+.summary-row.total {
+  border-top: 1px solid #e9ecef;
+  padding-top: 12px;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.summary-value {
+  color: #000;
+}
+
+/* Opção de Pagamento (PIX) */
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #eef0f2;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+}
+
+.radio-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-indicator::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+.pix-icon-box {
+  width: 40px;
+  height: 40px;
+  background-color: #d1f7ec;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #059669;
+  font-size: 12px;
+}
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payment-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.payment-subtitle {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Botão de Ação */
+.btn-pagamento {
+  padding: 14px;
+  background-color: #090b0e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-pagamento:hover {
+  opacity: 0.9;
+}
+
+.btn-pagamento:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Rodapé */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  background: white;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+  .nav-links .nav-link:not(.btn-cadastrar) {
+    display: none; /* Esconde links secundários no mobile se necessário */
+  }
+  .checkout-card {
+    padding: 24px 20px;
+  }
+}
