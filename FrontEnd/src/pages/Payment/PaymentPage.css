@@ -1,3 +1,7 @@
+/* ==========================================================================
+   SEU CSS ORIGINAL (INALTERADO)
+   ========================================================================== */
+
 /* Estrutura Geral da Página */
 .page-wrapper {
   display: flex;
@@ -282,9 +286,189 @@
     padding: 16px 20px;
   }
   .nav-links .nav-link:not(.btn-cadastrar) {
-    display: none; /* Esconde links secundários no mobile se necessário */
+    display: none;
   }
   .checkout-card {
     padding: 24px 20px;
   }
+}
+
+/* ==========================================================================
+   ESTILOS DOS MODAIS (ADICIONADOS ISOLADAMENTE NO FINAL)
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+/* Print 1 (QR Code) */
+.qr-code-container {
+  border: 1px solid #eef0f2;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background-color: #f8f9fa;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.qr-code-placeholder {
+  width: 140px;
+  height: 140px;
+  background-color: #cbcfd4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: #ffffff;
+}
+
+.qr-code-text {
+  font-size: 13px;
+  color: #555;
+}
+
+.amount-box {
+  width: 100%;
+  background-color: #fbfbfc;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.amount-label {
+  font-size: 13px;
+  color: #666;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.amount-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Print 2 (Sucesso) */
+.success-circle {
+  width: 64px;
+  height: 64px;
+  background-color: #def7ec;
+  color: #03543f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.ticket-label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.ticket-box {
+  width: 100%;
+  background-color: #fbfbfc;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.ticket-code {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.ticket-subtext {
+  font-size: 12px;
+  color: #777;
+  margin-top: 8px;
+  display: block;
+}
+
+.email-alert {
+  width: 100%;
+  background-color: #eef5ff;
+  border: 1px solid #d0e3ff;
+  border-radius: 8px;
+  padding: 14px;
+  color: #1e40af;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.btn-modal-submit {
+  width: 100%;
+  padding: 14px;
+  background-color: #090b0e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-modal-submit:hover {
+  opacity: 0.9;
 }
