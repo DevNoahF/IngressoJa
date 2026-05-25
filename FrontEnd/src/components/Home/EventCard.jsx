@@ -1,5 +1,5 @@
 import "./EventCard.css";
-import { MapPin, Calendar, Clock } from "lucide-react";
+import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 
 function EventCard({ event }) {
   return (
@@ -20,10 +20,19 @@ function EventCard({ event }) {
             {event.date}
           </span>
 
-          <span>
-            <Clock size={15} />
-            {event.hour}
-          </span>
+          {event.hour ? (
+            <span>
+              <Clock size={15} />
+              {event.hour}
+            </span>
+          ) : null}
+
+          {event.ticketValue !== undefined && event.ticketValue !== null ? (
+            <span>
+              <Ticket size={15} />
+              R$ {Number(event.ticketValue).toFixed(2)}
+            </span>
+          ) : null}
         </div>
 
         <button>Ler Mais</button>

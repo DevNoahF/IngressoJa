@@ -35,3 +35,19 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
 }
+
+.status-message {
+  grid-column: 1 / -1;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  color: #05051a;
+  font-size: 15px;
+}
+
+.status-message.error {
+  border-color: #f1b7b7;
+  background: #fff3f3;
+  color: #a61b1b;
+}
