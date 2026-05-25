@@ -1,5 +1,6 @@
 using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 
 namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 
@@ -8,25 +9,25 @@ public class EventEntity
     private EventEntity() { }
 
     public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public string Street { get; private set; }
-    public string Neighborhood { get; private set; }
-    public string City { get; private set; }
+    public NameVO Name { get; private set; }
+    public DescriptionVO Description { get; private set; }
+    public StreetNameVo Street { get; private set; }
+    public NeighborhoodVO Neighborhood { get; private set; }
+    public CityVO City { get; private set; }
     public int Number { get; private set; }
     public StatesEnum State { get; private set; }
-    public DateOnly Date { get; private set; }
+    public DateVO Date { get; private set; }
    public TimeOnly Hour { get; private set; }
-    public double TicketValue { get; private set; }
-    public int TotalTicketQuantity { get; private set; }
+    public TicketValueVO TicketValue { get; private set; }
+    public TotalTicketQuantity TotalTicketQuantity { get; private set; }
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
-    public string BannerImage { get; private set; }
+    public BannerImageVO BannerImage { get; private set; }
     public Guid UserId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    public EventEntity(string name, string description, string street, string neighborhood, string city, int number,
-        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity, Guid userId, int availableTickets, string bannerImage)
+    public EventEntity(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, Guid userId, int availableTickets, BannerImageVO bannerImage)
     {
         
         if (number < 0)
@@ -58,8 +59,8 @@ public class EventEntity
         UpdatedAt = null;
     }
 
-    public void Update(string name, string description, string street, string neighborhood, string city, int number,
-        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity)
+    public void Update(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity)
     {
         if (Status == EventStatusEnum.Cancelado)
             throw new Exception("Cannot update a cancelled event");
