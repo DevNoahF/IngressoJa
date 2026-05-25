@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Home from './pages/HomePage'
+import Home from './pages/home/HomePage'
 import CreateEvent from './pages/createEvent/CreateEvent'
 import Register from "./pages/register/Register";
+import Login from "./pages/login/LoginPage";
 import './App.css'
 import { canCreateEvent } from './utils/auth'
 
@@ -17,8 +18,9 @@ function RequireCreateEventAccess({ children }) {
 function App() {
   return (
     <Routes>
+      <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/' element={<Home />} />
+      <Route path='/Home' element={<Home />} />
       <Route
         path='/create-event'
         element={(
@@ -27,7 +29,7 @@ function App() {
           </RequireCreateEventAccess>
         )}
       />
-      <Route path='*' element={<Navigate to='/' replace />} />
+      <Route path='*' element={<Navigate to='/login' replace />} />
     </Routes>
   )
 }
