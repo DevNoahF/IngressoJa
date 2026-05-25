@@ -79,4 +79,11 @@ public class EventRepository : IEventRepository
         await _context.SaveChangesAsync();
         return entity.ToPutResponse();
     }
+
+    public async Task<IEnumerable<EventEntity>> GetEventsByOrganizerId(Guid organizerId)
+    {
+        var models = await _context.Events.Where(e => e.UserId == organizerId).ToListAsync();
+        return models.Select(m => m.ModelToEntity());
+    }
+
 }

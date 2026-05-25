@@ -52,6 +52,7 @@ builder.Services.AddScoped<AddEventSaleUseCase>();
 builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
+builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
 //builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
 
 // User UseCases
