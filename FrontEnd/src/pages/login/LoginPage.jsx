@@ -1,0 +1,117 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './LoginPage.css';
+
+export default function LoginPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      // Aqui você fará a chamada à API de login
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        navigate('/');
+      } else {
+        setError('Email ou senha inválidos');
+      }
+    } catch (err) {
+      setError('Erro ao conectar. Tente novamente.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-card">
+        {/* Ícone */}
+        <div className="login-icon">
+          <span>→</span>
+        </div>
+
+        {/* Título */}
+        <h1 className="login-title">Login</h1>
+
+        {/* Subtítulo */}
+        <p className="login-subtitle">Entre com suas credenciais para acessar sua conta</p>
+
+        {/* Formulário */}
+        <form onSubmit={handleLogin}>
+          {/* Campo de Email */}
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Campo de Senha */}
+          <div className="form-group">
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              placeholder="••••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Mensagem de Erro */}
+          {error && <div className="error-message">{error}</div>}
+
+          {/* Botão de Login */}
+          <button 
+            type="submit" 
+            className="login-button"
+            disabled={loading}
+          >
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
+
+        {/* Links de Cadastro */}
+        <div className="login-footer">
+          <p>
+            Não tem uma conta?{' '}
+            <a href="/cadastro/usuario" className="link">
+              Cadastre-se como usuário
+            </a>
+          </p>
+          <p>
+            É organizador?{' '}
+            <a href="/cadastro/organizador" className="link">
+              Cadastre-se aqui
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
