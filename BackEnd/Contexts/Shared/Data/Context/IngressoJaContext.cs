@@ -1,4 +1,4 @@
-using IngressoJa.Contexts.Vendas.Domain.Entities;
+using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ namespace IngressoJa.Data.dbContext
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<EventModel> Events { get; set; }
-        public DbSet<SalesModel> Sales { get; set; }
+        public DbSet<SaleModel> Sales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -127,6 +127,9 @@ namespace IngressoJa.Data.dbContext
 
             entity.Property(sale => sale.EventId)
                 .IsRequired();
+
+            entity.Property(sale => sale.TicketId)
+                .HasColumnName("ticket_id");
 
             entity.Property(sale => sale.SelectedTicketsUser)
                 .IsRequired();

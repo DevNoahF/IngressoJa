@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IngressoJa.Contexts.Vendas.Domain.Entities.Enums;
+using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
 
 namespace IngressoJa.Data.Model
 {
