@@ -1,24 +1,28 @@
+
+
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Data.dbContext
 {
-    public class IngressoJaContext : DbContext 
+    public class IngressoJaContext : DbContext
     {
-
         public IngressoJaContext(DbContextOptions<IngressoJaContext> options) : base(options)
         {
         }
 
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<EventModel> Events { get; set; }
-        public DbSet<SaleModel> Sales { get; set; }
+        public DbSet<UserModel> Users => Set<UserModel>();
+        public DbSet<EventModel> Events => Set<EventModel>();
+        public DbSet<SaleModel> Sales => Set<SaleModel>();
+        public DbSet<TicketModel> Tickets => Set<TicketModel>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            //USERS
             modelBuilder.Entity<UserModel>(entity =>
             {
                 entity.ToTable("Users");
@@ -29,29 +33,56 @@ namespace IngressoJa.Data.dbContext
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.FirstName)
+                    .HasColumnName("first_name")
                     .HasMaxLength(55)
                     .IsRequired();
 
                 entity.Property(e => e.LastName)
+                    .HasColumnName("last_name")
                     .HasMaxLength(55)
                     .IsRequired();
                 
                 entity.Property(e => e.Cpf)
+                    .HasConversion(
+                        cpf => cpf.Value,
+                        value => new CpfVO(value))
                     .HasMaxLength(11)
                     .IsRequired();
 
                 entity.Property(e => e.Email)
+                    .HasConversion(
+                        email => email.Value,
+                        value => new EmailVO(value))
                     .HasMaxLength(55)
                     .IsRequired();
 
+                entity.Property(e => e.PhotoProfile)
+                    .HasColumnName("photo_profile")
+                    .HasConversion(
+                        photoProfile => photoProfile.Value,
+                        value => new PhotoProfileVO(value))
+                    .HasMaxLength(255);
+
                 entity.Property(e => e.PasswordHash)
+                    .HasColumnName("password_hash")
+                    .HasConversion(
+                        password => password.Value,
+                        value => PasswordVO.CreatePassword(value))
                     .HasMaxLength(12)
                     .IsRequired();
 
                 entity.Property(e => e.Token)
                     .HasMaxLength(255);
+
+                entity.Property(e => e.DateBirth)
+                    .HasColumnName("date_birth")
+                    .HasColumnType("date")
+                    .IsRequired();
+
+                entity.Property(e => e.Role)
+                    .IsRequired();
             });
-            //event
+            //EVENTS
             modelBuilder.Entity<EventModel>(entity =>
             {
                 entity.ToTable("Events");
@@ -69,6 +100,7 @@ namespace IngressoJa.Data.dbContext
                     .HasMaxLength(255).IsRequired();
                 
                 entity.Property(e=>e.StreetName)
+                    .HasColumnName("street_name")
                     .HasMaxLength(55).IsRequired();
 
                 entity.Property(e => e.Neighborhood)
@@ -76,7 +108,6 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e=>e.City)
                     .HasMaxLength(55).IsRequired();
                 entity.Property(e => e.Number)
-                    .HasMaxLength(5)
                     .IsRequired();
                 
                 entity.Property(e => e.State)
@@ -91,64 +122,88 @@ namespace IngressoJa.Data.dbContext
                     .IsRequired();
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasColumnType("timestamp with time zone")
                     .IsRequired();
 
                 entity.Property(e => e.UpdatedAt)
-                    .HasColumnType("datetime");
+                    .HasColumnName("updated_at")
+                    .HasColumnType("timestamp with time zone");
 
                 entity.Property(e => e.TicketValue)
+                    .HasColumnName("ticket_value")
+                    .HasColumnType("decimal(18,2)")
                     .IsRequired();
 
                 entity.Property(e => e.TotalTicketQuantity)
+                    .HasColumnName("total_ticket_quantity")
                     .IsRequired();
 
                 entity.Property(e => e.BannerImage)
+                    .HasColumnName("banner_image")
                     .HasMaxLength(255)
                     .IsRequired();
 
                 entity.Property(e => e.UserId)
+                    .HasColumnName("user_id")
                     .IsRequired();
 
                 entity.Property(e => e.Status)
                     .IsRequired();
             });
-            //SALE
-            modelBuilder.Entity<SaleEntity>(entity =>
-        {
-            entity.ToTable("Sales");
 
-            entity.HasKey(sale => sale.Id);
+            //SALES
+            modelBuilder.Entity<SaleModel>(entity =>
+            {
+                entity.ToTable("Sales");
 
-            entity.Property(sale => sale.Id)
-                .ValueGeneratedOnAdd();
+                entity.HasKey(sale => sale.Id);
 
-            entity.Property(sale => sale.UserId)
-                .IsRequired();
+                entity.Property(sale => sale.Id)
+                    .ValueGeneratedOnAdd();
 
-            entity.Property(sale => sale.EventId)
-                .IsRequired();
+                entity.Property(sale => sale.UserId)
+                    .HasColumnName("user_id")
+                    .IsRequired();
 
-            entity.Property(sale => sale.TicketId)
-                .HasColumnName("ticket_id");
+                entity.Property(sale => sale.EventId)
+                    .HasColumnName("event_id")
+                    .IsRequired();
 
-            entity.Property(sale => sale.SelectedTicketsUser)
-                .IsRequired();
+                entity.Property(sale => sale.SelectedTicketsUser)
+                    .HasColumnName("selected_tickets_user")
+                    .IsRequired();
 
-            entity.Property(sale => sale.TotalPrice)
-                .IsRequired();
+                entity.Property(sale => sale.TotalPrice)
+                    .HasColumnName("total_price")
+                    .HasColumnType("double precision")
+                    .IsRequired();
 
-            entity.Property(sale => sale.CreatedAt)
-                .HasColumnType("timestamp with time zone")
-                .IsRequired();
+                entity.Property(sale => sale.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasColumnType("timestamp with time zone")
+                    .IsRequired();
 
-            entity.Property(sale => sale.SaleStatus)
-                .HasConversion<string>()
-                .HasMaxLength(20)
-                .IsRequired();
+                entity.Property(sale => sale.SaleStatus)
+                    .HasColumnName("sale_status")
+                    .HasConversion<string>()
+                    .HasMaxLength(20)
+                    .IsRequired();
+            });
+            //ticket
+            modelBuilder.Entity<TicketModel>(entity =>
+            {
+                entity.ToTable("Tickets");
 
-            entity.Ignore(sale => sale.DomainEvents);
-        });
+                entity.HasKey(ticket => ticket.Code);
+
+                entity.Property(ticket => ticket.Code)
+                    .ValueGeneratedNever();
+
+                entity.Property(ticket => ticket.UserId)
+                    .HasColumnName("user_id")
+                    .IsRequired();
+            });
         }
     }
 }

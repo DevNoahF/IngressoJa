@@ -1,11 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
+
 {
     public class LoginUserUseCase : ILoginUserUseCase
     {

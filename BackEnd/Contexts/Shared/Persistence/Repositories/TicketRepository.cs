@@ -1,3 +1,5 @@
+
+
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
@@ -6,9 +8,9 @@ namespace IngressoJa.Data.Persistence.Repositories;
 
 public class TicketRepository : ITicketRepository
 {
-    private readonly SaleContext _context;
+    private readonly IngressoJaContext _context;
 
-    public TicketRepository(SaleContext context)
+    public TicketRepository(IngressoJaContext context)
     {
         _context = context;
     }

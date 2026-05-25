@@ -11,9 +11,9 @@ namespace IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 
 public class EventRepository : IEventRepository
 {
-    private readonly DataContext _context;
+    private readonly IngressoJaContext _context;
 
-    public EventRepository(DataContext context)
+    public EventRepository(IngressoJaContext context)
     {
         _context = context;
     }

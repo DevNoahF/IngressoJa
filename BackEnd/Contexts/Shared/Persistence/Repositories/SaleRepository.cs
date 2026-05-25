@@ -6,9 +6,9 @@ namespace IngressoJa.Data.Persistence.Repositories;
 
 public class SaleRepository : ISaleRepository
 {
-    private readonly SaleContext _context;
+    private readonly IngressoJaContext _context;
 
-    public SaleRepository(SaleContext context)
+    public SaleRepository(IngressoJaContext context)
     {
         _context = context;
     }
