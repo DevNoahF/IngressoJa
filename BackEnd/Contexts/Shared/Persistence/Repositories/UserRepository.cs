@@ -3,26 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
-using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
-using IngressoJa.Data.Model;
 using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
-using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Data.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DataContext _context;
+        private readonly IngressoJaContext _context;
         private readonly IUserMapper userMapper;
 
-        public UserRepository(DataContext context, IUserMapper userMapper)
+        public UserRepository(IngressoJaContext context, IUserMapper userMapper)
         {
             _context = context;
             this.userMapper = userMapper;
@@ -33,9 +28,9 @@ namespace IngressoJa.Data.Persistence.Repositories
                 try
                 {
 
-                    var newUser = userMapper.EntityToUserModel(user);
+                    var userModel = userMapper.EntityToUserModel(user);
 
-                    _context.Users.Add(newUser);
+                    _context.Users.Add(userModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
