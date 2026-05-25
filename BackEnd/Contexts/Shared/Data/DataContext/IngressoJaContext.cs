@@ -1,5 +1,5 @@
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
-using IngressoJa.Contexts.Vendas.Domain.Entities;
+using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -204,6 +204,7 @@ namespace IngressoJa.Data.dbContext
         }
 
         public DbSet<SaleEntity> Sales => Set<SaleEntity>();
+        public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -226,6 +227,9 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("event_id")
                     .IsRequired();
 
+                entity.Property(sale => sale.TicketId)
+                    .HasColumnName("ticket_id");
+
                 entity.Property(sale => sale.SelectedTicketsUser)
                     .HasColumnName("selected_tickets_user")
                     .IsRequired();
@@ -247,6 +251,20 @@ namespace IngressoJa.Data.dbContext
                     .IsRequired();
 
                 entity.Ignore(sale => sale.DomainEvents);
+            });
+
+            modelBuilder.Entity<TicketEntity>(entity =>
+            {
+                entity.ToTable("Tickets");
+
+                entity.HasKey(ticket => ticket.Code);
+
+                entity.Property(ticket => ticket.Code)
+                    .ValueGeneratedNever();
+
+                entity.Property(ticket => ticket.UserId)
+                    .HasColumnName("user_id")
+                    .IsRequired();
             });
         }
     }
