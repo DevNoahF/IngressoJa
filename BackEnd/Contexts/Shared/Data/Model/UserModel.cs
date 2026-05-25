@@ -18,6 +18,6 @@ namespace IngressoJa.Data.Model
         public PhotoProfileVO PhotoProfile { get; set; }
         public PasswordVO PasswordHash { get; set; }
         public String Token { get; set; }
-        public DateTime DateBirth { get; set; }
+        public DateOnly DateBirth { get; set; }
     }
 }

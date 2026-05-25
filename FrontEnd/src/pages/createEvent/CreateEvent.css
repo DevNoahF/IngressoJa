@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f8f8f8;
+}
+
+.create-event-page {
+  min-height: calc(100vh - 70px);
+
+  display: flex;
+  justify-content: center;
+
+  padding: 40px 20px;
+}

@@ -13,6 +13,6 @@ namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.User
         CpfVO Cpf,
         EmailVO Email,
         PhotoProfileVO PhotoProfile,
-        DateTime DateBirth
+        DateOnly DateBirth
     );
 }

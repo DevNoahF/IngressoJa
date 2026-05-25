@@ -6,6 +6,7 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
+using BackEnd.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
 //[FromQuery]: Use quando os dados vão visíveis na URL (após a ?). É ideal para consultas, filtros, paginação ou parâmetros simples.
@@ -13,7 +14,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
 //[FromBody]: Use quando os dados vão escondidos no corpo (payload) da requisição. É ideal para criar ou atualizar objetos complexos (JSON) e dados sensíveis.
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("users")]
     public class UserController : ControllerBase
     {
         private readonly IRegisterUserUseCase _registerUserUseCase;
@@ -21,19 +22,29 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         private readonly ILoginUserUseCase _loginUserUseCase;
         private readonly IGetUserByEmailUseCase _getUserByEmailUseCase;
         private readonly IGetUserUseCase _getUserUseCase;
+        private readonly IGetUsersUseCase _getUsersUseCase;
+        private readonly IGetOrganizersUseCase _getOrganizersUseCase;
+        private readonly IUpdateUseCase _updateUseCase;
 
         public UserController(
             IRegisterUserUseCase registerUserUseCase,
             IRegisterOrganizerUseCase registerOrganizerUseCase,
             ILoginUserUseCase loginUserUseCase,
             IGetUserByEmailUseCase getUserByEmailUseCase,
-            IGetUserUseCase getUserUseCase)
+            IGetUserUseCase getUserUseCase,
+            IGetUsersUseCase getUsersUseCase,
+            IGetOrganizersUseCase getOrganizersUseCase,
+            IUpdateUseCase updateUseCase
+            )
         {
             _registerUserUseCase = registerUserUseCase;
             _registerOrganizerUseCase = registerOrganizerUseCase;
             _loginUserUseCase = loginUserUseCase;
             _getUserByEmailUseCase = getUserByEmailUseCase;
             _getUserUseCase = getUserUseCase;
+            _getUsersUseCase = getUsersUseCase;
+            _getOrganizersUseCase = getOrganizersUseCase;
+            _updateUseCase = updateUseCase;
         }
 
         [HttpPost("/register")]
@@ -46,7 +57,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
+                return StatusCode(400, "Error registering user: " + ex.Message);
             }
         }
 
@@ -60,13 +71,13 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
+                return StatusCode(400, "Error registering organizer: " + ex.Message);
             }
         }
 
         
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(Guid id)
         {
             try
@@ -76,11 +87,11 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
+                return StatusCode(404, "User not found. " + ex.Message);
             }
         }
 
-        [HttpGet("")]
+        [HttpGet("/email")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] EmailVO email)
         {
             try
@@ -89,9 +100,37 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
+            {   
+                return StatusCode(404, "User not found. " + ex.Message);
             }
         }   
+
+        [HttpGet("/users/all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var result = await _getUsersUseCase.GetAllUsers();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error fetching users. " + ex.Message);
+            }
+        }
+
+        [HttpGet("/organizers/all")]
+        public async Task<IActionResult> GetAllOrganizers()
+        {
+            try
+            {
+                var result = await _getOrganizersUseCase.GetAllOrganizers();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error fetching organizers. " + ex.Message);
+            }
+        }
     }
 }

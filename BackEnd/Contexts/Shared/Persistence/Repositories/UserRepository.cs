@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
-using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
-using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
-using IngressoJa.Data.Model;
 using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
-using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Data.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DataContext _context;
+        private readonly IngressoJaContext _context;
         private readonly IUserMapper userMapper;
 
-        public UserRepository(DataContext context, IUserMapper userMapper)
+        public UserRepository(IngressoJaContext context, IUserMapper userMapper)
         {
             _context = context;
             this.userMapper = userMapper;
@@ -33,9 +29,9 @@ namespace IngressoJa.Data.Persistence.Repositories
                 try
                 {
 
-                    var newUser = userMapper.EntityToUserModel(user);
+                    var userModel = userMapper.EntityToUserModel(user);
 
-                    _context.Users.Add(newUser);
+                    _context.Users.Add(userModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -62,7 +58,7 @@ namespace IngressoJa.Data.Persistence.Repositories
 
         // Login should be handled at UseCase layer: repository exposes getUserByEmail and persistence methods
 
-        public async Task<UserEntity?> getUserById(Guid id)
+        public async Task<UserEntity> getUserById(Guid id)
         {
             try
             {
@@ -70,7 +66,7 @@ namespace IngressoJa.Data.Persistence.Repositories
                     .FirstOrDefaultAsync(u => u.Id == id);
 
                 if (user == null)
-                        return null;
+                    throw new Exception("User not found.");
 
                 return userMapper.ModelToEntity(user);
             }
@@ -80,7 +76,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
-        public async Task<UserEntity?> getUserByEmail(EmailVO email)
+        public async Task<UserEntity> getUserByEmail(EmailVO email)
         {
             try
             {
@@ -98,6 +94,60 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
-    
+        public async Task<List<UserEntity>> getAllUsers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .Where(u => u.Role == RoleEnum.User)
+                    .ToListAsync();
+
+                return users.Select(userMapper.ModelToEntity).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error getting all users: {ex.Message}", ex);
+            }
+        }
+        public async Task<List<UserEntity>> getAllOrganizers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .Where(u => u.Role == RoleEnum.Organizer)
+                    .ToListAsync();
+
+                return users.Select(userMapper.ModelToEntity).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error getting all organizers: {ex.Message}", ex);
+            }
+        }
+
+        public async Task UpdateUser(Guid userId,UserEntity user)
+        {
+            try
+            {
+                var existingUser = await _context.Users.FindAsync(userId);
+                if (existingUser == null)
+                    throw new Exception("User not found.");
+
+                existingUser.Email = user.Email;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.PhotoProfile = user.PhotoProfile;
+                existingUser.PasswordHash = user.PasswordHash;
+
+                var userModel = userMapper.EntityToUserModel(user);
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating user: {ex.Message}", ex);
+            }
+        }
+
     }
 }

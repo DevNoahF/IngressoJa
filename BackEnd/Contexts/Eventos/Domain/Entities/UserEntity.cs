@@ -20,9 +20,9 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
 
         public String Token { get; private set; }
 
-        public DateTime DateBirth { get; set; } // formato: dd-MM-yyyy 
+        public DateOnly DateBirth { get; set; } // formato: dd-MM-yyyy 
 
-        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateTime dateBirth)
+        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateOnly dateBirth)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new Exception("First name is required");
@@ -32,10 +32,10 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
                 throw new Exception("Last name is required");
             if (lastName.Length > 55)                
                 throw new Exception("Last name must be less than 55 characters");
-            if (dateBirth >= DateTime.Now || dateBirth <= DateTime.Parse("01-01-1900"))
-                throw new Exception("Invalid date of birth");
+            if (dateBirth >= DateOnly.FromDateTime(DateTime.Now.AddYears(-18)))
+                throw new Exception("Not accept < 18 years old");
             
-            Id = new Guid();
+            Id = id;
             Role = role;
             FirstName = firstName;
             LastName = lastName;
@@ -44,7 +44,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
             Email = email;
             PasswordHash = password;
             Token = String.Empty;
-            DateBirth = DateTime.Parse(dateBirth.ToString("dd-MM-yyyy"));
+            DateBirth = dateBirth;
         }
     
     

@@ -5,6 +5,7 @@ using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
@@ -82,7 +83,7 @@ public static class UserMapper
             dto.Password,
             new PhotoProfileVO(string.Empty),
             string.Empty,
-            DateTime.MinValue
+            DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
@@ -99,7 +100,7 @@ public static class UserMapper
             dto.Password,
             new PhotoProfileVO(string.Empty),
             string.Empty,
-            DateTime.MinValue
+            DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
@@ -149,6 +150,22 @@ public static class UserMapper
         return new UserAuthRequestDTO(
             dto.Email,
             dto.Password
+        );
+    }
+
+    public static UserEntity UpdateUserToEntity(this UserUpdateRequestDTO dto)
+    {
+        return new UserEntity(
+            Guid.NewGuid(),
+            RoleEnum.User,
+            dto.FirstName,
+            dto.LastName,
+            new CpfVO(string.Empty),
+            dto.Email,
+            dto.Password,
+            new PhotoProfileVO(string.Empty),
+            string.Empty,
+            DateOnly.FromDateTime(DateTime.Now)
         );
     }
     

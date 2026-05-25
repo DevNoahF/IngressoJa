@@ -1,3 +1,4 @@
+using IngressoJa.Contexts.Shared.Data.Model;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Vendas.Domain.Entities;
 using IngressoJa.Data.Model;
@@ -14,6 +15,7 @@ namespace IngressoJa.Data.dbContext
         public DbSet<UserModel> Users => Set<UserModel>();
         public DbSet<EventModel> Events => Set<EventModel>();
         public DbSet<SaleModel> Sales => Set<SaleModel>();
+        public DbSet<TicketModel> Tickets => Set<TicketModel>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -79,6 +81,7 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e => e.Role)
                     .IsRequired();
             });
+
             //EVENTS
             modelBuilder.Entity<EventModel>(entity =>
             {
@@ -96,14 +99,16 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e => e.Description)
                     .HasMaxLength(255).IsRequired();
                 
-                entity.Property(e=>e.StreetName)
+                entity.Property(e => e.StreetName)
                     .HasColumnName("street_name")
                     .HasMaxLength(55).IsRequired();
 
                 entity.Property(e => e.Neighborhood)
                     .HasMaxLength(55).IsRequired();
-                entity.Property(e=>e.City)
+
+                entity.Property(e => e.City)
                     .HasMaxLength(55).IsRequired();
+
                 entity.Property(e => e.Number)
                     .IsRequired();
                 
@@ -185,6 +190,17 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("sale_status")
                     .HasConversion<string>()
                     .HasMaxLength(20)
+                    .IsRequired();
+            });
+
+            //TICKETS
+            modelBuilder.Entity<TicketModel>(entity =>
+            {
+                entity.ToTable("Tickets");
+                entity.HasKey(e => e.Codigo);
+                entity.Property(e => e.Codigo).ValueGeneratedNever();
+                entity.Property(e => e.UserId)
+                    .HasColumnName("user_id")
                     .IsRequired();
             });
         }
