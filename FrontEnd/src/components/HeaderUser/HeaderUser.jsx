@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, LogOut, UserCircle2 } from "lucide-react";
+import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
+import { useNavigate } from "react-router-dom";
 
 export default function HeaderUser() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Fecha o dropdown ao clicar fora
   useEffect(() => {
@@ -25,17 +28,21 @@ export default function HeaderUser() {
   }, []);
 
   const user = {
-    firstName: "Noah",
+    firstName: "Noah", // implementar firstname do backend
     profileImage:
-      "https://i.pravatar.cc/100?img=12",
+      "https://i.pravatar.cc/100?img=12", // implementar imagem do backend
   };
 
   return (
     <header className="header-user">
       <div className="header-user-container">
         <div className="header-user-logo">
-          <div className="header-user-logo-box">IJ</div>
-          <h1 className="header-user-title">IngressoJa</h1>
+          <img
+            src={ingressoJaLogo}
+            alt="IngressoJá"
+            className="header-user-logo-image"
+            onClick={() => navigate("/home")} // Implementar para voltar para home
+          />
         </div>
 
         <div className="header-user-profile" ref={dropdownRef}>

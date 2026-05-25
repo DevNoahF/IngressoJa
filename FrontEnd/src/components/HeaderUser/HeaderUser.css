@@ -18,28 +18,14 @@
 .header-user-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   min-width: 0;
+  cursor: pointer;
 }
 
-.header-user-logo-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: #05051a;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
+.header-user-logo-image {
+  width: 168px;
+  height: auto;
   flex-shrink: 0;
-}
-
-.header-user-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #05051a;
-  letter-spacing: -0.02em;
 }
 
 .header-user-profile {
@@ -164,8 +150,8 @@
     width: calc(100% - 20px);
   }
 
-  .header-user-title {
-    font-size: 18px;
+  .header-user-logo-image {
+    width: 140px;
   }
 
   .header-user-button {
