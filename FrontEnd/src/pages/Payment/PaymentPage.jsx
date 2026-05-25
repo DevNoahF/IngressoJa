@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './PaymentPage.css';
-import  Header from '../../components/Home/Header';
+import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import  Footer from '../../components/Home/Footer';
 
 export default function PaymentPage() {
@@ -23,7 +23,7 @@ export default function PaymentPage() {
 
   return (
     <div className="page-wrapper">
-      <Header />    
+      <HeaderUser />    
       {/* Header / Navbar superior */}
 
       {/* Conteúdo Principal */}

@@ -31,54 +31,40 @@ export default function HeaderUser() {
   };
 
   return (
-    <header className="w-full border-b bg-white px-8 py-4">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
-        
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white font-bold">
-            IJ
-          </div>
-
-          <h1 className="text-xl font-semibold text-zinc-900">
-            IngressoJa
-          </h1>
+    <header className="header-user">
+      <div className="header-user-container">
+        <div className="header-user-logo">
+          <div className="header-user-logo-box">IJ</div>
+          <h1 className="header-user-title">IngressoJa</h1>
         </div>
 
-        {/* Perfil */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="header-user-profile" ref={dropdownRef}>
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-3 rounded-full border border-zinc-200 bg-white px-3 py-2 transition hover:bg-zinc-100"
+            className="header-user-button"
           >
             <img
               src={user.profileImage}
               alt="Perfil"
-              className="h-9 w-9 rounded-full object-cover"
+              className="header-user-image"
             />
 
-            <span className="font-medium text-zinc-800">
-              {user.firstName}
-            </span>
+            <span className="header-user-name">{user.firstName}</span>
 
             <ChevronDown
               size={18}
-              className={`transition ${
-                open ? "rotate-180" : ""
-              }`}
+              className={`header-user-arrow ${open ? "open" : ""}`}
             />
           </button>
 
-          {/* Dropdown */}
           {open && (
-            <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg">
-              
-              <button className="flex w-full items-center gap-3 px-4 py-3 text-sm text-zinc-700 transition hover:bg-zinc-100">
+            <div className="header-user-dropdown">
+              <button className="header-user-dropdown-item">
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
 
-              <button className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 transition hover:bg-red-50">
+              <button className="header-user-dropdown-item header-user-dropdown-logout">
                 <LogOut size={18} />
                 Sair
               </button>

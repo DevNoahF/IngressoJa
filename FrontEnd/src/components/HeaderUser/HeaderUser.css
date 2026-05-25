@@ -1,158 +1,147 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* HEADER */
-.header {
+.header-user {
   width: 100%;
-  border-bottom: 1px solid #e4e4e7;
-  background: white;
-  padding: 16px 32px;
+  height: 70px;
+  border-bottom: 1px solid #e7e7e7;
+  background: #ffffff;
 }
 
-.header-container {
-  max-width: 1280px;
+.header-user-container {
+  width: min(1280px, calc(100% - 32px));
+  height: 100%;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
-/* LOGO */
-.logo-area {
+.header-user-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
 }
 
-.logo-box {
+.header-user-logo-box {
   width: 40px;
   height: 40px;
-
   border-radius: 12px;
-  background: #09090b;
-
-  color: white;
-  font-weight: bold;
+  background: #05051a;
+  color: #ffffff;
   font-size: 14px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
 
-.logo-title {
+.header-user-title {
   font-size: 22px;
-  font-weight: 600;
-  color: #18181b;
+  font-weight: 700;
+  color: #05051a;
+  letter-spacing: -0.02em;
 }
 
-/* PROFILE */
-.profile-wrapper {
+.header-user-profile {
   position: relative;
 }
 
-.profile-button {
+.header-user-button {
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 8px 14px;
-
   border-radius: 999px;
-  border: 1px solid #e4e4e7;
-
-  background: white;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  color: #05051a;
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.profile-button:hover {
-  background: #f4f4f5;
+.header-user-button:hover {
+  background: #f7f7f8;
+  border-color: #cfcfd6;
 }
 
-.profile-image {
+.header-user-button:active {
+  transform: scale(0.985);
+}
+
+.header-user-image {
   width: 38px;
   height: 38px;
-
-  border-radius: 50%;
+  border-radius: 999px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
-.profile-name {
+.header-user-name {
   font-size: 15px;
-  font-weight: 500;
-  color: #27272a;
+  font-weight: 600;
+  color: #262626;
+  display: none;
 }
 
-.arrow {
-  transition: 0.2s ease;
+.header-user-arrow {
+  color: #6b7280;
+  transition: transform 0.2s ease;
 }
 
-.arrow.open {
+.header-user-arrow.open {
   transform: rotate(180deg);
 }
 
-/* DROPDOWN */
-.dropdown {
+.header-user-dropdown {
   position: absolute;
-  top: 65px;
+  top: calc(100% + 12px);
   right: 0;
-
   width: 220px;
-
-  background: white;
+  background: #ffffff;
   border: 1px solid #e4e4e7;
   border-radius: 18px;
-
   overflow: hidden;
-
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
-
-  animation: fadeIn 0.2s ease;
+  box-shadow: 0 18px 35px rgba(5, 5, 26, 0.12);
+  animation: headerUserFadeIn 0.18s ease;
+  z-index: 20;
 }
 
-.dropdown button {
+.header-user-dropdown-item {
   width: 100%;
-
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 14px 16px;
-
   border: none;
-  background: white;
-
-  cursor: pointer;
-
-  font-size: 14px;
+  background: #ffffff;
   color: #3f3f46;
-
-  transition: 0.2s ease;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  transition: background-color 0.2s ease;
 }
 
-.dropdown button:hover {
+.header-user-dropdown-item:hover {
   background: #f4f4f5;
 }
 
-.logout {
-  color: #ef4444 !important;
+.header-user-dropdown-item:first-child {
+  border-bottom: 1px solid #e4e4e7;
 }
 
-.logout:hover {
-  background: #fef2f2 !important;
+.header-user-dropdown-logout {
+  color: #dc2626;
 }
 
-/* ANIMAÇÃO */
-@keyframes fadeIn {
+.header-user-dropdown-logout:hover {
+  background: #fef2f2;
+}
+
+.header-user-dropdown svg {
+  flex-shrink: 0;
+}
+
+@keyframes headerUserFadeIn {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -161,5 +150,31 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .header-user-name {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-user-container {
+    width: calc(100% - 20px);
+  }
+
+  .header-user-title {
+    font-size: 18px;
+  }
+
+  .header-user-button {
+    padding: 7px 10px;
+    gap: 10px;
+  }
+
+  .header-user-image {
+    width: 34px;
+    height: 34px;
   }
 }

@@ -1,7 +1,7 @@
 import "./HomePage.css";
 import { useEffect, useState } from "react";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
-import Header from '../../components/Home/Header';
+import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
 import EventCard from "../../components/Home/EventCard";
 import { getEventById, getEvents, getStateCode } from "../../api/events";
@@ -120,7 +120,7 @@ function Home() {
 
   return (
     <>
-      <Header />
+      <HeaderUser />
 
       <main className="home">
         <section className="hero">
