@@ -3,6 +3,7 @@ import Home from './pages/home/HomePage'
 import CreateEvent from './pages/createEvent/CreateEvent'
 import Register from "./pages/register/Register";
 import Login from "./pages/login/LoginPage";
+import Payment from './pages/Payment/PaymentPage';
 import './App.css'
 import { canCreateEvent } from './utils/auth'
 
@@ -21,6 +22,7 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/Home' element={<Home />} />
+      <Route path='/Payment' element={<Payment />} />
       <Route
         path='/create-event'
         element={(
