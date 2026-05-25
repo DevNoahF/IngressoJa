@@ -2,6 +2,7 @@
 
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Sales.Domain.Entities;
+using IngressoJa.Contexts.Shared.Data.Model;
 using IngressoJa.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
