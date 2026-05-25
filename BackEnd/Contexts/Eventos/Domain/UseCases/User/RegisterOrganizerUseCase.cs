@@ -23,8 +23,8 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
         {
             try
             {
-                var user = _userMapper.RegisterOrganizerToEntity(dto);
-                await _repository.RegisterUser(user);
+                var toEntity = _userMapper.RegisterOrganizerToEntity(dto);
+                await _repository.RegisterUser(toEntity);
             }
             catch (Exception ex)
             {
