@@ -71,6 +71,10 @@ export function getEvents() {
   return request("/events");
 }
 
+export function getEventById(eventId) {
+  return request(`/events/${eventId}`);
+}
+
 export function createEvent(payload) {
   return request("/events", {
     method: "POST",

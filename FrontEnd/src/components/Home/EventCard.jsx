@@ -1,7 +1,7 @@
 import "./EventCard.css";
 import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 
-function EventCard({ event }) {
+function EventCard({ event, onReadMore }) {
   return (
     <div className="event-card">
       <img src={event.image} alt={event.title} />
@@ -35,7 +35,9 @@ function EventCard({ event }) {
           ) : null}
         </div>
 
-        <button>Ler Mais</button>
+        <button type="button" onClick={() => onReadMore(event)}>
+          Ler Mais
+        </button>
       </div>
     </div>
   );

@@ -44,3 +44,7 @@ export function loginUser(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function getUserByEmail(email) {
+  return request(`/api/users?email=${encodeURIComponent(email)}`);
+}

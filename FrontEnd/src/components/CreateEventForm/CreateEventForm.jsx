@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarDays, Upload } from "lucide-react";
 import { createEvent, statesOptions } from "../../api/events";
+import { getStoredUserId } from "../../utils/auth";
 
 const initialFormData = {
   bannerImage: "",
@@ -43,7 +44,7 @@ function CreateEventForm() {
     event.preventDefault();
     setFeedback({ type: "", message: "" });
 
-    const organizerId = localStorage.getItem("userId")?.trim() ?? "";
+    const organizerId = getStoredUserId().trim();
 
     if (!organizerId) {
       setFeedback({
