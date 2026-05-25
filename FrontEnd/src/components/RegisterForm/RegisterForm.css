@@ -1,0 +1,179 @@
+.register-card {
+  width: 620px;
+
+  background: white;
+
+  border: 1px solid #e6e6e6;
+  border-radius: 18px;
+
+  padding: 34px;
+}
+
+.register-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 26px;
+}
+
+.register-icon {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  background: #f1f1f3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  color: #05051a;
+}
+
+.register-header h1 {
+  font-size: 40px;
+  color: #05051a;
+
+  margin-bottom: 10px;
+}
+
+.register-header p {
+  color: #7a7a7a;
+  font-size: 16px;
+}
+
+.avatar-upload {
+  width: 90px;
+  height: 90px;
+
+  margin: 0 auto 28px auto;
+
+  border-radius: 50%;
+  border: 2px dashed #cfcfd4;
+
+  background: #fafafa;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #98a1b2;
+
+  cursor: pointer;
+
+  overflow: hidden;
+}
+
+.avatar-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.input-group {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 15px;
+  font-weight: 600;
+
+  color: #05051a;
+}
+
+.input-group input {
+  width: 100%;
+  height: 48px;
+
+  border: none;
+  outline: none;
+
+  background: #f3f3f5;
+
+  border-radius: 10px;
+
+  padding: 0 14px;
+
+  font-size: 15px;
+
+  color: #05051a;
+}
+
+.register-btn {
+  width: 100%;
+  height: 48px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #05051a;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  margin-top: 4px;
+
+  transition: 0.2s;
+}
+
+.register-btn:hover {
+  opacity: 0.92;
+}
+
+.register-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.form-feedback {
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.form-feedback.success {
+  background: #edf9f1;
+  color: #166534;
+}
+
+.form-feedback.error {
+  background: #fff3f3;
+  color: #a61b1b;
+}
+
+.login-text {
+  text-align: center;
+
+  color: #777;
+  font-size: 15px;
+
+  margin-top: 4px;
+}
+
+.login-text span {
+  color: #05051a;
+  font-weight: 600;
+  cursor: pointer;
+}
