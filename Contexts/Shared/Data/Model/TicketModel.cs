@@ -1,10 +1,11 @@
 using System;
 
-namespace IngressoJa.Contexts.Shared.Data.Model
+namespace IngressoJa.Contexts.Shared.Model
 {
     public class TicketModel
     {
-        public Guid Code { get; set; }
+        public Guid Codigo { get; set; }
+
         public Guid UserId { get; set; }
     }
 }
