@@ -1,9 +1,9 @@
 import "./HomePage.css";
-import Header from '../components/Home/Header';
-import Footer from "../components/Home/Footer";
-import EventCard from "../components/Home/EventCard";
+import Header from '../../components/Home/Header';
+import Footer from "../../components/Home/Footer";
+import EventCard from "../../components/Home/EventCard";
 
-import { events } from "../data/events";
+import { events } from "../../data/events";
 
 function Home() {
   return (
