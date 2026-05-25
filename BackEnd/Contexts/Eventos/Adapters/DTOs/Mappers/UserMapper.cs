@@ -82,7 +82,7 @@ public static class UserMapper
             dto.Password,
             new PhotoProfileVO(string.Empty),
             string.Empty,
-            DateTime.MinValue
+            DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
@@ -99,7 +99,7 @@ public static class UserMapper
             dto.Password,
             new PhotoProfileVO(string.Empty),
             string.Empty,
-            DateTime.MinValue
+            DateOnly.FromDateTime(DateTime.Now)
         );
     }
 

@@ -13,6 +13,6 @@ namespace IngressoJa.Contexts.Eventos.Application.DTOs.Request
         PhotoProfileVO PhotoProfile,
         EmailVO Email, 
         PasswordVO Password, 
-        DateTime DateBirth
+        DateOnly DateBirth
         );
 }
