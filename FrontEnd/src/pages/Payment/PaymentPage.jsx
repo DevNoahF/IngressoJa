@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './PaymentPage.css';
-import Header from '../../components/Home/Header';
 import Footer from '../../components/Home/Footer';
 import qrcodepix from '../../assets/qrcodepix.png'; // Imagem de QR Code para simulação
+import HeaderUser from '../../components/HeaderUser/HeaderUser';
+import  Footer from '../../components/Home/Footer';
 
 export default function PaymentPage() {
   // Controle de passos: 'checkout' (tela principal), 'qrcode' (print1), 'confirmed' (print2)
@@ -26,7 +27,8 @@ export default function PaymentPage() {
 
   return (
     <div className="page-wrapper">
-      <Header />    
+      <HeaderUser />    
+      {/* Header / Navbar superior */}
 
       {/* Conteúdo Principal mantém intacto */}
       <main className="checkout-container">
