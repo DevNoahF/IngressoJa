@@ -13,8 +13,10 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories
     {
         Task RegisterUser(UserEntity user);
         Task RegisterOrganizer(UserEntity user);
-        // Repository should not return DTOs; login flow handled in UseCase via getUserByEmail
-        Task<UserEntity?> getUserById(Guid id);
-        Task<UserEntity?> getUserByEmail(EmailVO email);
+        Task<List<UserEntity>> getAllUsers();
+        Task<List<UserEntity>> getAllOrganizers();
+        Task<UserEntity> getUserById(Guid id);
+        Task<UserEntity> getUserByEmail(EmailVO email);
+        Task UpdateUser(Guid userId, UserEntity user);
     }
 }

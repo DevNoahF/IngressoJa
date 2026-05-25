@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
@@ -19,9 +20,10 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Interfaces.User
         public  UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto);
         public  UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto);
         
-        public UserRegisterRequestDTO RegisterOrganizerToEntity(UserRegisterRequestDTO dto);
-        public UserRegisterRequestDTO RegisterUserToEntity(UserRegisterRequestDTO dto);
+        public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto);
+        public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto);
         public UserAuthResponseDTO AuthResponse(UserEntity entity, string token);
         public UserAuthRequestDTO UserAuthRequestToAuthResponse(UserAuthRequestDTO dto);
+        public UserEntity UpdateUserToEntity(UserUpdateRequestDTO dto);
     }
 }
