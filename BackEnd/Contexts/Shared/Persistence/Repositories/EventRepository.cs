@@ -62,7 +62,7 @@ public class EventRepository : IEventRepository
 
     public async Task<EventEntity?> GetEventByName(string name)
     {
-        var model = await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+        var model = await _context.Events.FirstOrDefaultAsync(e => e.Name.Value == name);
         return model?.ModelToEntity();
     }
 

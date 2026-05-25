@@ -16,5 +16,6 @@ public record EventCreateRequestDTO(
     TicketValueVO TicketValue,
     TotalTicketQuantity TotalTicketQuantity,
     BannerImageVO BannerImage,
-    Guid UserId
+    Guid UserId,
+    EventStatusEnum Status
 );

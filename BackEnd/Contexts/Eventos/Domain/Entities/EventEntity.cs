@@ -27,7 +27,7 @@ public class EventEntity
     public DateTime? UpdatedAt { get; private set; }
 
     public EventEntity(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
-        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, Guid userId, int availableTickets, BannerImageVO bannerImage)
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, Guid userId, BannerImageVO bannerImage, EventStatusEnum status)
     {
         
         if (number < 0)
@@ -53,14 +53,14 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         BannerImage = bannerImage;
-        Status = EventStatusEnum.Andamento;
+        Status = status;
         UserId = userId;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
     }
 
     public void Update(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
-        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity)
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, BannerImageVO bannerImage)
     {
         if (Status == EventStatusEnum.Cancelado)
             throw new Exception("Cannot update a cancelled event");
@@ -88,6 +88,8 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         UpdatedAt = DateTime.UtcNow;
+        BannerImage = bannerImage;
+
     }
     
     public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações-Todo
