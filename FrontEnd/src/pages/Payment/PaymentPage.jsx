@@ -3,7 +3,6 @@ import './PaymentPage.css';
 import Footer from '../../components/Home/Footer';
 import qrcodepix from '../../assets/qrcodepix.png'; // Imagem de QR Code para simulação
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
-import  Footer from '../../components/Home/Footer';
 
 export default function PaymentPage() {
   // Controle de passos: 'checkout' (tela principal), 'qrcode' (print1), 'confirmed' (print2)
@@ -156,7 +155,6 @@ export default function PaymentPage() {
         </div>
       )}
 
-      <Footer />
     </div>
   );
 }
