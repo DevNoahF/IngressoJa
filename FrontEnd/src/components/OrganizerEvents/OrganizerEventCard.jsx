@@ -27,11 +27,11 @@ function OrganizerEventCard({ event, onEdit, onRevenue }) {
           </div>
 
           <button type="button" className="organizer-event-edit-button" onClick={onEdit}>
-            editar evento
+            Editar Evento
           </button>
 
           <button type="button" className="organizer-event-revenue-button" onClick={onRevenue}>
-            ver receita
+            Ver Receita
           </button>
         </div>
       </div>
