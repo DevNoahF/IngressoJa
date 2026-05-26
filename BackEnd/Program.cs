@@ -79,6 +79,9 @@ builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>(
 builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
 builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
+builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetUsersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetUsersUseCase>();
+builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetOrganizersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetOrganizerUseCase>();
+builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IUpdateUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.UpdateUseCase>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 
 // JWT

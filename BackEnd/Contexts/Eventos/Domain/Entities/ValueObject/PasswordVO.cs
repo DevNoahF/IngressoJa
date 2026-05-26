@@ -7,7 +7,12 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
 {
     public class PasswordVO
     {
-        public String Value { get; private set; }
+        public String Value { get; set; }
+
+        public PasswordVO()
+        {
+            Value = string.Empty;
+        }
 
         private PasswordVO(String value)
         {
