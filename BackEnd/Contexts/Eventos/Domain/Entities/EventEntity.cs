@@ -1,5 +1,6 @@
 using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 
 namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 
@@ -7,73 +8,36 @@ public class EventEntity
 {
 
     public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public string Street { get; private set; }
-    public string Neighborhood { get; private set; }
-    public string City { get; private set; }
+    public NameVO Name { get; private set; }
+    public DescriptionVO Description { get; private set; }
+    public StreetNameVo Street { get; private set; }
+    public NeighborhoodVO Neighborhood { get; private set; }
+    public CityVO City { get; private set; }
     public int Number { get; private set; }
     public StatesEnum State { get; private set; }
-    public DateOnly Date { get; private set; }
-    public TimeOnly Hour { get; private set; }
-    public double TicketValue { get; private set; }
-    public int TotalTicketQuantity { get; private set; }
+    public DateVO Date { get; private set; }
+   public TimeOnly Hour { get; private set; }
+    public TicketValueVO TicketValue { get; private set; }
+    public TotalTicketQuantity TotalTicketQuantity { get; private set; }
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
-    public string BannerImage { get; private set; }
+    public BannerImageVO BannerImage { get; private set; }
     public Guid UserId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    public EventEntity(string name, string description, string street, string neighborhood, string city, int number,
-        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity, Guid userId, int availableTickets, string bannerImage)
+    public EventEntity(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, Guid userId, BannerImageVO bannerImage, EventStatusEnum status)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new EventFieldNameRequiredException("Name");
-        if (name.Length > 55)
-            throw new EventMaxLenghtExceededException("Name", 55);
-
-        if (string.IsNullOrWhiteSpace(description))
-            throw new EventFieldNameRequiredException("Description");
-        if (description.Length > 255)
-            throw new EventMaxLenghtExceededException("Description", 255);
-
-        if (string.IsNullOrWhiteSpace(street))
-            throw new EventFieldNameRequiredException("Street name");
-        if (street.Length > 55)
-            throw new EventMaxLenghtExceededException("Street name", 55);
-
-        if (string.IsNullOrWhiteSpace(neighborhood))
-            throw new EventFieldNameRequiredException("Neighborhood");
-        if (neighborhood.Length > 55)
-            throw new EventMaxLenghtExceededException("Neighborhood", 55);
-
-        if (string.IsNullOrWhiteSpace(city))
-            throw new EventFieldNameRequiredException("City");
-        if (city.Length > 55)
-            throw new EventMaxLenghtExceededException("City", 55);
-
+        
         if (number < 0)
             throw new Exception("Number must be greater than or equal to zero");
 
         if (!Enum.IsDefined(typeof(StatesEnum), state))
             throw new Exception("Invalid state");
-
-        if (date < DateOnly.FromDateTime(DateTime.UtcNow))
-            throw new EventDateInPastException(date.ToDateTime(TimeOnly.MinValue));
-        if (date == DateOnly.FromDateTime(DateTime.UtcNow) && hour < TimeOnly.FromDateTime(DateTime.UtcNow))
-            throw new Exception("Event date or hour is in the past");
-
-        if (ticketValue < 0)
-            throw new Exception("Ticket value must be greater than or equal to zero");
-
-        if (totalTicketQuantity <= 0)
-            throw new Exception("Total ticket quantity must be greater than zero");
-
+        
         if (userId == Guid.Empty)
             throw new EventFieldNameRequiredException("OrganizerId");
-
-        if (bannerImage.Length > 255)
-            throw new Exception("Invalid URL Length");
+        
 
         Id = Guid.NewGuid();
         Name = name;
@@ -88,14 +52,14 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         BannerImage = bannerImage;
-        Status = EventStatusEnum.Andamento;
+        Status = status;
         UserId = userId;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
     }
 
-    public void Update(string name, string description, string street, string neighborhood, string city, int number,
-        StatesEnum state, DateOnly date, TimeOnly hour, double ticketValue, int totalTicketQuantity)
+    public void Update(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, BannerImageVO bannerImage)
     {
         if (Status == EventStatusEnum.Cancelado)
             throw new Exception("Cannot update a cancelled event");
@@ -103,47 +67,13 @@ public class EventEntity
         if (Status == EventStatusEnum.Encerrado)
             throw new Exception("Cannot update a finished event");
 
-        if (string.IsNullOrWhiteSpace(name))
-            throw new EventFieldNameRequiredException("Name");
-        if (name.Length > 55)
-            throw new EventMaxLenghtExceededException("Name", 55);
-
-        if (string.IsNullOrWhiteSpace(description))
-            throw new EventFieldNameRequiredException("Description");
-        if (description.Length > 255)
-            throw new EventMaxLenghtExceededException("Description", 255);
-
-        if (string.IsNullOrWhiteSpace(street))
-            throw new EventFieldNameRequiredException("Street name");
-        if (street.Length > 55)
-            throw new EventMaxLenghtExceededException("Street name", 55);
-
-        if (string.IsNullOrWhiteSpace(neighborhood))
-            throw new EventFieldNameRequiredException("Neighborhood");
-        if (neighborhood.Length > 55)
-            throw new EventMaxLenghtExceededException("Neighborhood", 55);
-
-        if (string.IsNullOrWhiteSpace(city))
-            throw new EventFieldNameRequiredException("City");
-        if (city.Length > 55)
-            throw new EventMaxLenghtExceededException("City", 55);
-
         if (number < 0)
             throw new Exception("Number must be greater than or equal to zero");
 
         if (!Enum.IsDefined(typeof(StatesEnum), state))
             throw new Exception("Invalid state");
 
-        if (date < DateOnly.FromDateTime(DateTime.UtcNow))
-            throw new EventDateInPastException(date.ToDateTime(TimeOnly.MinValue));
-        if (date == DateOnly.FromDateTime(DateTime.UtcNow) && hour < TimeOnly.FromDateTime(DateTime.UtcNow))
-            throw new Exception("Event date or hour is in the past");
 
-        if (ticketValue < 0)
-            throw new Exception("Ticket value must be greater than or equal to zero");
-
-        if (totalTicketQuantity <= 0)
-            throw new Exception("Total ticket quantity must be greater than zero");
 
         Name = name;
         Description = description;
@@ -157,9 +87,11 @@ public class EventEntity
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         UpdatedAt = DateTime.UtcNow;
+        BannerImage = bannerImage;
+
     }
     
-    public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações
+    public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações-Todo
     {
         Status = newStatus;
         UpdatedAt = DateTime.UtcNow;

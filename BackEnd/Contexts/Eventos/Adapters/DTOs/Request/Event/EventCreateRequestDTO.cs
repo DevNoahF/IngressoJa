@@ -1,19 +1,21 @@
 ﻿using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 
 public record EventCreateRequestDTO(
-    string Name,
-    string Description,
-    string Street,
-    string Neighborhood,
-    string City,
+    NameVO Name,
+    DescriptionVO Description,
+    StreetNameVo Street,
+    NeighborhoodVO Neighborhood,
+    CityVO City,
     int Number,
     StatesEnum State,
     string Date,
     string Hour,
-    double TicketValue,
-    int TotalTicketQuantity,
-    string BannerImage,
-    Guid UserId
+    TicketValueVO TicketValue,
+    TotalTicketQuantity TotalTicketQuantity,
+    BannerImageVO BannerImage,
+    Guid UserId,
+    EventStatusEnum Status
 );

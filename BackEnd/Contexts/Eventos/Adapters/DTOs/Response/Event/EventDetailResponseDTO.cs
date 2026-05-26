@@ -1,18 +1,20 @@
-﻿namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
+
+namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 
 public record EventDetailResponseDTO(
     Guid Id,
-    string Name,
-    string Description,
-    string Street,
-    string Neighborhood,
-    string City,
+    NameVO Name,
+    DescriptionVO Description,
+    StreetNameVo Street,
+    NeighborhoodVO Neighborhood,
+    CityVO City,
     int Number,
     StatesEnum State,
     string Date,
     string Hour,
-    double TicketValue,
-    string BannerImage,
+    TicketValueVO TicketValue,
+    BannerImageVO BannerImage,
     EventStatusEnum Status
 );

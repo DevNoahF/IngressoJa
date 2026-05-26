@@ -1,0 +1,43 @@
+.organizer-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.organizer-stat-card {
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  border: 1px solid #e7e7e7;
+  box-shadow: 0 10px 30px rgba(5, 5, 26, 0.05);
+}
+
+.organizer-stat-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.organizer-stat-value {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 32px;
+  line-height: 1;
+  color: #05051a;
+}
+
+.organizer-stat-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #5f6673;
+}
+
+@media (max-width: 960px) {
+  .organizer-stats {
+    grid-template-columns: 1fr;
+  }
+}
