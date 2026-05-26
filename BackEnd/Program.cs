@@ -8,6 +8,7 @@ using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
 using IngressoJa.Data.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
@@ -36,8 +37,9 @@ builder.Services.AddSwaggerGen();
 
 // Data configuration with MySql
 var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 36));
 builder.Services.AddDbContext<IngressoJaContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, serverVersion));
 
 // Update JWT settings in configuration
 builder.Configuration["JwtSettings:SecretKey"] = jwtSecret;
@@ -45,6 +47,7 @@ builder.Configuration["JwtSettings:SecretKey"] = jwtSecret;
 // Sales
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<IEventSaleRepository, EventSaleRepository>();
 builder.Services.AddScoped<CreateSaleUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
@@ -62,7 +65,7 @@ builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
 builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
-//builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
+builder.Services.AddScoped<IngressoJa.Contexts.Sales.Application.UseCases.EventSale.UpdateEventUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
