@@ -85,14 +85,6 @@ builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSingleton<ITokenGenerate, TokenGenerate>();
 
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 //config cors
 builder.Services.AddCors(options =>
 {
@@ -104,10 +96,19 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
     });
 });
-app.UseCors();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
