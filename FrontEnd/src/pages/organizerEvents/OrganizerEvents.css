@@ -1,75 +1,194 @@
+/* ==========================================================================
+   ESTILOS DOS NOVOS MODAIS (EDITAR E RECEITA)
+   ========================================================================== */
+
 .organizer-events-page {
   min-height: 100vh;
-  background: #f9fafb;
-}
-
-.organizer-events-page-title {
-  padding: 14px 16px 8px;
-  text-align: center;
-  color: #2f9e44;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  background: #f6f7fb;
 }
 
 .organizer-events-main {
-  width: min(1280px, calc(100% - 28px));
-  margin: 0 auto;
-  padding: 0 0 40px;
-}
-
-.organizer-events-hero-copy {
-  margin: 0 0 10px;
-}
-
-.organizer-events-kicker {
-  margin: 0;
-  color: transparent;
-  line-height: 0;
+  padding: 32px 20px 56px;
 }
 
 .organizer-events-grid {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px 24px;
-  align-items: start;
-  justify-items: center;
-  padding-top: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
 }
 
 .organizer-events-state {
   grid-column: 1 / -1;
+  margin: 0;
   padding: 18px 20px;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #ffffff;
-  border: 1px solid #e7e7e7;
-  color: #05051a;
+  color: #111827;
+  border: 1px solid #e5e7eb;
 }
 
 .organizer-events-state.error {
-  border-color: #f1b7b7;
-  background: #fff3f3;
-  color: #a61b1b;
+  color: #b42318;
+  border-color: #fecaca;
+  background: #fff1f2;
 }
 
-@media (max-width: 960px) {
-  .organizer-events-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-  }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
 }
 
-@media (max-width: 640px) {
-  .organizer-events-grid {
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 600px; /* Um pouco mais largo para o formulário */
+  max-height: 90vh;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* Área de Scroll do Formulário */
+.modal-body-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 10px;
+  margin-bottom: 20px;
+}
+
+/* Estilização da Scrollbar */
+.modal-body-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body-scroll::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 10px;
+}
+
+/* Grid do Formulário */
+.edit-event-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9f9f9;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Modal de Receita */
+.revenue-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.stat-item {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2f9e44; /* Verde da sua marca */
+}
+
+.btn-save {
+  width: 100%;
+  padding: 14px;
+  background-color: #090b0e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .edit-event-form {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
-
-  .organizer-events-main {
-    width: calc(100% - 16px);
-  }
-
-  .organizer-events-page-title {
-    font-size: 16px;
+  .full-width {
+    grid-column: span 1;
   }
 }

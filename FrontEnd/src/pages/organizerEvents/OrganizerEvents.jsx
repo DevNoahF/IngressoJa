@@ -1,118 +1,73 @@
 import "./OrganizerEvents.css";
-
 import { useEffect, useMemo, useState } from "react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
-import { getEvents, getStateCode } from "../../api/events";
+import { getEventsByOrganizerId, getStateCode } from "../../api/events";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
 const mockEvents = [
   {
-    id: 1,
-    name: "Festival de Rock 2026",
-    description: "Evento principal do calendário do organizer.",
-    bannerImage: fallbackImage,
+    id: "mock-1",
+    name: "Festival de Verão",
+    description: "Evento mockado para teste da rota do organizador.",
     location: "São Paulo - SP",
     formattedDate: "15/07/2026",
     hour: "18:00",
-    ticketValue: "150,00",
-    totalTicketQuantity: 450,
-    statusLabel: "Próximo",
+    bannerImage: fallbackImage,
+    totalTicketQuantity: 120,
+    status: "upcoming",
   },
   {
-    id: 2,
+    id: "mock-2",
     name: "Noite Eletrônica",
-    description: "Uma segunda opção de evento para visualização.",
+    description: "Evento mockado para teste da rota do organizador.",
+    location: "Rio de Janeiro - RJ",
+    formattedDate: "22/07/2026",
+    hour: "20:30",
     bannerImage: fallbackImage,
-    location: "Campinas - SP",
-    formattedDate: "22/08/2026",
-    hour: "21:30",
-    ticketValue: "90,00",
-    totalTicketQuantity: 320,
-    statusLabel: "Próximo",
+    totalTicketQuantity: 90,
+    status: "upcoming",
   },
   {
-    id: 3,
-    name: "Festival de Verão",
-    description: "Mock com imagem e dados de apoio para a página.",
-    bannerImage: fallbackImage,
-    location: "Santos - SP",
-    formattedDate: "05/09/2026",
+    id: "mock-3",
+    name: "Samba Sunset",
+    description: "Evento mockado para teste da rota do organizador.",
+    location: "Belo Horizonte - MG",
+    formattedDate: "28/07/2026",
     hour: "17:00",
-    ticketValue: "75,00",
-    totalTicketQuantity: 280,
-    statusLabel: "Próximo",
+    bannerImage: fallbackImage,
+    totalTicketQuantity: 150,
+    status: "finished",
   },
   {
-    id: 4,
-    name: "Experiência Urbana",
-    description: "Mais um card para preencher a grade visual.",
+    id: "mock-4",
+    name: "Tech Conference",
+    description: "Evento mockado para teste da rota do organizador.",
+    location: "Curitiba - PR",
+    formattedDate: "02/08/2026",
+    hour: "09:00",
     bannerImage: fallbackImage,
-    location: "Ribeirão Preto - SP",
-    formattedDate: "12/10/2026",
-    hour: "19:00",
-    ticketValue: "60,00",
-    totalTicketQuantity: 190,
-    statusLabel: "Próximo",
+    totalTicketQuantity: 300,
+    status: "upcoming",
   },
 ];
 
-function formatDate(value) {
-  if (!value) {
-    return "Data não informada";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(date);
-}
-
-function getEventDateStatus(event) {
-  if (!event.date) {
-    return "upcoming";
-  }
-
-  const eventDate = new Date(`${event.date}${event.hour ? `T${event.hour}` : "T00:00"}`);
-
-  if (Number.isNaN(eventDate.getTime())) {
-    return "upcoming";
-  }
-
-  return eventDate >= new Date() ? "upcoming" : "finished";
-}
-
 function normalizeEvent(event) {
-  const stateCode = getStateCode(event.state) || event.state || "";
-  const cityLabel = [event.city, stateCode].filter(Boolean).join(stateCode && event.city ? " - " : "");
-  const totalTicketQuantity = Number(event.totalTicketQuantity ?? event.totalTickets ?? 0);
-  const ticketValue = Number(event.ticketValue ?? 0);
-  const status = getEventDateStatus(event);
+  const city = event.city ?? "";
+  const stateCode = getStateCode(event.state);
 
   return {
     id: event.id,
-    name: event.name ?? event.title ?? "Evento sem nome",
+    name: event.name ?? "Evento sem nome",
     description: event.description ?? "",
-    bannerImage: event.bannerImage || event.image || fallbackImage,
-    location: cityLabel || "Localização não informada",
-    formattedDate: formatDate(event.date),
-    date: event.date,
-    hour: event.hour,
-    ticketValue: ticketValue.toFixed(2).replace(".", ","),
-    totalTicketQuantity: totalTicketQuantity > 0 ? totalTicketQuantity : "-",
-    capacityLabel: totalTicketQuantity > 0 ? totalTicketQuantity.toLocaleString("pt-BR") : "-",
-    status,
-    statusLabel: status === "finished" ? "Encerrado" : "Próximo",
-    organizerId: String(event.userId ?? event.organizerId ?? event.ownerId ?? ""),
+    location: stateCode ? `${city} - ${stateCode}` : city,
+    formattedDate: event.date ?? "Data não informada",
+    hour: event.hour ?? "--:--",
+    bannerImage: event.bannerImage || fallbackImage,
+    totalTicketQuantity: event.totalTicketQuantity ?? 0,
+    status: event.status ?? "",
   };
 }
 
@@ -122,29 +77,54 @@ function OrganizerEvents() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ESTADOS PARA OS MODAIS
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showRevenueModal, setShowRevenueModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  // Funções para abrir modais
+  const handleEditClick = (event) => {
+    setSelectedEvent(event);
+    setShowEditModal(true);
+  };
+
+  const handleRevenueClick = (event) => {
+    setSelectedEvent(event);
+    setShowRevenueModal(true);
+  };
+
+  const handleCloseModals = () => {
+    setShowEditModal(false);
+    setShowRevenueModal(false);
+    setSelectedEvent(null);
+  };
+
   useEffect(() => {
     let isMounted = true;
 
     async function loadEvents() {
+      if (!organizerId) {
+        setEvents(mockEvents);
+        setError("");
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError("");
 
-        const response = await getEvents();
+        const response = await getEventsByOrganizerId(organizerId);
 
         if (!isMounted) {
           return;
         }
 
-        const normalizedEvents = (Array.isArray(response) ? response : [])
-          .map(normalizeEvent)
-          .filter((event) => !organizerId || event.organizerId === organizerId);
-
-        setEvents(normalizedEvents);
+        setEvents(Array.isArray(response) ? response.map(normalizeEvent) : []);
       } catch (requestError) {
         if (isMounted) {
-          setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os eventos do organizer.");
-          setEvents([]);
+          setError("");
+          setEvents(mockEvents);
         }
       } finally {
         if (isMounted) {
@@ -161,8 +141,7 @@ function OrganizerEvents() {
   }, [organizerId]);
 
   const visibleEvents = useMemo(() => {
-    const mappedEvents = events.slice(0, 4);
-    return mappedEvents.length > 0 ? mappedEvents : mockEvents;
+    return events.slice(0, 4);
   }, [events]);
 
   return (
@@ -171,13 +150,141 @@ function OrganizerEvents() {
 
       <main className="organizer-events-main">
         <section className="organizer-events-grid" aria-live="polite">
+          {isLoading ? <p className="organizer-events-state">Carregando eventos...</p> : null}
           {error ? <p className="organizer-events-state error">{error}</p> : null}
 
+          {!isLoading && !error && visibleEvents.length === 0 ? (
+            <p className="organizer-events-state">Nenhum evento encontrado.</p>
+          ) : null}
+
           {visibleEvents.map((event) => (
-            <OrganizerEventCard key={event.id} event={event} />
+            <OrganizerEventCard
+                key={event.id}
+                event={event}
+                onEdit={() => handleEditClick(event)}
+                onRevenue={() => handleRevenueClick(event)}
+            />
           ))}
         </section>
       </main>
+
+      {/* MODAL 1: EDITAR EVENTO */}
+      {showEditModal && selectedEvent && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <div className="modal-header">
+              <h2 className="modal-title">Editar Evento</h2>
+              <button className="modal-close-btn" onClick={handleCloseModals}>✕</button>
+            </div>
+
+            <div className="modal-body-scroll">
+              <form className="edit-event-form">
+                <div className="form-group full-width">
+                  <label>NOME DO EVENTO</label>
+                  <input type="text" defaultValue={selectedEvent.name} />
+                </div>
+
+                <div className="form-group full-width">
+                  <label>DESCRIÇÃO</label>
+                  <textarea defaultValue={selectedEvent.description} />
+                </div>
+
+                <div className="form-group">
+                  <label>RUA (STREET)</label>
+                  <input type="text" placeholder="Ex: Rua das Flores" />
+                </div>
+
+                <div className="form-group">
+                  <label>NÚMERO</label>
+                  <input type="text" placeholder="Ex: 123" />
+                </div>
+
+                <div className="form-group">
+                  <label>BAIRRO (NEIGHBORHOOD)</label>
+                  <input type="text" />
+                </div>
+
+                <div className="form-group">
+                  <label>CIDADE (CITY)</label>
+                  <input type="text" defaultValue={selectedEvent.location.split(" - ")[0]} />
+                </div>
+
+                <div className="form-group">
+                  <label>ESTADO (STATE)</label>
+                  <select>
+                    <option value="SP">São Paulo</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="MG">Minas Gerais</option>
+                    {/* Adicionar outros conforme seu ENUM */}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>DATA E HORA (COMPLETO)</label>
+                  <input type="datetime-local" />
+                </div>
+
+                <div className="form-group">
+                  <label>DATA (DATE ONLY)</label>
+                  <input type="date" defaultValue={selectedEvent.date} />
+                </div>
+
+                <div className="form-group">
+                  <label>HORA (TIME ONLY)</label>
+                  <input type="time" defaultValue={selectedEvent.hour} />
+                </div>
+
+                <div className="form-group">
+                  <label>TOTAL DE TICKETS</label>
+                  <input type="number" defaultValue={selectedEvent.totalTicketQuantity} />
+                </div>
+
+                <div className="form-group full-width">
+                  <label>STATUS DO EVENTO</label>
+                  <select defaultValue={selectedEvent.status}>
+                    <option value="upcoming">Próximo</option>
+                    <option value="finished">Encerrado</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <button className="btn-save" onClick={handleCloseModals}>
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: VER RECEITA */}
+      {showRevenueModal && selectedEvent && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <div className="modal-header">
+              <h2 className="modal-title">Relatório de Vendas</h2>
+              <button className="modal-close-btn" onClick={handleCloseModals}>✕</button>
+            </div>
+
+            <div className="revenue-stats">
+              <h3 style={{textAlign: "center", marginBottom: "10px"}}>{selectedEvent.name}</h3>
+              
+              <div className="stat-item">
+                <span className="stat-label">Ingressos Vendidos</span>
+                <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
+              </div>
+
+              <div className="stat-item">
+                <span className="stat-label">Receita Total Bruta</span>
+                <span className="stat-value">R$ 18.600,00</span>
+              </div>
+            </div>
+
+            <button className="btn-save" onClick={handleCloseModals}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

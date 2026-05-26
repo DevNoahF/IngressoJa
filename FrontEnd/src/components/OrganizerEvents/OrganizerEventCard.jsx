@@ -1,7 +1,7 @@
 import "./OrganizerEventCard.css";
 import { Calendar, Clock, MapPin } from "lucide-react";
 
-function OrganizerEventCard({ event }) {
+function OrganizerEventCard({ event, onEdit, onRevenue }) {
   return (
     <article className="organizer-event-shell">
       <div className="organizer-event-card">
@@ -26,11 +26,11 @@ function OrganizerEventCard({ event }) {
             </span>
           </div>
 
-          <button type="button" className="organizer-event-edit-button">
+          <button type="button" className="organizer-event-edit-button" onClick={onEdit}>
             editar evento
           </button>
 
-          <button type="button" className="organizer-event-revenue-button">
+          <button type="button" className="organizer-event-revenue-button" onClick={onRevenue}>
             ver receita
           </button>
         </div>
