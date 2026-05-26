@@ -29,4 +29,9 @@ public class SaleRepository : ISaleRepository
     {
         return _context.Sales.FindAsync([id], cancellationToken).AsTask();
     }
+
+    public async Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Sales.Where(s => s.EventId == eventId).ToListAsync(cancellationToken);
+    }
 }
