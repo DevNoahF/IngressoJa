@@ -1,3 +1,4 @@
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
@@ -15,18 +16,21 @@ public class SaleRepository : ISaleRepository
 
     public async Task AddAsync(SaleEntity sale, CancellationToken cancellationToken = default)
     {
-        await _context.Sales.AddAsync(sale, cancellationToken);
+        var model = sale.ToModel();
+        await _context.Sales.AddAsync(model, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateAsync(SaleEntity sale, CancellationToken cancellationToken = default)
     {
-        _context.Sales.Update(sale);
+        var model = sale.ToModel();
+        _context.Sales.Update(model);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<SaleEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<SaleEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return _context.Sales.FindAsync([id], cancellationToken).AsTask();
+        var model = await _context.Sales.FindAsync([id], cancellationToken: cancellationToken);
+        return model?.ToEntity();
     }
 }
