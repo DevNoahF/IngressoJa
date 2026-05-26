@@ -1,5 +1,6 @@
 
 
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
@@ -17,7 +18,8 @@ public class TicketRepository : ITicketRepository
 
     public async Task CreateAsync(TicketEntity ticket)
     {
-        await _context.Tickets.AddAsync(ticket);
+        var model = ticket.ToModel();
+        await _context.Tickets.AddAsync(model);
         await _context.SaveChangesAsync();
     }
 }
