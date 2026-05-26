@@ -14,12 +14,10 @@ function App() {
       <Route path='/' element={<Navigate to='/login' replace />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/home' element={<Home />} />
-      <Route path='/payment' element={<Payment />} />
-      <Route path='/create-event' element={<CreateEvent />} />
-      <Route path='/organizer' element={<Navigate to='/organizer/events' replace />} />
-      <Route path='/organizer/events' element={<OrganizerEvents />} />
-      <Route path='/organizerEvents' element={<Navigate to='/organizer/events' replace />} />
+      <Route path='/user/home' element={<Home />} />
+      <Route path='/user/payment' element={<Payment />} />
+      <Route path='/organizer/create' element={<CreateEvent />} />
+      <Route path='/organizer/home' element={<OrganizerEvents />} />
       <Route path='*' element={<Navigate to='/login' replace />} />
     </Routes>
   )
