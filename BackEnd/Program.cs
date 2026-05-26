@@ -33,7 +33,12 @@ var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "dev-sec
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// CORREÇÃO AQUI: Configurando o Swagger para usar o nome completo dos tipos e evitar conflitos de nomes iguais
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName);
+});
 
 // Data configuration with MySql
 var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
