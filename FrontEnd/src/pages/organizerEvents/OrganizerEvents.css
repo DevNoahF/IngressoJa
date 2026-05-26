@@ -36,7 +36,7 @@
   background: #fff1f2;
 }
 
-.modal-overlay {
+.organizer-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -50,21 +50,22 @@
   padding: 20px;
 }
 
-.modal-card {
+.organizer-modal-card {
   background: white;
   border-radius: 16px;
   padding: 32px;
   width: 100%;
-  max-width: 600px; /* Um pouco mais largo para o formulário */
+  max-width: 760px;
   max-height: 90vh;
   position: relative;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
-.modal-header {
+.organizer-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -73,14 +74,14 @@
   padding-bottom: 15px;
 }
 
-.modal-title {
+.organizer-modal-title {
   font-size: 20px;
   font-weight: 600;
   color: #000;
   margin: 0;
 }
 
-.modal-close-btn {
+.organizer-modal-close-btn {
   background: none;
   border: none;
   font-size: 24px;
@@ -89,18 +90,19 @@
 }
 
 /* Área de Scroll do Formulário */
-.modal-body-scroll {
+.organizer-modal-body-scroll {
   overflow-y: auto;
+  min-height: 0;
   flex: 1;
   padding-right: 10px;
   margin-bottom: 20px;
 }
 
 /* Estilização da Scrollbar */
-.modal-body-scroll::-webkit-scrollbar {
+.organizer-modal-body-scroll::-webkit-scrollbar {
   width: 6px;
 }
-.modal-body-scroll::-webkit-scrollbar-thumb {
+.organizer-modal-body-scroll::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 10px;
 }
@@ -136,6 +138,7 @@
   border-radius: 8px;
   font-size: 14px;
   background: #f9f9f9;
+  width: 100%;
 }
 
 .form-group textarea {
@@ -172,7 +175,7 @@
   color: #2f9e44; /* Verde da sua marca */
 }
 
-.btn-save {
+.organizer-modal-save-btn {
   width: 100%;
   padding: 14px;
   background-color: #090b0e;
@@ -182,6 +185,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 @media (max-width: 600px) {
@@ -190,5 +194,9 @@
   }
   .full-width {
     grid-column: span 1;
+  }
+
+  .organizer-modal-card {
+    padding: 24px 20px;
   }
 }
