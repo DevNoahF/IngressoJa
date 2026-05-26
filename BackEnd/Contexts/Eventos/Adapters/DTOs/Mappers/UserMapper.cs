@@ -6,14 +6,15 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
-public static class UserMapper
+public class UserMapper : IUserMapper
 {
     
     //Converte UserEntity para UserModel
-    public static UserModel  EntityToUserModel(this UserEntity entity)
+    public UserModel EntityToUserModel(UserEntity entity)
     {
         return new UserModel
         {
@@ -31,7 +32,7 @@ public static class UserMapper
 
     
     //Converte UserEntity para UserModel  
-    public static UserEntity ModelToEntity(this UserModel model)
+    public UserEntity ModelToEntity(UserModel model)
     {
         return new UserEntity(
             model.Id,
@@ -48,7 +49,7 @@ public static class UserMapper
     }
 
     //Converte UserRecordedResponseDTO para UserEntity  
-    public static UserRecordedResponseDTO EntityToRecordedResponse(this UserEntity entity)
+    public UserRecordedResponseDTO EntityToRecordedResponse(UserEntity entity)
     {
         return new UserRecordedResponseDTO(
             entity.Id,
@@ -62,7 +63,7 @@ public static class UserMapper
     }
 
     // AuthUserRequestDTO para UserEntity
-    public static UserAuthRequestDTO EntityToAuthRequestDTO(this UserEntity entity)
+    public UserAuthRequestDTO EntityToAuthRequestDTO(UserEntity entity)
     {
         return new UserAuthRequestDTO(
             entity.Email,
@@ -71,7 +72,7 @@ public static class UserMapper
     }
 
     // UserAuthUser para UserEntity
-    public static UserEntity UserAuthRequestUserToEntity(this UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto)
     {
         return new UserEntity(
             Guid.NewGuid(),
@@ -88,7 +89,7 @@ public static class UserMapper
     }
 
     // UserAuthOrganizer para UserEntity
-    public static UserEntity UserAuthRequestOrganizerToEntity(this UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto)
     {
         return new UserEntity(
             Guid.NewGuid(),
@@ -105,7 +106,7 @@ public static class UserMapper
     }
 
     // UserRegisterRequestDTO para UserEntity
-    public static UserEntity RegisterUserToEntity(this UserRegisterRequestDTO dto)
+    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto)
     {
         return new UserEntity(
             Guid.NewGuid(),
@@ -122,7 +123,7 @@ public static class UserMapper
     }
 
     // UserRegisterOrganizer para UserEntity
-    public static UserEntity RegisterOrganizerToEntity(this UserRegisterRequestDTO dto)
+    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto)
     {
         return new UserEntity(
             Guid.NewGuid(),
@@ -139,13 +140,13 @@ public static class UserMapper
     }
 
     // responseAuth to UserEntity
-    public static UserAuthResponseDTO EntityToAuthResponseDTO(this UserEntity entity, string token)
+    public UserAuthResponseDTO AuthResponse(UserEntity entity, string token)
     {
         return new UserAuthResponseDTO(token);
     }
 
     // UserAuthRequestDTO para UserAuthResponseDTO
-    public static UserAuthRequestDTO UserAuthRequestToAuthResponse(this UserAuthRequestDTO dto)
+    public UserAuthRequestDTO UserAuthRequestToAuthResponse(UserAuthRequestDTO dto)
     {
         return new UserAuthRequestDTO(
             dto.Email,
@@ -153,7 +154,7 @@ public static class UserMapper
         );
     }
 
-    public static UserEntity UpdateUserToEntity(this UserUpdateRequestDTO dto)
+    public  UserEntity UpdateUserToEntity(  UserUpdateRequestDTO dto)
     {
         return new UserEntity(
             Guid.NewGuid(),

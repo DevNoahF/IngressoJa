@@ -13,6 +13,7 @@ using DotNetEnv;
 using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
+using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,13 +67,14 @@ builder.Services.AddScoped<GetEventSaleByIdUseCase>();
 builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
 builder.Services.AddScoped<IngressoJa.Contexts.Sales.Application.UseCases.EventSale.UpdateEventUseCase>();
 
-// User UseCases
+// User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
 builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
 builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
+builder.Services.AddScoped<IUserMapper, UserMapper>();
 
 // JWT
 builder.Services.AddJwtAuthentication(builder.Configuration);
