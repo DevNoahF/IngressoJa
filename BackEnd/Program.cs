@@ -25,10 +25,10 @@ builder.Configuration.AddEnvironmentVariables();
 
 // Get environment variables
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
-var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "IngressoJa";
-var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "postgres";
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "3306";
+var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "ingressoja";
+var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "root";
+var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "ingressoja";
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "dev-secret-key-change-before-production-123456";
 
 builder.Services.AddControllers();
@@ -39,7 +39,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 36));
 builder.Services.AddDbContext<IngressoJaContext>(options =>
-    options.UseMySql(connectionString, serverVersion));
+    options.UseMySql(connectionString, serverVersion, mysqlOptions => mysqlOptions.EnableRetryOnFailure()));
 
 // Update JWT settings in configuration
 builder.Configuration["JwtSettings:SecretKey"] = jwtSecret;
