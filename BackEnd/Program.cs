@@ -1,11 +1,11 @@
 using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.UseCases.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Infrastructure.Persistence.Repositories;
-
 using IngressoJa.Data.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
@@ -15,22 +15,33 @@ using IngressoJa.Data.dbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load .env file
 Env.Load();
+
+// Add environment variables to configuration
+builder.Configuration.AddEnvironmentVariables();
+
+// Get environment variables
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "IngressoJa";
+var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
+var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "postgres";
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "dev-secret-key-change-before-production-123456";
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// data configuration - esta com autoDetect do pomelo
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Data configuration with MySql
+var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
 builder.Services.AddDbContext<IngressoJaContext>(options =>
-    options.UseMySql(connectionString, 
-    serverVersion: ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+// Update JWT settings in configuration
+builder.Configuration["JwtSettings:SecretKey"] = jwtSecret;
 
 // Sales
-
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<CreateSaleUseCase>();
@@ -38,24 +49,20 @@ builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 
 // Eventos
-
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
-//builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
 builder.Services.AddScoped<GetAllEventsUseCase>();
 
 // Events in sales
-
 builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<AddEventSaleUseCase>();
 builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
-//builder.Services.AddScoped<UpdateEventUseCase>(); -> ta dando erro
+
 
 // User UseCases
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
@@ -64,7 +71,6 @@ builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
 
 // JWT
-
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSingleton<ITokenGenerate, TokenGenerate>();
 

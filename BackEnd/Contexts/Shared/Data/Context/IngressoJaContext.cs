@@ -60,8 +60,8 @@ namespace IngressoJa.Data.dbContext
                 entity.Property(e => e.PhotoProfile)
                     .HasColumnName("photo_profile")
                     .HasConversion(
-                        photoProfile => photoProfile.Value,
-                        value => new PhotoProfileVO(value))
+                        photoProfile => photoProfile == null ? null : photoProfile.Value,
+                        value => value == null ? null : new PhotoProfileVO(value))
                     .HasMaxLength(255);
 
                 entity.Property(e => e.PasswordHash)
