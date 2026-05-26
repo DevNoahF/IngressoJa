@@ -11,5 +11,7 @@ public class BannerImageVO
         
         if (!value.Contains("http:"))
             throw new Exception("Banner Image must contain a valid URL.");
+
+        Value = value;
     }
 }
