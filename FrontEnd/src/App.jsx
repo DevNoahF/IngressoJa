@@ -11,16 +11,15 @@ import './App.css'
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Navigate to='/organizer/events' replace />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/home' element={<Home />} />
       <Route path='/payment' element={<Payment />} />
       <Route path='/create-event' element={<CreateEvent />} />
-      <Route path='/organizer' element={<Navigate to='/organizer/events' replace />} />
+      <Route path='/organizer/home' element={<Navigate to='/organizer/events' replace />} />
       <Route path='/organizer/events' element={<OrganizerEvents />} />
-      <Route path='/organizerEvents' element={<Navigate to='/organizer/events' replace />} />
       <Route path='*' element={<Navigate to='/organizer/events' replace />} />
+      <Route path='/update-user' element={<updateUser />} />
     </Routes>
   )
 }
