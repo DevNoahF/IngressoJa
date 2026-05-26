@@ -2,6 +2,7 @@ using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Data.Persistence.Repositories;
 
@@ -36,6 +37,10 @@ public class SaleRepository : ISaleRepository
 
     public async Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
-        return await _context.Sales.Where(s => s.EventId == eventId).ToListAsync(cancellationToken);
+        var models = await _context.Sales
+            .Where(s => s.EventId == eventId)
+            .ToListAsync(cancellationToken);
+
+        return models.Select(model => model.ToEntity());
     }
 }
