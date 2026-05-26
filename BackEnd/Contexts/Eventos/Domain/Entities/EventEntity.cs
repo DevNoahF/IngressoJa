@@ -5,7 +5,6 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 
 public class EventEntity
 {
-    private EventEntity() { }
 
     public Guid Id { get; private set; }
     public string Name { get; private set; }
@@ -16,7 +15,7 @@ public class EventEntity
     public int Number { get; private set; }
     public StatesEnum State { get; private set; }
     public DateOnly Date { get; private set; }
-   public TimeOnly Hour { get; private set; }
+    public TimeOnly Hour { get; private set; }
     public double TicketValue { get; private set; }
     public int TotalTicketQuantity { get; private set; }
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
