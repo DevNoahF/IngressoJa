@@ -1,17 +1,14 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Home from './pages/home/HomePage'
 import CreateEvent from './pages/createEvent/CreateEvent'
+import OrganizerEvents from './pages/organizerEvents/OrganizerEvents'
 import Register from "./pages/register/Register";
 import Login from "./pages/login/LoginPage";
 import Payment from './pages/Payment/PaymentPage';
 import './App.css'
 import { canCreateEvent } from './utils/auth'
 
-function RequireCreateEventAccess({ children }) {
-  if (!canCreateEvent()) {
-    return <Navigate to='/' replace />
-  }
-
+function RequireOrganizerAccess({ children }) {
   return children
 }
 
@@ -26,9 +23,17 @@ function App() {
       <Route
         path='/create-event'
         element={(
-          <RequireCreateEventAccess>
+          <RequireOrganizerAccess>
             <CreateEvent />
-          </RequireCreateEventAccess>
+          </RequireOrganizerAccess>
+        )}
+      />
+      <Route
+        path='/organizer/events'
+        element={(
+          <RequireOrganizerAccess>
+            <OrganizerEvents />
+          </RequireOrganizerAccess>
         )}
       />
       <Route path='*' element={<Navigate to='/login' replace />} />

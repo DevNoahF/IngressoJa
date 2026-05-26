@@ -1,18 +1,19 @@
 .header-organizer {
 	width: 100%;
-	height: 70px;
-	border-bottom: 1px solid #e7e7e7;
+	height: 96px;
+	border-bottom: 1px solid #dbe4f0;
 	background: #ffffff;
 }
 
 .header-organizer-container {
-	width: min(1280px, calc(100% - 32px));
+	width: calc(100% - 48px);
 	height: 100%;
 	margin: 0 auto;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 16px;
+	gap: 20px;
+	padding: 0 6px;
 }
 
 .header-organizer-logo {
@@ -22,35 +23,36 @@
 }
 
 .header-organizer-logo-image {
-	width: 168px;
+	width: 132px;
 	height: auto;
 	flex-shrink: 0;
+	cursor: pointer;
 }
 
 .header-organizer-actions {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 16px;
 }
 
 .header-organizer-create-button {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
-	height: 40px;
-	padding: 0 16px;
-	border: none;
-	border-radius: 10px;
-	background: #05051a;
-	color: #ffffff;
-	font-size: 14px;
-	font-weight: 600;
+	height: 34px;
+	padding: 0 12px;
+	border: 1px solid #3b82f6;
+	border-radius: 8px;
+	background: #dbeafe;
+	color: #2563eb;
+	font-size: 13px;
+	font-weight: 500;
 	cursor: pointer;
 	transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
 }
 
 .header-organizer-create-button:hover {
-	background: #0d0d2a;
+	background: #bfdbfe;
 }
 
 .header-organizer-create-button:active {
@@ -64,19 +66,19 @@
 .header-organizer-button {
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 8px 14px;
+	gap: 10px;
+	padding: 8px 12px;
 	border-radius: 999px;
-	border: 1px solid #d9d9d9;
+	border: 1px solid #d0d7e2;
 	background: #ffffff;
-	color: #05051a;
+	color: #1d4ed8;
 	cursor: pointer;
 	transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .header-organizer-button:hover {
-	background: #f7f7f8;
-	border-color: #cfcfd6;
+	background: #f8fbff;
+	border-color: #b6c7e3;
 }
 
 .header-organizer-button:active {
@@ -84,22 +86,23 @@
 }
 
 .header-organizer-image {
-	width: 38px;
-	height: 38px;
+	width: 40px;
+	height: 40px;
 	border-radius: 999px;
 	object-fit: cover;
 	flex-shrink: 0;
+	border: 2px solid #60a5fa;
 }
 
 .header-organizer-name {
 	font-size: 15px;
-	font-weight: 600;
-	color: #262626;
+	font-weight: 700;
+	color: #2563eb;
 	display: none;
 }
 
 .header-organizer-arrow {
-	color: #6b7280;
+	color: #22c55e;
 	transition: transform 0.2s ease;
 }
 
@@ -113,7 +116,7 @@
 	right: 0;
 	width: 220px;
 	background: #ffffff;
-	border: 1px solid #e4e4e7;
+	border: 1px solid #dbe4f0;
 	border-radius: 18px;
 	overflow: hidden;
 	box-shadow: 0 18px 35px rgba(5, 5, 26, 0.12);
@@ -176,26 +179,26 @@
 
 @media (max-width: 640px) {
 	.header-organizer-container {
-		width: calc(100% - 20px);
+		width: calc(100% - 16px);
 	}
 
 	.header-organizer-logo-image {
-		width: 140px;
+		width: 112px;
 	}
 
 	.header-organizer-actions {
-		gap: 8px;
+		gap: 10px;
 	}
 
 	.header-organizer-create-button {
-		height: 38px;
-		padding: 0 12px;
-		font-size: 13px;
+		height: 32px;
+		padding: 0 10px;
+		font-size: 12px;
 	}
 
 	.header-organizer-button {
-		padding: 7px 10px;
-		gap: 10px;
+		padding: 6px 10px;
+		gap: 8px;
 	}
 
 	.header-organizer-image {
