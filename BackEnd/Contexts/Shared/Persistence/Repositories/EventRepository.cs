@@ -62,7 +62,7 @@ public class EventRepository : IEventRepository
 
     public async Task<EventEntity?> GetEventByName(string name)
     {
-        var model = await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+        var model = await _context.Events.FirstOrDefaultAsync(e => e.Name.Value == name);
         return model?.ModelToEntity();
     }
 
@@ -79,4 +79,11 @@ public class EventRepository : IEventRepository
         await _context.SaveChangesAsync();
         return entity.ToPutResponse();
     }
+
+    public async Task<IEnumerable<EventEntity>> GetEventsByOrganizerId(Guid organizerId)
+    {
+        var models = await _context.Events.Where(e => e.UserId == organizerId).ToListAsync();
+        return models.Select(m => m.ModelToEntity());
+    }
+
 }

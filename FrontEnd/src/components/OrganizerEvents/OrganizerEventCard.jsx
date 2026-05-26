@@ -1,0 +1,42 @@
+import "./OrganizerEventCard.css";
+import { Calendar, Clock, MapPin } from "lucide-react";
+
+function OrganizerEventCard({ event }) {
+  return (
+    <article className="organizer-event-shell">
+      <div className="organizer-event-card">
+        <img src={event.bannerImage} alt={event.name} className="organizer-event-image" />
+        <div className="organizer-event-meta">
+          <h3>{event.name}</h3>
+
+          <div className="organizer-event-details">
+            <span>
+              <MapPin size={15} />
+              {event.location}
+            </span>
+
+            <span>
+              <Calendar size={15} />
+              {event.formattedDate}
+            </span>
+
+            <span>
+              <Clock size={15} />
+              {event.hour}
+            </span>
+          </div>
+
+          <button type="button" className="organizer-event-edit-button">
+            editar evento
+          </button>
+
+          <button type="button" className="organizer-event-revenue-button">
+            ver receita
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default OrganizerEventCard;

@@ -15,6 +15,7 @@ public class EventController : ControllerBase
     private readonly GetAllEventsUseCase _getAllEventsUseCase;
     private readonly GetEventByIdUseCase _getEventByIdUseCase;
     private readonly ChangeEventStatusUseCase _changeStatusOfEventUseCase;
+    private readonly GetEventsByOrganizerIdUseCase _getEventsByOrganizerIdUseCase;
 
     public EventController(
         CreateEventUseCase createEventUseCase,
@@ -22,7 +23,8 @@ public class EventController : ControllerBase
         UpdateEventUseCase updateEventUseCase,
         GetAllEventsUseCase getAllEventsUseCase,
         GetEventByIdUseCase getEventByIdUseCase,
-        ChangeEventStatusUseCase changeStatusOfEventUseCase
+        ChangeEventStatusUseCase changeStatusOfEventUseCase,
+        GetEventsByOrganizerIdUseCase getEventsByOrganizerIdUseCase
     )
     {
         _createEventUseCase = createEventUseCase;
@@ -31,6 +33,7 @@ public class EventController : ControllerBase
         _getAllEventsUseCase = getAllEventsUseCase;
         _getEventByIdUseCase = getEventByIdUseCase;
         _changeStatusOfEventUseCase = changeStatusOfEventUseCase;
+        _getEventsByOrganizerIdUseCase = getEventsByOrganizerIdUseCase;
     }
 
     [HttpPost]
@@ -117,6 +120,20 @@ public class EventController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.InnerException?.Message ?? ex.Message);
+        }
+    }
+
+    [HttpGet("organizer/{organizerId}")]
+    public async Task<IActionResult> GetEventsByOrganizerId(Guid organizerId)
+    {
+        try
+        {
+            var result = await _getEventsByOrganizerIdUseCase.GetEventsByOrganizerId(organizerId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
