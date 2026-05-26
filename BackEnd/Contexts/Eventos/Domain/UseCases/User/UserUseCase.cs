@@ -100,7 +100,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
                 if (userEntity == null)
                     throw new Exception("User not found.");
 
-                var userDto = userEntity.EntityToRecordedResponse();
+                var userDto = __userMapper.EntityToRecordedResponse(userEntity);
                 return userDto;
             }
             catch (Exception ex)
