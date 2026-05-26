@@ -14,8 +14,8 @@ services:
   db:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-IngressoJa}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ingressoja}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ingressoja}
     ports:
       - "3306:3306"
     volumes:
