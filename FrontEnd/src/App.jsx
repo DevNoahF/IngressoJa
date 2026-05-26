@@ -11,7 +11,7 @@ import './App.css'
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Navigate to='/organizer/events' replace />} />
+      <Route path='/' element={<Navigate to='/login' replace />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/home' element={<Home />} />
@@ -20,7 +20,7 @@ function App() {
       <Route path='/organizer' element={<Navigate to='/organizer/events' replace />} />
       <Route path='/organizer/events' element={<OrganizerEvents />} />
       <Route path='/organizerEvents' element={<Navigate to='/organizer/events' replace />} />
-      <Route path='*' element={<Navigate to='/organizer/events' replace />} />
+      <Route path='*' element={<Navigate to='/login' replace />} />
     </Routes>
   )
 }
