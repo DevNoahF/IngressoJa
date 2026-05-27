@@ -9,6 +9,84 @@ import { setStoredEventId } from "../../utils/eventContext";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
+const mockEvents = [
+  {
+    id: "1",
+    name: "Festival de Verão",
+    description: "Um evento incrível com apresentações musicais, comida de rua e muita diversão. Venha se divertir com amigos e família.",
+    city: "São Paulo",
+    state: "SP",
+    date: "15/07/2026",
+    hour: "18:00",
+    bannerImage: "https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=800",
+    ticketValue: 80.00,
+    totalTicketQuantity: 500,
+    street: "Avenida Paulista",
+    number: 1000,
+    neighborhood: "Bela Vista",
+  },
+  {
+    id: "2",
+    name: "Noite Eletrônica",
+    description: "A maior festa eletrônica do ano com DJs internacionais. Som de qualidade, luzes impressionantes e ambiente incrível.",
+    city: "Rio de Janeiro",
+    state: "RJ",
+    date: "22/07/2026",
+    hour: "20:30",
+    bannerImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800",
+    ticketValue: 120.00,
+    totalTicketQuantity: 800,
+    street: "Rua da Lapa",
+    number: 500,
+    neighborhood: "Lapa",
+  },
+  {
+    id: "3",
+    name: "Samba Sunset",
+    description: "Samba ao vivo com vista para o mar. Venha dançar ao som da melhor música brasileira durante o pôr do sol.",
+    city: "Belo Horizonte",
+    state: "MG",
+    date: "28/07/2026",
+    hour: "17:00",
+    bannerImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
+    ticketValue: 65.00,
+    totalTicketQuantity: 600,
+    street: "Avenida Mineirão",
+    number: 300,
+    neighborhood: "Funcionários",
+  },
+  {
+    id: "4",
+    name: "Tech Conference 2026",
+    description: "Conferência de tecnologia com palestras de experts da indústria. Aprenda sobre as últimas tendências e inovações.",
+    city: "Curitiba",
+    state: "PR",
+    date: "02/08/2026",
+    hour: "09:00",
+    bannerImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
+    ticketValue: 150.00,
+    totalTicketQuantity: 1000,
+    street: "Centro de Convenções",
+    number: 1,
+    neighborhood: "Centro",
+  },
+  {
+    id: "5",
+    name: "Festival de Gastronomia",
+    description: "Mergulhe em uma experiência culinária única com chefs renomados. Deguste pratos especiais e bebidas selecionadas.",
+    city: "Salvador",
+    state: "BA",
+    date: "05/08/2026",
+    hour: "19:00",
+    bannerImage: "https://images.unsplash.com/photo-1564183346067-c92cdd611de8?w=800",
+    ticketValue: 95.00,
+    totalTicketQuantity: 400,
+    street: "Praça da Republica",
+    number: 200,
+    neighborhood: "Pelourinho",
+  },
+];
+
 function Home() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,11 +118,21 @@ function Home() {
           hour: event.hour,
           image: event.bannerImage || fallbackImage,
           ticketValue: event.ticketValue,
+          totalTicketQuantity: event.totalTicketQuantity,
         })));
       } catch (requestError) {
         if (isMounted) {
-          setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os eventos.");
-          setEvents([]);
+          setError("");
+          setEvents(mockEvents.map((event) => ({
+            id: event.id,
+            title: event.name,
+            city: `${event.city}${event.state ? ` - ${getStateCode(event.state)}` : ""}`,
+            date: event.date,
+            hour: event.hour,
+            image: event.bannerImage || fallbackImage,
+            ticketValue: event.ticketValue,
+            totalTicketQuantity: event.totalTicketQuantity,
+          })));
         }
       } finally {
         if (isMounted) {
@@ -84,7 +172,8 @@ function Home() {
         setSelectedEventDetails(response);
       } catch (requestError) {
         if (isMounted) {
-          setSelectedEventDetails(selectedEvent);
+          const mockEvent = mockEvents.find(e => e.id === selectedEvent.id);
+          setSelectedEventDetails(mockEvent || selectedEvent);
           setDetailError("");
         }
       } finally {
@@ -183,6 +272,10 @@ function Home() {
                   <span>
                     <Clock size={16} />
                     {(selectedEventDetails ?? selectedEvent).hour}
+                  </span>
+                  <span>
+                    <Ticket size={16} />
+                    {Number((selectedEventDetails ?? selectedEvent).totalTicketQuantity).toLocaleString('pt-BR')} total de ingressos
                   </span>
 
                   <span>
