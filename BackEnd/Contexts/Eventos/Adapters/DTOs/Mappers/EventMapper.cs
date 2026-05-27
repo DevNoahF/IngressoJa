@@ -22,6 +22,7 @@ public static class EventMapper
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
             new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             new BannerImageVO(string.Empty),
             eventEntity.Status
         );
@@ -37,6 +38,7 @@ public static class EventMapper
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Status,
             new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             new BannerImageVO(string.Empty)
         );
     }

@@ -15,6 +15,7 @@ public record EventDetailResponseDTO(
     string Date,
     string Hour,
     TicketValueVO TicketValue,
+    TotalTicketQuantity TotalTicketQuantity,
     BannerImageVO BannerImage,
     EventStatusEnum Status
 );
