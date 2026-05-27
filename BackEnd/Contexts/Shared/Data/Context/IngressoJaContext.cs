@@ -94,19 +94,34 @@ namespace IngressoJa.Data.dbContext
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
+                    .HasConversion(
+                        name => name.Value,
+                        value => new NameVO(value))
                     .HasMaxLength(55)
                     .IsRequired();
 
                 entity.Property(e => e.Description)
+                    .HasConversion(
+                        description => description.Value,
+                        value => new DescriptionVO(value))
                     .HasMaxLength(255).IsRequired();
                 
                 entity.Property(e=>e.StreetName)
                     .HasColumnName("street_name")
+                    .HasConversion(
+                        streetName => streetName.Value,
+                        value => new StreetNameVo(value))
                     .HasMaxLength(55).IsRequired();
 
                 entity.Property(e => e.Neighborhood)
+                    .HasConversion(
+                        neighborhood => neighborhood.Value,
+                        value => new NeighborhoodVO(value))
                     .HasMaxLength(55).IsRequired();
                 entity.Property(e=>e.City)
+                    .HasConversion(
+                        city => city.Value,
+                        value => new CityVO(value))
                     .HasMaxLength(55).IsRequired();
                 entity.Property(e => e.Number)
                     .IsRequired();
@@ -116,6 +131,9 @@ namespace IngressoJa.Data.dbContext
                 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")
+                    .HasConversion(
+                        date => date.Value,
+                        value => new DateVO(value))
                     .IsRequired();
 
                 entity.Property(e => e.Hour)
@@ -124,24 +142,33 @@ namespace IngressoJa.Data.dbContext
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnName("created_at")
-                    .HasColumnType("timestamp with time zone")
+                    .HasColumnType("datetime(6)")
                     .IsRequired();
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
-                    .HasColumnType("timestamp with time zone");
+                    .HasColumnType("datetime(6)");
 
                 entity.Property(e => e.TicketValue)
                     .HasColumnName("ticket_value")
+                    .HasConversion(
+                        ticketValue => ticketValue.Value,
+                        value => new TicketValueVO(value))
                     .HasColumnType("decimal(18,2)")
                     .IsRequired();
 
                 entity.Property(e => e.TotalTicketQuantity)
                     .HasColumnName("total_ticket_quantity")
+                    .HasConversion(
+                        totalTicketQuantity => totalTicketQuantity.Value,
+                        value => new TotalTicketQuantity(value))
                     .IsRequired();
 
                 entity.Property(e => e.BannerImage)
                     .HasColumnName("banner_image")
+                    .HasConversion(
+                        bannerImage => bannerImage.Value,
+                        value => new BannerImageVO(value))
                     .HasMaxLength(255)
                     .IsRequired();
 
@@ -182,7 +209,7 @@ namespace IngressoJa.Data.dbContext
 
                 entity.Property(sale => sale.CreatedAt)
                     .HasColumnName("created_at")
-                    .HasColumnType("timestamp with time zone")
+                    .HasColumnType("datetime(6)")
                     .IsRequired();
 
                 entity.Property(sale => sale.SaleStatus)

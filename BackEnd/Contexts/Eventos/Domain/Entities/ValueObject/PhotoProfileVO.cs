@@ -9,18 +9,25 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
     {
         public String Value { get; set; }
 
+        public PhotoProfileVO()
+        {
+            Value = string.Empty;
+        }
+
         public PhotoProfileVO(string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Photo profile cannot be null or empty.");
+                Value = string.Empty;
+                return;
             }
 
-            if (!value.Contains("http:"))
+            if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
             {
                 throw new ArgumentException("Photo profile must be a valid URL.");
-            
             }
+
             Value = value;
         }
     }

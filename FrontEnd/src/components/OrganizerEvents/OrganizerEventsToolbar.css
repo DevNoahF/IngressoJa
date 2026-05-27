@@ -1,0 +1,113 @@
+.organizer-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #05051a 0%, #111827 70%, #1f2937 100%);
+  color: #ffffff;
+  box-shadow: 0 18px 50px rgba(5, 5, 26, 0.22);
+}
+
+.organizer-toolbar-copy {
+  max-width: 520px;
+}
+
+.organizer-toolbar-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c7cad4;
+}
+
+.organizer-toolbar-copy h2 {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.05;
+}
+
+.organizer-toolbar-copy p {
+  margin: 0;
+  color: #d6dae4;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.organizer-toolbar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: min(100%, 420px);
+}
+
+.organizer-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.organizer-search svg {
+  color: #cbd5e1;
+  flex-shrink: 0;
+}
+
+.organizer-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.organizer-search input::placeholder {
+  color: #9ca3af;
+}
+
+.organizer-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.organizer-filter-button {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e5e7eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.organizer-filter-button.active {
+  background: #ffffff;
+  color: #05051a;
+}
+
+.organizer-toolbar-count {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+@media (max-width: 960px) {
+  .organizer-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .organizer-toolbar-controls {
+    min-width: 0;
+  }
+}

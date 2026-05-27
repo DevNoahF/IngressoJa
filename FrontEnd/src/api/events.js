@@ -71,6 +71,10 @@ export function getEvents() {
   return request("/events");
 }
 
+export function getEventsByOrganizerId(organizerId) {
+  return request(`/events/organizer/${organizerId}`);
+}
+
 export function getEventById(eventId) {
   return request(`/events/${eventId}`);
 }

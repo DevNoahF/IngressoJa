@@ -3,6 +3,7 @@ using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.EventSale;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Data.Model;
 using EventStatusEnum = IngressoJa.Contexts.Eventos.Domain.Entities.Enums.EventStatusEnum;
 
@@ -14,9 +15,9 @@ public static class EventSaleMapper
     {
         return new EventSaleAddEventResponseDTO(
             entity.EventId,
-            entity.EventName,
-            entity.TicketValue,
-            entity.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             entity.Status
         );
     }
@@ -25,9 +26,9 @@ public static class EventSaleMapper
     {
         return new EventSaleEntity(
             dto.EventId,
-            dto.EventName,
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             dto.Status
         );
     }
@@ -36,9 +37,9 @@ public static class EventSaleMapper
     {
         return new EventSaleGetResponseDTO(
             entity.EventId,
-            entity.EventName,
-            entity.TicketValue,
-            entity.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             entity.Status
             );
     }
@@ -47,9 +48,9 @@ public static class EventSaleMapper
     {
         return new EventSaleGetResponseDTO(
             entity.EventId,
-            entity.EventName,
-            entity.TicketValue,
-            entity.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             entity.Status
             );
     }
@@ -58,9 +59,9 @@ public static class EventSaleMapper
     {
         return new EventSaleUpdateResponseDTO(
             entity.EventId,
-            entity.EventName,
-            entity.TicketValue,
-            entity.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             entity.Status
             );
     }
@@ -69,9 +70,9 @@ public static class EventSaleMapper
     {
         return new EventSaleEntity(
             eventId,
-            dto.EventName,
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
+            new NameVO(string.Empty),
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             dto.Status
             
             );
@@ -79,9 +80,9 @@ public static class EventSaleMapper
 
     public static EventModel UpdateModel(this EventSaleEntity entity, EventModel existingModel)
     {
-        existingModel.Name = entity.EventName;
-        existingModel.TicketValue = entity.TicketValue;
-        existingModel.TotalTicketQuantity = entity.TotalTicketQuantity;
+        existingModel.Name = new NameVO(string.Empty);
+        existingModel.TicketValue = new TicketValueVO(0);
+        existingModel.TotalTicketQuantity = new TotalTicketQuantity(0);
         existingModel.Status = (IngressoJa.Contexts.Eventos.Domain.Entities.Enums.EventStatusEnum)(int)entity.Status;
         return existingModel;
     }

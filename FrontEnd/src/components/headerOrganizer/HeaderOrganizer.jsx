@@ -33,6 +33,10 @@ export default function HeaderOrganizer() {
 		navigate("/create-event");
 	}
 
+	function handleGoHome() {
+		navigate("/home");
+	}
+
 	return (
 		<header className="header-organizer">
 			<div className="header-organizer-container">
@@ -41,7 +45,7 @@ export default function HeaderOrganizer() {
 						src={ingressoJaLogo} 
 						alt="IngressoJá"
 						className="header-organizer-logo-image"
-                        onClick={}// implementar para voltar para home
+						onClick={handleGoHome}
 					/>
 				</div>
 
@@ -49,41 +53,31 @@ export default function HeaderOrganizer() {
 					<button
 						type="button"
 						className="header-organizer-create-button"
-						onClick={}
+						onClick={handleCreateEvent}
 					>
 						<Plus size={16} />
 						Criar Evento
 					</button>
-                    <div className="header-organizer-actions">
-                        <button
-                            type="button"
-                            className="header-organizer-create-button"
-                            onClick={}
-                        >
-                            <Plus size={16} />
-                            Ver Vendas
-                        </button>
 
+					<div className="header-organizer-profile" ref={dropdownRef}>
+						<button
+							type="button"
+							onClick={() => setOpen((current) => !current)}
+							className="header-organizer-button"
+						>
+							<img
+								src={user.profileImage}
+								alt="Perfil"
+								className="header-organizer-image"
+							/>
 
-                        <div className="header-organizer-profile" ref={dropdownRef}>
-                            <button
-                                type="button"
-                                onClick={() => setOpen((current) => !current)}
-                                className="header-organizer-button"
-                            >
-                                <img
-                                    src={user.profileImage}
-                                    alt="Perfil"
-                                    className="header-organizer-image"
-                                />
+							<span className="header-organizer-name">{user.firstName}</span>
 
-                                <span className="header-organizer-name">{user.firstName}</span>
-
-                                <ChevronDown
-                                    size={18}
-                                    className={`header-organizer-arrow ${open ? "open" : ""}`}
-                                />
-                            </button>
+							<ChevronDown
+								size={18}
+								className={`header-organizer-arrow ${open ? "open" : ""}`}
+							/>
+						</button>
 
 						{open && (
 							<div className="header-organizer-dropdown">
@@ -101,7 +95,6 @@ export default function HeaderOrganizer() {
 								</button>
 							</div>
 						)}
-                        </div>
 					</div>
 				</div>
 			</div>

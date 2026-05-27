@@ -1,10 +1,11 @@
+using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
 
 namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Request.EventSale;
 
 public record EventSaleUpdateRequestDTO(
-    string EventName,
-    double TicketValue,
-    int TotalTicketQuantity,
+    NameVO EventName,
+    TicketValueVO TicketValue, 
+    TotalTicketQuantity TotalTicketQuantity,
     EventStatusEnum Status
     );

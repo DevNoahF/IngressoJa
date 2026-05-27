@@ -11,15 +11,18 @@ public class SalesController : ControllerBase
 {
     private readonly CreateSaleUseCase _createSaleUseCase;
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
+    private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
 
     public SalesController(
         CreateSaleUseCase createSaleUseCase,
         GetSaleByIdUseCase getSaleByIdUseCase,
+        GetSaleByEventUseCase getSaleByEventUseCase,
         UpdateSaleStatusUseCase updateSaleStatusUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
+        _getSaleByEventUseCase = getSaleByEventUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
     }
 
@@ -82,6 +85,22 @@ public class SalesController : ControllerBase
         {
             Console.WriteLine(exception.Message);
             return BadRequest(exception.Message);
+        }
+    }
+
+    [HttpGet("event/{eventId:guid}")]
+    public async Task<IActionResult> GetByEventId(Guid eventId, CancellationToken cancellationToken)
+    {
+        try 
+        {
+            var sale = await _getSaleByEventUseCase.ExecuteAsync(eventId, cancellationToken);
+        
+            return Ok(sale.ToResponse());
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+            return BadRequest(ex.Message);
         }
     }
 }
