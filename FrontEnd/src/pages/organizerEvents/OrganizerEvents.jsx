@@ -1,5 +1,6 @@
 import "./OrganizerEvents.css";
 import { useEffect, useMemo, useState } from "react";
+import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventsByOrganizerId, getStateCode } from "../../api/events";
@@ -67,6 +68,7 @@ function normalizeEvent(event) {
     hour: event.hour ?? "--:--",
     bannerImage: event.bannerImage || fallbackImage,
     totalTicketQuantity: event.totalTicketQuantity ?? 0,
+    ticketValue: event.ticketValue ?? 0,
     status: event.status ?? "",
   };
 }
@@ -80,6 +82,7 @@ function OrganizerEvents() {
   // ESTADOS PARA OS MODAIS
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRevenueModal, setShowRevenueModal] = useState(false);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Funções para abrir modais
@@ -93,9 +96,15 @@ function OrganizerEvents() {
     setShowRevenueModal(true);
   };
 
+  const handlePhotoClick = (event) => {
+    setSelectedEvent(event);
+    setShowDescriptionModal(true);
+  };
+
   const handleCloseModals = () => {
     setShowEditModal(false);
     setShowRevenueModal(false);
+    setShowDescriptionModal(false);
     setSelectedEvent(null);
   };
 
@@ -163,6 +172,7 @@ function OrganizerEvents() {
                 event={event}
                 onEdit={() => handleEditClick(event)}
                 onRevenue={() => handleRevenueClick(event)}
+                onPhotoClick={() => handlePhotoClick(event)}
             />
           ))}
         </section>
@@ -280,6 +290,61 @@ function OrganizerEvents() {
             </div>
 
             <button className="btn-save" onClick={handleCloseModals}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: VER DESCRIÇÃO DO EVENTO */}
+      {showDescriptionModal && selectedEvent && (
+        <div className="organizer-modal-overlay">
+          <div className="organizer-modal-card">
+            <div className="organizer-modal-header">
+              <h2 className="organizer-modal-title">Descrição do Evento</h2>
+              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>
+                ✕
+              </button>
+            </div>
+
+            <div className="organizer-description-modal-body">
+              <img 
+                src={selectedEvent.bannerImage} 
+                alt={selectedEvent.name}
+                className="organizer-description-modal-image"
+              />
+              
+              <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
+              
+              <p className="organizer-description-modal-text">
+                {selectedEvent.description || "Nenhuma descrição disponível."}
+              </p>
+
+              <div className="organizer-description-modal-details">
+                <span>
+                  <MapPin size={16} />
+                  {selectedEvent.location}
+                </span>
+                <span>
+                  <Calendar size={16} />
+                  {selectedEvent.formattedDate}
+                </span>
+                <span>
+                  <Clock size={16} />
+                  {selectedEvent.hour}
+                </span>
+                <span>
+                  <Ticket size={16} />
+                  {selectedEvent.totalTicketQuantity} Total de ingressos
+                </span>
+                <span>
+                  <Ticket size={16} />
+                  R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso
+                </span>
+              </div>
+            </div>
+
+            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>
               Fechar
             </button>
           </div>

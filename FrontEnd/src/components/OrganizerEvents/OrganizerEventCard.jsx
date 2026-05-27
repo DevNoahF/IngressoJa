@@ -1,11 +1,17 @@
 import "./OrganizerEventCard.css";
 import { Calendar, Clock, MapPin } from "lucide-react";
 
-function OrganizerEventCard({ event, onEdit, onRevenue }) {
+function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick }) {
   return (
     <article className="organizer-event-shell">
       <div className="organizer-event-card">
-        <img src={event.bannerImage} alt={event.name} className="organizer-event-image" />
+        <img 
+          src={event.bannerImage} 
+          alt={event.name} 
+          className="organizer-event-image" 
+          onClick={onPhotoClick}
+          style={{ cursor: 'pointer' }}
+        />
         <div className="organizer-event-meta">
           <h3>{event.name}</h3>
 
