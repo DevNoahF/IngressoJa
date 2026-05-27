@@ -1,20 +1,161 @@
+/* UpdateProfile.css */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 body {
-  background: #f8f8f8;
+  background: #f5f5f5;
 }
 
-.register-page {
-  min-height: calc(100vh - 140px);
-
+.update-container {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+}
 
-  padding: 40px 20px;
+.update-card {
+  width: 100%;
+  max-width: 850px;
+  background: white;
+  border-radius: 14px;
+  padding: 35px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.icon-top {
+  width: 70px;
+  height: 70px;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  color: #111827;
+}
+
+.update-card h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.update-card p {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 35px;
+}
+
+.photo-upload {
+  width: 130px;
+  height: 130px;
+  border: 2px dashed #cfcfcf;
+  border-radius: 50%;
+  margin: 0 auto 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.photo-upload:hover {
+  border-color: #111827;
+  color: #111827;
+}
+
+.update-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.input-group input {
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: #f3f4f6;
+  padding: 0 16px;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input-group input:focus {
+  border: 2px solid #111827;
+  background: white;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.date-input {
+  position: relative;
+}
+
+.date-input svg {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.date-input input {
+  width: 100%;
+  padding-right: 45px;
+}
+
+.save-btn {
+  grid-column: span 2;
+  height: 55px;
+  border: none;
+  border-radius: 12px;
+  background: #020221;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  background: #11113a;
+}
+
+@media (max-width: 768px) {
+  .update-form {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width,
+  .save-btn {
+    grid-column: span 1;
+  }
+
+  .update-card {
+    padding: 25px;
+  }
 }
