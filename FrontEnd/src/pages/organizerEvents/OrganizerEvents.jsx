@@ -180,14 +180,16 @@ function OrganizerEvents() {
 
       {/* MODAL 1: EDITAR EVENTO */}
       {showEditModal && selectedEvent && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <div className="modal-header">
-              <h2 className="modal-title">Editar Evento</h2>
-              <button className="modal-close-btn" onClick={handleCloseModals}>✕</button>
+        <div className="organizer-modal-overlay">
+          <div className="organizer-modal-card">
+            <div className="organizer-modal-header">
+              <h2 className="organizer-modal-title">Editar Evento</h2>
+              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>
+                ✕
+              </button>
             </div>
 
-            <div className="modal-body-scroll">
+            <div className="organizer-modal-body-scroll">
               <form className="edit-event-form">
                 <div className="form-group full-width">
                   <label>NOME DO EVENTO</label>
@@ -259,7 +261,7 @@ function OrganizerEvents() {
               </form>
             </div>
 
-            <button className="btn-save" onClick={handleCloseModals}>
+            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>
               Salvar Alterações
             </button>
           </div>
@@ -268,11 +270,13 @@ function OrganizerEvents() {
 
       {/* MODAL 2: VER RECEITA */}
       {showRevenueModal && selectedEvent && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <div className="modal-header">
-              <h2 className="modal-title">Relatório de Vendas</h2>
-              <button className="modal-close-btn" onClick={handleCloseModals}>✕</button>
+        <div className="organizer-modal-overlay">
+          <div className="organizer-modal-card">
+            <div className="organizer-modal-header">
+              <h2 className="organizer-modal-title">Relatório de Vendas</h2>
+              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>
+                ✕
+              </button>
             </div>
 
             <div className="revenue-stats">
@@ -289,7 +293,7 @@ function OrganizerEvents() {
               </div>
             </div>
 
-            <button className="btn-save" onClick={handleCloseModals}>
+            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>
               Fechar
             </button>
           </div>
