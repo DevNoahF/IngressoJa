@@ -33,6 +33,13 @@ function EventCard({ event, onReadMore }) {
               R$ {Number(event.ticketValue).toFixed(2)}
             </span>
           ) : null}
+
+          {event.totalTicketQuantity !== undefined && event.totalTicketQuantity !== null ? (
+            <span>
+              <Ticket size={15} />
+              {event.totalTicketQuantity} ingressos disponíveis
+            </span>
+          ) : null}
         </div>
 
         <button type="button" onClick={() => onReadMore(event)}>

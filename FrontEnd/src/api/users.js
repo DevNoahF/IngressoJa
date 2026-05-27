@@ -25,14 +25,14 @@ async function request(path, options = {}) {
 }
 
 export function registerUser(payload) {
-  return request("/api/users/register", {
+  return request("/register", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
 export function registerOrganizer(payload) {
-  return request("/api/users/register/organizer", {
+  return request("/register/organizer", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -46,5 +46,5 @@ export function loginUser(payload) {
 }
 
 export function getUserByEmail(email) {
-  return request(`/api/users?email=${encodeURIComponent(email)}`);
+  return request(`/email?email=${encodeURIComponent(email)}`);
 }
