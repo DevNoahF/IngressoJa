@@ -60,7 +60,6 @@ Example request:
   "eventId": "7403c4e1-fd37-4d99-88a0-010f5d4b8f22",
   "selectedTicketsUser": 2,
   "totalPrice": 120.0,
-  "availableTickets": 50,
   "ticketId": "6b1ba66b-d66e-4b3f-b857-9c49a2d6b4dd"
 }
 ```

@@ -36,7 +36,6 @@ public class SalesController : ControllerBase
                 request.EventId,
                 request.SelectedTicketsUser,
                 request.TotalPrice,
-                request.AvailableTickets,
                 request.TicketId,
                 cancellationToken);
             var response = sale.ToResponse();

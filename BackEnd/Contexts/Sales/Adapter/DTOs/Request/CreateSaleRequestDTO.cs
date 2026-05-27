@@ -5,5 +5,4 @@ public sealed record CreateSaleRequestDTO(
     Guid EventId,
     int SelectedTicketsUser,
     double TotalPrice,
-    int AvailableTickets,
     Guid? TicketId = null);
