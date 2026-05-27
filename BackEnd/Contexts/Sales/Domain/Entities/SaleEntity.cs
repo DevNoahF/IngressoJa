@@ -76,6 +76,14 @@ public class SaleEntity
         UpdateStatus(SaleStatusEnum.Approved);
     }
 
+    public void SetTicketId(Guid ticketId)
+    {
+        if (ticketId == Guid.Empty)
+            throw new ArgumentException("The ticket id cannot be empty.", nameof(ticketId));
+
+        TicketId = ticketId;
+    }
+
     public void ClearDomainEvents()
     {
         _domainEvents.Clear();

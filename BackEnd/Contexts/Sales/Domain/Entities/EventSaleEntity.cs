@@ -21,5 +21,15 @@ public class EventSaleEntity
         Status = status;
         
     }
-    
+
+    public void DeductTickets(int quantity)
+    {
+        if (quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+
+        if (TotalTicketQuantity < quantity)
+            throw new InvalidOperationException($"Not enough tickets available. Available: {TotalTicketQuantity}, Requested: {quantity}");
+
+        TotalTicketQuantity -= quantity;
+    }
 }

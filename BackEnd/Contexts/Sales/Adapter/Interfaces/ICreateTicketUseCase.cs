@@ -7,6 +7,6 @@ namespace IngressoJa.Contexts.Sales.Adapter.Interfaces
 {
     public interface ICreateTicketUseCase
     {
-        Task<TicketEntity> ExecuteAsync(Guid userId);
+        Task<TicketEntity> ExecuteAsync(int saleId, Guid userId, CancellationToken cancellationToken = default);
     }
 }
