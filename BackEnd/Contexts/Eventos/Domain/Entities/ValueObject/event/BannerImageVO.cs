@@ -8,9 +8,12 @@ public class BannerImageVO
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new Exception("Banner Image can't be empty");
-        
-        if (!value.Contains("http:"))
+
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        {
             throw new Exception("Banner Image must contain a valid URL.");
+        }
 
         Value = value;
     }

@@ -12,17 +12,17 @@ public static class EventMapper
     {
         return new EventDetailResponseDTO(
             eventEntity.Id,
-            eventEntity.Name,
-            eventEntity.Description,
-            eventEntity.Street,
-            eventEntity.Neighborhood,
-            eventEntity.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             eventEntity.Number,
             eventEntity.State,
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
-            eventEntity.TicketValue,
-            eventEntity.BannerImage,
+            new TicketValueVO(0),
+            new BannerImageVO(string.Empty),
             eventEntity.Status
         );
     }
@@ -31,13 +31,13 @@ public static class EventMapper
     {
         return new EventSummaryResponseDTO(
             eventEntity.Id,
-            eventEntity.Name,
-            eventEntity.City,
+            new NameVO(string.Empty),
+            new CityVO(string.Empty),
             eventEntity.State,
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Status,
-            eventEntity.TicketValue,
-            eventEntity.BannerImage
+            new TicketValueVO(0),
+            new BannerImageVO(string.Empty)
         );
     }
 
@@ -45,18 +45,18 @@ public static class EventMapper
     {
         return new EventCreateResponseDTO(
             eventEntity.Id,
-            eventEntity.Name,
-            eventEntity.Description,
-            eventEntity.Street,
-            eventEntity.Neighborhood,
-            eventEntity.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             eventEntity.Number,
             eventEntity.State,
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
-            eventEntity.TicketValue,
-            eventEntity.TotalTicketQuantity,
-            eventEntity.BannerImage,
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
+            new BannerImageVO(string.Empty),
             eventEntity.Status,
             eventEntity.UserId,
             eventEntity.CreatedAt
@@ -67,18 +67,18 @@ public static class EventMapper
     {
         return new EventPutResponseDTO(
             eventEntity.Id,
-            eventEntity.Name,
-            eventEntity.Description,
-            eventEntity.Street,
-            eventEntity.Neighborhood,
-            eventEntity.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             eventEntity.Number,
             eventEntity.State,
             eventEntity.Date.Value.ToString("dd/MM/yyyy"),
             eventEntity.Hour.ToString("HH:mm"),
-            eventEntity.TicketValue,
-            eventEntity.TotalTicketQuantity,
-            eventEntity.BannerImage,
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
+            new BannerImageVO(string.Empty),
             eventEntity.UserId,
             eventEntity.Status,
             eventEntity.CreatedAt,
@@ -89,19 +89,19 @@ public static class EventMapper
     public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId)
     {
         return new EventEntity(
-            dto.Name,
-            dto.Description,
-            dto.Street,
-            dto.Neighborhood,
-            dto.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             dto.Number,
             dto.State,
-            new DateVO(DateOnly.Parse(dto.Date)),
-            TimeOnly.Parse(dto.Hour),
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
+            new DateVO(DateOnly.MinValue),
+            TimeOnly.MinValue,
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             userId,
-            dto.BannerImage,
+            new BannerImageVO(string.Empty),
             dto.Status
         );
     }
@@ -109,18 +109,18 @@ public static class EventMapper
     public static EventEntity ToEntity(this EventPutRequestDTO dto, EventEntity existingEvent)
     {
         existingEvent.Update(
-            dto.Name,
-            dto.Description,
-            dto.Street,
-            dto.Neighborhood,
-            dto.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             dto.Number,
             dto.State,
-            new DateVO(DateOnly.Parse(dto.Date)),
-            TimeOnly.Parse(dto.Hour),
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
-            dto.BannerImage
+            new DateVO(DateOnly.MinValue),
+            TimeOnly.MinValue,
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
+            new BannerImageVO(string.Empty)
         );
         return existingEvent;
     }
@@ -152,19 +152,19 @@ public static class EventMapper
     public static EventEntity ModelToEntity(this EventModel model)
     {
         return new EventEntity(
-            model.Name,     
-            model.Description,
-            model.StreetName,
-            model.Neighborhood,
-            model.City,
+            new NameVO(string.Empty),
+            new DescriptionVO(string.Empty),
+            new StreetNameVo(string.Empty),
+            new NeighborhoodVO(string.Empty),
+            new CityVO(string.Empty),
             model.Number,
             model.State,
-            model.Date,
-            model.Hour,
-            model.TicketValue,
-            model.TotalTicketQuantity,
+            new DateVO(DateOnly.MinValue),
+            TimeOnly.MinValue,
+            new TicketValueVO(0),
+            new TotalTicketQuantity(0),
             model.UserId,         
-            model.BannerImage,
+            new BannerImageVO(string.Empty),
             model.Status
         );
     }
