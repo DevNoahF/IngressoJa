@@ -1,22 +1,17 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS builder
+FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0-arm64v8 AS build
+WORKDIR /App
 
-WORKDIR /app
-
-# nuget
-COPY *.csproj ./
-RUN dotnet restore 
-
+# Copy everything
 COPY . ./
-RUN dotnet publish -c Release -o out
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -o out
 
-# runtime
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-azurelinux3.0-arm64v8
+WORKDIR /App
+COPY --from=build /App/out .
+ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
 
-FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
-WORKDIR /app
-
-COPY --from=builder /app/out ./
-
-ENTRYPOINT [ "dotnet", "IngressoJa.dll" ]
-
-
-# docker build -t ingressoja:latest .
+#docker build -t backend-ingressoja .
