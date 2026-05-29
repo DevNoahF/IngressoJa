@@ -15,6 +15,9 @@ public class EventSaleEntity
     public EventSaleEntity(Guid eventId, NameVO name, TicketValueVO ticketValue,TotalTicketQuantity totalTicketQuantity,
         EventStatusEnum status)
     {
+        if (!Enum.IsDefined(typeof(EventStatusEnum), status))
+            throw new Exception("Invalid event sale status");
+
         EventId = eventId;
         Name = name;
         TicketValue = ticketValue;
