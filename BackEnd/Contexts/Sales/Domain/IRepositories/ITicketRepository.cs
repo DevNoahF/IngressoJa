@@ -7,7 +7,5 @@ public interface ITicketRepository
     Task<TicketEntity> CreateTicket(TicketEntity ticket);
     Task<IEnumerable<TicketEntity>> GetAllTickets();
     Task<TicketEntity?> GetTicketById(Guid ticketId);
-    Task UpdateTicket(TicketEntity ticket);
-    Task DeleteTicket(Guid Code);
     Task<IEnumerable<TicketEntity?>> GetTicketByUserId(Guid UserId);
 }

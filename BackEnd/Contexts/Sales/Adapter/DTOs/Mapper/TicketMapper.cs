@@ -38,14 +38,6 @@ public static class TicketMapper
             entity.UserId
             );
     }
-
-    public static UpdateTicketResponseDTO ToUpdateTicketResponseDTO(this TicketEntity entity)
-    {
-        return new UpdateTicketResponseDTO(
-            entity.Code,
-            entity.UserId  
-            );
-    }
     public static TicketModel ToModel(this TicketEntity entity)
     {
         return new TicketModel
@@ -58,10 +50,5 @@ public static class TicketMapper
     public static TicketEntity ToEntity(this TicketModel model)
     {
         return new TicketEntity(model.Code, model.UserId);
-    }
-
-    public static TicketEntity ToEntity(this UpdateTicketRequestDTO dto, TicketEntity existingTicket)
-    {
-        return new TicketEntity(existingTicket.Code, dto.UserId);
     }
 }
