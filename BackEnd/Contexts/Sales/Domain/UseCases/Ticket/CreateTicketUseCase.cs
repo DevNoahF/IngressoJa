@@ -1,43 +1,43 @@
-using IngressoJa.Contexts.Sales.Adapter.Interfaces;
-using IngressoJa.Contexts.Sales.Domain.Entities;
-using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
-using IngressoJa.Contexts.Sales.Domain.IRepositories;
+    using IngressoJa.Contexts.Sales.Adapter.Interfaces;
+    using IngressoJa.Contexts.Sales.Domain.Entities;
+    using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
+    using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
-namespace IngressoJa.Contexts.Sales.Application.UseCases.Ticket
-{
-    public class CreateTicketUseCase : ICreateTicketUseCase
+    namespace IngressoJa.Contexts.Sales.Application.UseCases.Ticket
     {
-        private readonly ITicketRepository _ticketRepository;
-        private readonly ISaleRepository _saleRepository;
-
-        public CreateTicketUseCase(ITicketRepository ticketRepository, ISaleRepository saleRepository)
+        public class CreateTicketUseCase : ICreateTicketUseCase
         {
-            _ticketRepository = ticketRepository;
-            _saleRepository = saleRepository;
-        }
+            private readonly ITicketRepository _ticketRepository;
+            private readonly ISaleRepository _saleRepository;
 
-        public async Task<TicketEntity> ExecuteAsync(int saleId, Guid userId, CancellationToken cancellationToken = default)
-        {
-            // Buscar a venda
-            var sale = await _saleRepository.GetByIdAsync(saleId, cancellationToken);
+            public CreateTicketUseCase(ITicketRepository ticketRepository, ISaleRepository saleRepository)
+            {
+                _ticketRepository = ticketRepository;
+                _saleRepository = saleRepository;
+            }
 
-            if (sale == null)
-                throw new InvalidOperationException($"Sale with ID {saleId} not found.");
+            public async Task<TicketEntity> ExecuteAsync(int saleId, Guid userId, CancellationToken cancellationToken = default)
+            {
+                // Buscar a venda
+                var sale = await _saleRepository.GetByIdAsync(saleId, cancellationToken);
 
-            // Verificar se a venda foi aprovada
-            if (sale.SaleStatus != SaleStatusEnum.Approved)
-                throw new InvalidOperationException($"Ticket can only be created for approved sales. Current status: {sale.SaleStatus}");
+                if (sale == null)
+                    throw new InvalidOperationException($"Sale with ID {saleId} not found.");
 
-            // Validar se o usuário é o proprietário da venda
-            if (sale.UserId != userId)
-                throw new UnauthorizedAccessException("User is not authorized to create tickets for this sale.");
+                // Verificar se a venda foi aprovada
+                if (sale.SaleStatus != SaleStatusEnum.Approved)
+                    throw new InvalidOperationException($"Ticket can only be created for approved sales. Current status: {sale.SaleStatus}");
 
-            // Criar o ingresso
-            var ticket = new TicketEntity(Guid.NewGuid(), userId);
+                // Validar se o usuário é o proprietário da venda
+                if (sale.UserId != userId)
+                    throw new UnauthorizedAccessException("User is not authorized to create tickets for this sale.");
 
-            await _ticketRepository.CreateAsync(ticket);
+                // Criar o ingresso
+                var ticket = new TicketEntity(Guid.NewGuid(), userId);
 
-            return ticket;
+                await _ticketRepository.CreateAsync(ticket);
+
+                return ticket;
+            }
         }
     }
-}
