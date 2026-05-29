@@ -24,8 +24,10 @@ public class UserMapper : IUserMapper
             LastName = entity.LastName,
             Cpf = entity.Cpf,
             Email = entity.Email,
+            PhotoProfile = entity.PhotoProfile,
             PasswordHash = entity.PasswordHash,
-            Token = entity.Token,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = null,
             DateBirth = entity.DateBirth
         };
     }
@@ -43,7 +45,7 @@ public class UserMapper : IUserMapper
             model.Email,
             model.PasswordHash,
             model.PhotoProfile,
-            model.Token,
+                string.Empty,
             model.DateBirth
         );
     }

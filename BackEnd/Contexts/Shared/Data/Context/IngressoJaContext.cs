@@ -68,12 +68,18 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("password_hash")
                     .HasConversion(
                         password => password.Value,
-                        value => PasswordVO.CreatePassword(value))
-                    .HasMaxLength(12)
+                        value => PasswordVO.FromHash(value))
+                    .HasMaxLength(255)
                     .IsRequired();
 
-                entity.Property(e => e.Token)
-                    .HasMaxLength(255);
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasColumnType("datetime(6)")
+                    .IsRequired();
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnName("updated_at")
+                    .HasColumnType("datetime(6)");
 
                 entity.Property(e => e.DateBirth)
                     .HasColumnName("date_birth")

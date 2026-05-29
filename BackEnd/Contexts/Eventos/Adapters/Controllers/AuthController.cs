@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly IUserUseCase _userUseCase;

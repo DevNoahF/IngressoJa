@@ -1,6 +1,7 @@
 using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.UseCases.User;
+using IngressoJa.Contexts.Eventos.Application.UseCases;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
@@ -14,6 +15,7 @@ using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +76,7 @@ builder.Services.AddScoped<IngressoJa.Contexts.Sales.Application.UseCases.EventS
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
 builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();

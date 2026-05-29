@@ -81,7 +81,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             try
             {
                 var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email.Value == email.Value);
+                    .FirstOrDefaultAsync(u => u.Email == email);
 
                 if (user == null)
                     throw new Exception("User not found.");
@@ -142,6 +142,8 @@ namespace IngressoJa.Data.Persistence.Repositories
                 var userModel = userMapper.EntityToUserModel(user);
 
                 await _context.SaveChangesAsync();
+                existingUser.UpdatedAt = DateTime.UtcNow;
+
             }
             catch (Exception ex)
             {
