@@ -6,6 +6,7 @@ import Register from "./pages/register/Register";
 import Login from "./pages/login/LoginPage";
 import Payment from './pages/Payment/PaymentPage';
 import './App.css'
+import UpdateProfile from './pages/updateUser/updateUser';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Route path='/organizer/home' element={<OrganizerEvents />} />
       <Route path='/home' element={<Navigate to='/user/home' replace />} />
       <Route path='/create-event' element={<Navigate to='/organizer/create' replace />} />
+      <Route path='/update' element={<UpdateProfile />} />
       <Route path='*' element={<Navigate to='/user/home' replace />} />
     </Routes>
   )
