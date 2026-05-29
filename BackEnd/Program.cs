@@ -14,6 +14,8 @@ using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
+using IngressoJa.Contexts.Eventos.Application.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,8 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
 builder.Services.AddScoped<GetAllEventsUseCase>();
+builder.Services.AddScoped<UpdateEventUseCase>();
+builder.Services.AddScoped<ChangeEventStatusUseCase>();
 
 // Events in sales
 builder.Services.AddScoped<GetEventByIdUseCase>();
@@ -70,13 +74,14 @@ builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
 builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
-builder.Services.AddScoped<IngressoJa.Contexts.Sales.Application.UseCases.EventSale.UpdateEventUseCase>();
+builder.Services.AddScoped<UpdateEventSaleUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
-builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
+builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetUsersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetUsersUseCase>();

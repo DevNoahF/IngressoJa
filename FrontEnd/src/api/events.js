@@ -2,6 +2,80 @@ const DEFAULT_API_URL = "http://localhost:5202";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
 
+function unwrapValue(field) {
+  if (field && typeof field === "object" && "value" in field) {
+    return field.value;
+  }
+
+  return field ?? "";
+}
+
+function normalizeEvent(event) {
+  if (!event) {
+    return null;
+  }
+
+  return {
+    id: event.id ?? event.EventId ?? "",
+    name: unwrapValue(event.name ?? event.Name),
+    description: unwrapValue(event.description ?? event.Description),
+    street: unwrapValue(event.street ?? event.Street ?? event.streetName ?? event.StreetName),
+    neighborhood: unwrapValue(event.neighborhood ?? event.Neighborhood),
+    city: unwrapValue(event.city ?? event.City),
+    number: event.number ?? event.Number ?? 0,
+    state: event.state ?? event.State ?? 0,
+    date: event.date ?? event.Date ?? "",
+    hour: event.hour ?? event.Hour ?? "",
+    ticketValue: unwrapValue(event.ticketValue ?? event.TicketValue) ?? 0,
+    totalTicketQuantity: unwrapValue(event.totalTicketQuantity ?? event.TotalTicketQuantity) ?? 0,
+    bannerImage: unwrapValue(event.bannerImage ?? event.BannerImage),
+    userId: event.userId ?? event.UserId ?? "",
+    status: event.status ?? event.Status ?? 1,
+    createdAt: event.createdAt ?? event.CreatedAt ?? null,
+    updatedAt: event.updatedAt ?? event.UpdatedAt ?? null,
+  };
+}
+
+function wrapValue(value) {
+  return { value };
+}
+
+function buildCreatePayload(payload) {
+  return {
+    name: wrapValue(payload.name),
+    description: wrapValue(payload.description),
+    street: wrapValue(payload.street),
+    neighborhood: wrapValue(payload.neighborhood),
+    city: wrapValue(payload.city),
+    number: Number(payload.number),
+    state: Number(payload.state),
+    date: payload.date,
+    hour: payload.hour,
+    ticketValue: wrapValue(Number(payload.ticketValue)),
+    totalTicketQuantity: wrapValue(Number(payload.totalTicketQuantity)),
+    bannerImage: wrapValue(payload.bannerImage),
+    userId: payload.userId,
+    status: Number(payload.status ?? 1),
+  };
+}
+
+function buildUpdatePayload(payload) {
+  return {
+    name: wrapValue(payload.name),
+    description: wrapValue(payload.description),
+    street: wrapValue(payload.street),
+    neighborhood: wrapValue(payload.neighborhood),
+    city: wrapValue(payload.city),
+    number: Number(payload.number),
+    state: Number(payload.state),
+    date: payload.date,
+    hour: payload.hour,
+    ticketValue: wrapValue(Number(payload.ticketValue)),
+    totalTicketQuantity: wrapValue(Number(payload.totalTicketQuantity)),
+    bannerImage: wrapValue(payload.bannerImage),
+  };
+}
+
 export const statesOptions = [
   { value: 1, code: "AC", name: "Acre" },
   { value: 2, code: "AL", name: "Alagoas" },
@@ -68,20 +142,42 @@ async function request(path, options = {}) {
 }
 
 export function getEvents() {
-  return request("/events");
+  return request("/events").then((events) => (Array.isArray(events) ? events.map(normalizeEvent) : []));
 }
 
 export function getEventsByOrganizerId(organizerId) {
-  return request(`/events/organizer/${organizerId}`);
+  return request(`/events/organizer/${organizerId}`).then((events) => (Array.isArray(events) ? events.map(normalizeEvent) : []));
 }
 
 export function getEventById(eventId) {
-  return request(`/events/${eventId}`);
+  return request(`/events/${eventId}`).then(normalizeEvent);
 }
 
 export function createEvent(payload) {
   return request("/events", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(buildCreatePayload(payload)),
   });
 }
+
+export function updateEvent(eventId, payload) {
+  return request(`/events/${eventId}`, {
+    method: "PUT",
+    body: JSON.stringify(buildUpdatePayload(payload)),
+  }).then(normalizeEvent);
+}
+
+export function changeEventStatus(eventId, status) {
+  return request(`/events/${eventId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status: Number(status) }),
+  }).then((response) => (response ? normalizeEvent(response) : response));
+}
+
+export function deleteEvent(eventId) {
+  return request(`/events/${eventId}`, {
+    method: "DELETE",
+  });
+}
+
+export { normalizeEvent };

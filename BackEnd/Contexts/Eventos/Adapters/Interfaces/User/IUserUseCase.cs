@@ -12,7 +12,7 @@ namespace IngressoJa.Contexts.Eventos.Application.Interfaces.User
     public interface IUserUseCase
     {
         Task RegisterUser(UserRegisterRequestDTO userRegisterRequestDTO);
-        Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO userAuthRequestDTO);
+        Task<UserAuthResponseDTO> Login(UserAuthRequestDTO userAuthRequestDTO);
         Task<UserRecordedResponseDTO> getUser(Guid id);
         Task<UserEntity> getUserByEmail(EmailVO email);
         Task RegisterOrganizer(UserRegisterRequestDTO userRegisterRequestDTO);

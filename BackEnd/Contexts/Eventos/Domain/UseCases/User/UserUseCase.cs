@@ -31,6 +31,10 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
         {
             try
             {
+                var alreadyExists = await __repository.UserExistsByEmailOrCpf(dto.Email, dto.Cpf);
+                if (alreadyExists)
+                    throw new Exception("A user with this email or CPF already exists.");
+
                 var user = __userMapper.RegisterUserToEntity(dto);
                 await __repository.RegisterUser(user);
             }
@@ -44,8 +48,12 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
         {
             try
             {
+                var alreadyExists = await __repository.UserExistsByEmailOrCpf(dto.Email, dto.Cpf);
+                if (alreadyExists)
+                    throw new Exception("A user with this email or CPF already exists.");
+
                 var user = __userMapper.RegisterOrganizerToEntity(dto);
-                await __repository.RegisterUser(user);
+                await __repository.RegisterOrganizer(user);
             }
             catch (Exception ex)
             {
@@ -53,7 +61,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
             }
         }
 
-        public async Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto)
+        public async Task<UserAuthResponseDTO> Login(UserAuthRequestDTO dto)
         {
             try
             {
@@ -66,8 +74,10 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
                     throw new Exception("Invalid password.");
 
                 var token = __tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
+                userExisting.SetToken(token);
+                await __repository.UpdateUser(userExisting.Id, userExisting);
                     
-                var response = __userMapper.AuthResponse(userExisting, token);
+                var response = __userMapper.AuthResponse(userExisting);
                 return response;
             }
             catch (Exception ex)

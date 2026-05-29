@@ -30,6 +30,9 @@ namespace IngressoJa.Data.dbContext
 
                 entity.HasKey(e => e.Id);
 
+                entity.HasIndex(e => e.Email).IsUnique();
+                entity.HasIndex(e => e.Cpf).IsUnique();
+
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever();
 
@@ -68,8 +71,8 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("password_hash")
                     .HasConversion(
                         password => password.Value,
-                        value => PasswordVO.CreatePassword(value))
-                    .HasMaxLength(12)
+                        value => PasswordVO.FromHash(value))
+                    .HasMaxLength(255)
                     .IsRequired();
 
                 entity.Property(e => e.Token)

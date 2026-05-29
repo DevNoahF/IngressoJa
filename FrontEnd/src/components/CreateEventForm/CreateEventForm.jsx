@@ -79,7 +79,7 @@ function CreateEventForm() {
       });
 
       setFormData(initialFormData);
-      navigate("/");
+      navigate("/organizer/home", { replace: true });
     } catch (error) {
       setFeedback({
         type: "error",

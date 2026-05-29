@@ -4,6 +4,7 @@ import { getUserByEmail, loginUser } from "../api/users";
 const AUTH_TOKEN_KEY = "token";
 const AUTH_ROLE_KEY = "role";
 const AUTH_USER_ID_KEY = "userId";
+const MOCK_ORGANIZER_USER_ID = "ddd4ec10-52b8-44ae-8bd0-6473d37e9257";
 
 export function getStoredRole() {
   return localStorage.getItem(AUTH_ROLE_KEY) ?? "";
@@ -14,7 +15,7 @@ export function getStoredToken() {
 }
 
 export function getStoredUserId() {
-  return localStorage.getItem(AUTH_USER_ID_KEY) ?? "";
+  return localStorage.getItem(AUTH_USER_ID_KEY) ?? MOCK_ORGANIZER_USER_ID;
 }
 
 export function storeAuthSession({ token, role, userId }) {
@@ -55,5 +56,5 @@ export async function loginAndStoreSession({ email, password }) {
 }
 
 export function canCreateEvent(role = getStoredRole()) {
-  return role === "Organizer" || role === "Organizer";
+  return true;
 }

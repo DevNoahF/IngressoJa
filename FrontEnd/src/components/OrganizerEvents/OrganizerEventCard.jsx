@@ -1,10 +1,22 @@
 import "./OrganizerEventCard.css";
 import { Calendar, Clock, MapPin } from "lucide-react";
 
-function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick }) {
+function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete }) {
   return (
     <article className="organizer-event-shell">
       <div className="organizer-event-card">
+        {onDelete ? (
+          <button
+            type="button"
+            className="organizer-event-delete"
+            aria-label={`Excluir ${event.name}`}
+            title="Excluir evento"
+            onClick={onDelete}
+          >
+            ×
+          </button>
+        ) : null}
+
         <img 
           src={event.bannerImage} 
           alt={event.name} 
@@ -12,6 +24,7 @@ function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick }) {
           onClick={onPhotoClick}
           style={{ cursor: 'pointer' }}
         />
+
         <div className="organizer-event-meta">
           <h3>{event.name}</h3>
 

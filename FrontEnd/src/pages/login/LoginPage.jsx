@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import { loginAndStoreSession, getStoredRole } from '../../utils/auth';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -15,24 +16,11 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Aqui você fará a chamada à API de login
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, senha }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        navigate('/');
-      } else {
-        setError('Email ou senha inválidos');
-      }
+      await loginAndStoreSession({ email, password: senha });
+      const role = getStoredRole();
+      navigate(role === 'Organizer' ? '/organizer/home' : '/user/home');
     } catch (err) {
-      setError('Erro ao conectar. Tente novamente.');
+      setError(err instanceof Error ? err.message : 'Erro ao conectar. Tente novamente.');
       console.error(err);
     } finally {
       setLoading(false);

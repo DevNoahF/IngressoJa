@@ -11,20 +11,20 @@ using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
 
 {
-    public class LoginUserUseCase : ILoginUserUseCase
+    public class LoginUseCase : ILoginUseCase
     {
         private readonly IUserRepository _repository;
         private readonly ITokenGenerate _tokenGenerate;
         private readonly IUserMapper _userMapper;
 
-        public LoginUserUseCase(IUserRepository repository, ITokenGenerate tokenGenerate, IUserMapper userMapper)
+        public LoginUseCase(IUserRepository repository, ITokenGenerate tokenGenerate, IUserMapper userMapper)
         {
             _repository = repository;
             _tokenGenerate = tokenGenerate;
             _userMapper = userMapper;
         }
 
-        public async Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto)
+        public async Task<UserAuthResponseDTO> Login(UserAuthRequestDTO dto)
         {
             try
             {
@@ -37,8 +37,10 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
                     throw new Exception("Invalid password.");
 
                 var token = _tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
+                userExisting.SetToken(token);
+                await _repository.UpdateUser(userExisting.Id, userExisting);
                     
-                var response = _userMapper.AuthResponse(userExisting, token);
+                var response = _userMapper.AuthResponse(userExisting);
                 return response;
             }
             catch (Exception ex)

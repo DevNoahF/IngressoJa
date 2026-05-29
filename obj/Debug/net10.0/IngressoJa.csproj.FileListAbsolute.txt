@@ -1,9 +1,0 @@
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.csproj.AssemblyReference.cache
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\rpswa.dswa.cache.json
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.AssemblyInfoInputs.cache
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.AssemblyInfo.cs
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.csproj.CoreCompileInputs.cache
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\joaqu\OneDrive\Documentos\GitHub\IngressoJa\obj\Debug\net10.0\IngressoJa.sourcelink.json

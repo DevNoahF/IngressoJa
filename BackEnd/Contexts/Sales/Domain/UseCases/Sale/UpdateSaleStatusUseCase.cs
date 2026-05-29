@@ -7,17 +7,10 @@ namespace IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 public class UpdateSaleStatusUseCase
 {
     private readonly ISaleRepository _saleRepository;
-    private readonly ITicketRepository _ticketRepository;
-    private readonly IEventSaleRepository _eventSaleRepository;
 
-    public UpdateSaleStatusUseCase(
-        ISaleRepository saleRepository,
-        ITicketRepository ticketRepository,
-        IEventSaleRepository eventSaleRepository)
+    public UpdateSaleStatusUseCase(ISaleRepository saleRepository)
     {
         _saleRepository = saleRepository;
-        _ticketRepository = ticketRepository;
-        _eventSaleRepository = eventSaleRepository;
     }
 
     public async Task<SaleEntity?> ExecuteAsync(
@@ -35,28 +28,8 @@ public class UpdateSaleStatusUseCase
 
         sale.UpdateStatus(status);
 
-        // Se aprovada, gerar ticket e descontar da quantidade disponível
-        if (status == SaleStatusEnum.Approved)
-        {
-            // Criar ticket
-            var ticket = new TicketEntity(Guid.NewGuid(), sale.UserId);
-            await _ticketRepository.CreateAsync(ticket);
-
-            // Associar ticket à venda
-            sale.SetTicketId(ticket.Code);
-
-            // Descontar tickets do evento
-            var eventSale = await _eventSaleRepository.GetByEventIdAsync(sale.EventId);
-            if (eventSale != null)
-            {
-                eventSale.DeductTickets(sale.SelectedTicketsUser);
-                await _eventSaleRepository.UpdateAsync(eventSale);
-            }
-        }
-
         await _saleRepository.UpdateAsync(sale, cancellationToken);
 
         return sale;
     }
 }
-

@@ -1,10 +1,17 @@
+<<<<<<< HEAD
     using IngressoJa.Contexts.Sales.Adapter.Interfaces;
     using IngressoJa.Contexts.Sales.Domain.Entities;
     using IngressoJa.Contexts.Sales.Domain.Entities.Enums;
     using IngressoJa.Contexts.Sales.Domain.IRepositories;
+=======
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
+using IngressoJa.Contexts.Sales.Domain.Entities;
+using IngressoJa.Contexts.Sales.Domain.IRepositories;
+>>>>>>> 6bc7467a4162024c06fe2d5e40f8599c1d3a7d60
 
     namespace IngressoJa.Contexts.Sales.Application.UseCases.Ticket
     {
+<<<<<<< HEAD
         public class CreateTicketUseCase : ICreateTicketUseCase
         {
             private readonly ITicketRepository _ticketRepository;
@@ -34,6 +41,20 @@
 
                 // Criar o ingresso
                 var ticket = new TicketEntity(Guid.NewGuid(), userId);
+=======
+        private readonly ITicketRepository _repository;
+
+        public CreateTicketUseCase(ITicketRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<TicketEntity> ExecuteAsync(Guid userId)
+        {
+            var ticket = new TicketEntity(Guid.NewGuid(), userId);
+
+            await _repository.CreateAsync(ticket);
+>>>>>>> 6bc7467a4162024c06fe2d5e40f8599c1d3a7d60
 
                 await _ticketRepository.CreateAsync(ticket);
 

@@ -3,57 +3,29 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
-import { getEventsByOrganizerId, getStateCode } from "../../api/events";
+import { getEventsByOrganizerId, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
-const mockEvents = [
-  {
-    id: "mock-1",
-    name: "Festival de Verão",
-    description: "Evento mockado para teste da rota do organizador.",
-    location: "São Paulo - SP",
-    formattedDate: "15/07/2026",
-    hour: "18:00",
-    bannerImage: fallbackImage,
-    totalTicketQuantity: 120,
-    status: "upcoming",
-  },
-  {
-    id: "mock-2",
-    name: "Noite Eletrônica",
-    description: "Evento mockado para teste da rota do organizador.",
-    location: "Rio de Janeiro - RJ",
-    formattedDate: "22/07/2026",
-    hour: "20:30",
-    bannerImage: fallbackImage,
-    totalTicketQuantity: 90,
-    status: "upcoming",
-  },
-  {
-    id: "mock-3",
-    name: "Samba Sunset",
-    description: "Evento mockado para teste da rota do organizador.",
-    location: "Belo Horizonte - MG",
-    formattedDate: "28/07/2026",
-    hour: "17:00",
-    bannerImage: fallbackImage,
-    totalTicketQuantity: 150,
-    status: "finished",
-  },
-  {
-    id: "mock-4",
-    name: "Tech Conference",
-    description: "Evento mockado para teste da rota do organizador.",
-    location: "Curitiba - PR",
-    formattedDate: "02/08/2026",
-    hour: "09:00",
-    bannerImage: fallbackImage,
-    totalTicketQuantity: 300,
-    status: "upcoming",
-  },
-];
+// Evento fixo (sempre visível, não deve ser apagado)
+const PERMANENT_EVENT = {
+  id: "permanent-semanca-1",
+  name: "Show da SeManca e SeMata",
+  description:
+    "Uma noite inesquecível onde a SeManca toca trompete com os pés e a SeMata ensina passos de dança proibidos até pela física. Riso garantido ou SeMata direto para sua casa.",
+  location: "Cidade Imaginária - SMT",
+  // Local engraçado
+  location: "Praça do Caos Glorioso - ZZ",
+  formattedDate: "31/12/2026",
+  hour: "23:59",
+  bannerImage: "https://i.pinimg.com/736x/c5/53/79/c55379996a160a72d08150c3b05db17d.jpg",
+  totalTicketQuantity: 420,
+  ticketValue: 99.9,
+  status: "upcoming",
+};
+
+
 
 function normalizeEvent(event) {
   const city = event.city ?? "";
@@ -63,13 +35,57 @@ function normalizeEvent(event) {
     id: event.id,
     name: event.name ?? "Evento sem nome",
     description: event.description ?? "",
+    city,
+    state: event.state ?? 0,
+    street: event.street ?? "",
+    number: event.number ?? 0,
+    neighborhood: event.neighborhood ?? "",
     location: stateCode ? `${city} - ${stateCode}` : city,
     formattedDate: event.date ?? "Data não informada",
+    date: event.date ?? "",
     hour: event.hour ?? "--:--",
     bannerImage: event.bannerImage || fallbackImage,
     totalTicketQuantity: event.totalTicketQuantity ?? 0,
     ticketValue: event.ticketValue ?? 0,
     status: event.status ?? "",
+  };
+}
+
+function toDateInputValue(dateValue) {
+  if (!dateValue) {
+    return "";
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+    return dateValue;
+  }
+
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateValue)) {
+    const [day, month, year] = dateValue.split("/");
+    return `${year}-${month}-${day}`;
+  }
+
+  return "";
+}
+
+function toStateValue(state) {
+  return state ? String(state) : "";
+}
+
+function buildEditForm(event) {
+  return {
+    name: event.name ?? "",
+    description: event.description ?? "",
+    street: event.street ?? "",
+    number: String(event.number ?? ""),
+    neighborhood: event.neighborhood ?? "",
+    city: event.city ?? "",
+    state: toStateValue(event.state),
+    date: toDateInputValue(event.date ?? event.formattedDate ?? ""),
+    hour: event.hour ?? "",
+    ticketValue: String(event.ticketValue ?? ""),
+    totalTicketQuantity: String(event.totalTicketQuantity ?? ""),
+    bannerImage: event.bannerImage ?? "",
   };
 }
 
@@ -84,10 +100,15 @@ function OrganizerEvents() {
   const [showRevenueModal, setShowRevenueModal] = useState(false);
   const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const [editFeedback, setEditFeedback] = useState({ type: "", message: "" });
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
 
   // Funções para abrir modais
   const handleEditClick = (event) => {
     setSelectedEvent(event);
+    setEditForm(buildEditForm(event));
+    setEditFeedback({ type: "", message: "" });
     setShowEditModal(true);
   };
 
@@ -101,19 +122,92 @@ function OrganizerEvents() {
     setShowDescriptionModal(true);
   };
 
+  const handleDeleteClick = async (eventToDelete) => {
+    if (!eventToDelete) return;
+
+    const confirmed = window.confirm(`Excluir o evento "${eventToDelete.name}"? Esta ação é irreversível.`);
+    if (!confirmed) return;
+
+    try {
+      await deleteEvent(eventToDelete.id);
+      setEvents((current) => current.filter((e) => e.id !== eventToDelete.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível excluir o evento.");
+    }
+  };
+
   const handleCloseModals = () => {
     setShowEditModal(false);
     setShowRevenueModal(false);
     setShowDescriptionModal(false);
     setSelectedEvent(null);
+    setEditForm(null);
+    setEditFeedback({ type: "", message: "" });
+    setIsSavingEdit(false);
   };
+
+  function handleEditFormChange(event) {
+    const { name, value } = event.target;
+    setEditForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  }
+
+  async function handleEditSubmit(event) {
+    event.preventDefault();
+
+    if (!selectedEvent || !editForm) {
+      return;
+    }
+
+    setIsSavingEdit(true);
+    setEditFeedback({ type: "", message: "" });
+
+    try {
+      const updatedEvent = await updateEvent(selectedEvent.id, {
+        name: editForm.name,
+        description: editForm.description,
+        street: editForm.street,
+        neighborhood: editForm.neighborhood,
+        city: editForm.city,
+        number: Number(editForm.number),
+        state: Number(editForm.state),
+        date: editForm.date,
+        hour: editForm.hour,
+        ticketValue: Number(editForm.ticketValue),
+        totalTicketQuantity: Number(editForm.totalTicketQuantity),
+        bannerImage: editForm.bannerImage,
+      });
+
+      setEvents((currentEvents) =>
+        currentEvents.map((currentEvent) =>
+          currentEvent.id === selectedEvent.id ? updatedEvent : currentEvent
+        )
+      );
+
+      setSelectedEvent(updatedEvent);
+      setEditForm(buildEditForm(updatedEvent));
+      setEditFeedback({
+        type: "success",
+        message: "Evento atualizado com sucesso.",
+      });
+    } catch (requestError) {
+      setEditFeedback({
+        type: "error",
+        message: requestError instanceof Error ? requestError.message : "Não foi possível atualizar o evento.",
+      });
+    } finally {
+      setIsSavingEdit(false);
+    }
+  }
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadEvents() {
       if (!organizerId) {
-        setEvents(mockEvents);
+        setEvents([]);
         setError("");
         setIsLoading(false);
         return;
@@ -133,7 +227,7 @@ function OrganizerEvents() {
       } catch (requestError) {
         if (isMounted) {
           setError("");
-          setEvents(mockEvents);
+          setEvents([]);
         }
       } finally {
         if (isMounted) {
@@ -166,6 +260,15 @@ function OrganizerEvents() {
             <p className="organizer-events-state">Nenhum evento encontrado.</p>
           ) : null}
 
+          {/* Evento permanente: sempre renderizado e sem opção de deletar */}
+          <OrganizerEventCard
+            key={PERMANENT_EVENT.id}
+            event={PERMANENT_EVENT}
+            onEdit={() => handleEditClick(PERMANENT_EVENT)}
+            onRevenue={() => handleRevenueClick(PERMANENT_EVENT)}
+            onPhotoClick={() => handlePhotoClick(PERMANENT_EVENT)}
+          />
+
           {visibleEvents.map((event) => (
             <OrganizerEventCard
                 key={event.id}
@@ -173,6 +276,7 @@ function OrganizerEvents() {
                 onEdit={() => handleEditClick(event)}
                 onRevenue={() => handleRevenueClick(event)}
                 onPhotoClick={() => handlePhotoClick(event)}
+                onDelete={() => handleDeleteClick(event)}
             />
           ))}
         </section>
@@ -190,79 +294,82 @@ function OrganizerEvents() {
             </div>
 
             <div className="organizer-modal-body-scroll">
-              <form className="edit-event-form">
+              <form id="edit-event-form" className="edit-event-form" onSubmit={handleEditSubmit}>
                 <div className="form-group full-width">
                   <label>NOME DO EVENTO</label>
-                  <input type="text" defaultValue={selectedEvent.name} />
+                  <input type="text" name="name" value={editForm?.name ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group full-width">
                   <label>DESCRIÇÃO</label>
-                  <textarea defaultValue={selectedEvent.description} />
+                  <textarea name="description" value={editForm?.description ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>RUA (STREET)</label>
-                  <input type="text" placeholder="Ex: Rua das Flores" />
+                  <input type="text" name="street" value={editForm?.street ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>NÚMERO</label>
-                  <input type="text" placeholder="Ex: 123" />
+                  <input type="number" min="0" name="number" value={editForm?.number ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>BAIRRO (NEIGHBORHOOD)</label>
-                  <input type="text" />
+                  <input type="text" name="neighborhood" value={editForm?.neighborhood ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>CIDADE (CITY)</label>
-                  <input type="text" defaultValue={selectedEvent.location.split(" - ")[0]} />
+                  <input type="text" name="city" value={editForm?.city ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>ESTADO (STATE)</label>
-                  <select>
-                    <option value="SP">São Paulo</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="MG">Minas Gerais</option>
-                    {/* Adicionar outros conforme seu ENUM */}
+                  <select name="state" value={editForm?.state ?? ""} onChange={handleEditFormChange} required>
+                    <option value="">Selecione o estado</option>
+                    {statesOptions.map((state) => (
+                      <option key={state.value} value={state.value}>
+                        {state.code} - {state.name}
+                      </option>
+                    ))}
                   </select>
-                </div>
-
-                <div className="form-group">
-                  <label>DATA E HORA (COMPLETO)</label>
-                  <input type="datetime-local" />
                 </div>
 
                 <div className="form-group">
                   <label>DATA (DATE ONLY)</label>
-                  <input type="date" defaultValue={selectedEvent.date} />
+                  <input type="date" name="date" value={editForm?.date ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>HORA (TIME ONLY)</label>
-                  <input type="time" defaultValue={selectedEvent.hour} />
+                  <input type="time" name="hour" value={editForm?.hour ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group">
                   <label>TOTAL DE TICKETS</label>
-                  <input type="number" defaultValue={selectedEvent.totalTicketQuantity} />
+                  <input type="number" min="1" name="totalTicketQuantity" value={editForm?.totalTicketQuantity ?? ""} onChange={handleEditFormChange} required />
                 </div>
 
                 <div className="form-group full-width">
-                  <label>STATUS DO EVENTO</label>
-                  <select defaultValue={selectedEvent.status}>
-                    <option value="upcoming">Próximo</option>
-                    <option value="finished">Encerrado</option>
-                  </select>
+                  <label>VALOR DO INGRESSO</label>
+                  <input type="number" min="0" step="0.01" name="ticketValue" value={editForm?.ticketValue ?? ""} onChange={handleEditFormChange} required />
                 </div>
+
+                <div className="form-group full-width">
+                  <label>BANNER DO EVENTO</label>
+                  <input type="url" name="bannerImage" value={editForm?.bannerImage ?? ""} onChange={handleEditFormChange} required />
+                </div>
+
+                {editFeedback.message ? (
+                  <p className={`form-feedback ${editFeedback.type}`}>{editFeedback.message}</p>
+                ) : null}
               </form>
             </div>
 
-            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>
-              Salvar Alterações
+            <button type="submit" form="edit-event-form" className="organizer-modal-save-btn" disabled={isSavingEdit}>
+              {isSavingEdit ? "Salvando..." : "Salvar Alterações"}
             </button>
           </div>
         </div>
