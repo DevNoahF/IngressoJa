@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0-arm64v8 AS build
 WORKDIR /App
-
 # Copy everything
 COPY . ./
 # Restore as distinct layers
@@ -11,7 +10,10 @@ RUN dotnet publish -o out
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-azurelinux3.0-arm64v8
 WORKDIR /App
+EXPOSE 80
 COPY --from=build /App/out .
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+ENTRYPOINT ["dotnet", "IngressoJa.dll"]
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=development
 
 #docker build -t backend-ingressoja .
