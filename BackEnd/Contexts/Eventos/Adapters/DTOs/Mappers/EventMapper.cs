@@ -46,7 +46,7 @@ public static class EventMapper
     public static EventCreateResponseDTO ToCreateResponse(this EventEntity eventEntity)
     {
         return new EventCreateResponseDTO(
-            eventEntity.Id,
+            Guid.NewGuid(),
             eventEntity.Name,
             eventEntity.Description,
             eventEntity.Street,
@@ -91,6 +91,7 @@ public static class EventMapper
     public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId)
     {
         return new EventEntity(
+            Guid.NewGuid(),
             dto.Name,
             dto.Description,
             dto.Street,
@@ -154,6 +155,7 @@ public static class EventMapper
     public static EventEntity ModelToEntity(this EventModel model)
     {
         return new EventEntity(
+            model.Id,
             model.Name,
             model.Description,
             model.StreetName,
@@ -165,7 +167,7 @@ public static class EventMapper
             model.Hour,
             model.TicketValue,
             model.TotalTicketQuantity,
-            model.UserId,         
+            model.UserId,
             model.BannerImage,
             model.Status
         );

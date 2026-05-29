@@ -66,11 +66,11 @@ public class EventRepository : IEventRepository
         return model?.ModelToEntity();
     }
 
-    public async Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO dto)
+    public async Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO dto, Guid id)
     {
-        var model = await _context.Events.FindAsync(dto.EventId);
+        var model = await _context.Events.FindAsync(id);
         if (model is null)
-            throw new EventNotFoundException(dto.EventId);
+            throw new EventNotFoundException(id);
 
         var entity = model.ModelToEntity();
         entity.ChangeStatus(dto.Status);
