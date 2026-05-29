@@ -14,6 +14,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories
     {
         Task RegisterUser(UserEntity user);
         Task RegisterOrganizer(UserEntity user);
+        Task<bool> UserExistsByEmailOrCpf(EmailVO email, CpfVO cpf);
         Task<List<UserEntity>> getAllUsers();
         Task<List<UserEntity>> getAllOrganizers();
         Task<UserEntity> getUserById(Guid id);

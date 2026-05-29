@@ -24,6 +24,7 @@ public class UserMapper : IUserMapper
             LastName = entity.LastName,
             Cpf = entity.Cpf,
             Email = entity.Email,
+            PhotoProfile = entity.PhotoProfile,
             PasswordHash = entity.PasswordHash,
             Token = entity.Token,
             DateBirth = entity.DateBirth
@@ -41,9 +42,9 @@ public class UserMapper : IUserMapper
             model.LastName,
             model.Cpf,
             model.Email,
-            model.PasswordHash,
-            model.PhotoProfile,
-            model.Token,
+            PasswordVO.FromHash(model.PasswordHash.Value),
+            model.PhotoProfile ?? new PhotoProfileVO(string.Empty),
+            model.Token ?? string.Empty,
             model.DateBirth
         );
     }
@@ -81,7 +82,7 @@ public class UserMapper : IUserMapper
             string.Empty,
             new CpfVO(string.Empty),
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
             string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
@@ -98,7 +99,7 @@ public class UserMapper : IUserMapper
             string.Empty,
             new CpfVO(string.Empty),
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
             string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
@@ -115,7 +116,7 @@ public class UserMapper : IUserMapper
             dto.LastName,
             dto.Cpf,
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
             string.Empty,
             dto.DateBirth
@@ -132,7 +133,7 @@ public class UserMapper : IUserMapper
             dto.LastName,
             dto.Cpf,
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
             string.Empty,
             dto.DateBirth
@@ -140,9 +141,9 @@ public class UserMapper : IUserMapper
     }
 
     // responseAuth to UserEntity
-    public UserAuthResponseDTO AuthResponse(UserEntity entity, string token)
+    public UserAuthResponseDTO AuthResponse(UserEntity entity)
     {
-        return new UserAuthResponseDTO(token);
+        return new UserAuthResponseDTO(entity.Token);
     }
 
     // UserAuthRequestDTO para UserAuthResponseDTO
@@ -154,19 +155,19 @@ public class UserMapper : IUserMapper
         );
     }
 
-    public  UserEntity UpdateUserToEntity(  UserUpdateRequestDTO dto)
+    public  UserEntity UpdateUserToEntity(UserEntity currentUser, UserUpdateRequestDTO dto)
     {
         return new UserEntity(
-            Guid.NewGuid(),
-            RoleEnum.User,
+            currentUser.Id,
+            currentUser.Role,
             dto.FirstName,
             dto.LastName,
-            new CpfVO(string.Empty),
+            currentUser.Cpf,
             dto.Email,
-            dto.Password,
-            new PhotoProfileVO(string.Empty),
-            string.Empty,
-            DateOnly.FromDateTime(DateTime.Now)
+            PasswordVO.CreatePassword(dto.Password.Value),
+            dto.PhotoProfile,
+            currentUser.Token,
+            currentUser.DateBirth
         );
     }
     

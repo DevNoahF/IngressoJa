@@ -19,7 +19,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
     {
         private readonly IRegisterUserUseCase _registerUserUseCase;
         private readonly IRegisterOrganizerUseCase _registerOrganizerUseCase;
-        private readonly ILoginUserUseCase _loginUserUseCase;
         private readonly IGetUserByEmailUseCase _getUserByEmailUseCase;
         private readonly IGetUserUseCase _getUserUseCase;
         private readonly IGetUsersUseCase _getUsersUseCase;
@@ -29,7 +28,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         public UserController(
             IRegisterUserUseCase registerUserUseCase,
             IRegisterOrganizerUseCase registerOrganizerUseCase,
-            ILoginUserUseCase loginUserUseCase,
             IGetUserByEmailUseCase getUserByEmailUseCase,
             IGetUserUseCase getUserUseCase,
             IGetUsersUseCase getUsersUseCase,
@@ -39,7 +37,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             _registerUserUseCase = registerUserUseCase;
             _registerOrganizerUseCase = registerOrganizerUseCase;
-            _loginUserUseCase = loginUserUseCase;
             _getUserByEmailUseCase = getUserByEmailUseCase;
             _getUserUseCase = getUserUseCase;
             _getUsersUseCase = getUsersUseCase;

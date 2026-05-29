@@ -23,8 +23,12 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
         {
             try
             {
+                var alreadyExists = await _repository.UserExistsByEmailOrCpf(dto.Email, dto.Cpf);
+                if (alreadyExists)
+                    throw new Exception("A user with this email or CPF already exists.");
+
                 var toEntity = _userMapper.RegisterOrganizerToEntity(dto);
-                await _repository.RegisterUser(toEntity);
+                await _repository.RegisterOrganizer(toEntity);
             }
             catch (Exception ex)
             {
