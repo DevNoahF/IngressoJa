@@ -77,7 +77,7 @@ builder.Services.AddScoped<UpdateEventSaleUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IUserUseCase>(); Auth quer essa dependencia, porém aplicação não roda se aplicada
+//builder.Services.AddScoped<IUserUseCase>(); ->Lembrar de tirar os comentários assim que LoginUseCase for implementado em Repository
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
 builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();

@@ -6,6 +6,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 
 public class EventEntity
 {
+    private EventEntity() { }
 
     public Guid Id { get; private set; }
     public NameVO Name { get; private set; }

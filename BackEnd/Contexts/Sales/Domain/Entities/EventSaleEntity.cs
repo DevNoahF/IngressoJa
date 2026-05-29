@@ -5,6 +5,8 @@ namespace IngressoJa.Contexts.Sales.Domain.Entities;
 
 public class EventSaleEntity
 {
+    private EventSaleEntity() { }
+
     public Guid EventId { get; set; }
     public NameVO Name { get; set; }
     public TicketValueVO TicketValue { get; set; }

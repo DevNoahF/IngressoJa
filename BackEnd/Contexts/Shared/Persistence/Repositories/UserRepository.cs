@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
@@ -148,6 +150,13 @@ namespace IngressoJa.Data.Persistence.Repositories
                 throw new Exception($"Error updating user: {ex.Message}", ex);
             }
         }
+
+        /*public async Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto)
+        {
+            try
+            {
+    
+        }*/
 
     }
 }
