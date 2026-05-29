@@ -9,7 +9,7 @@ public class DateVO
     public DateVO(DateOnly value)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        if (value > today)
+        if (value < today)
             throw new EventDateInPastException(value.ToDateTime(TimeOnly.MinValue));//Arrumar o Exception
         Value = value;
     }

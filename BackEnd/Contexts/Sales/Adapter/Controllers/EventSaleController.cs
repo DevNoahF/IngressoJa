@@ -12,20 +12,20 @@ public class EventSaleController : ControllerBase
     private readonly DeleteEventSaleUseCase _deleteEventSaleUseCase;
     private readonly GetAllEventSalesUseCase _getAllEventSalesUseCase;
     private readonly GetEventSaleByIdUseCase _getEventSaleByIdUseCase;
-    private readonly UpdateEventUseCase _updateEventUseCase;
+    private readonly UpdateEventSaleUseCase _updateEventSaleUseCase;
 
     public EventSaleController(
         AddEventSaleUseCase addEventSaleUseCase,
         DeleteEventSaleUseCase deleteEventSaleUseCase,
         GetAllEventSalesUseCase getAllEventSalesUseCase,
         GetEventSaleByIdUseCase getEventSaleByIdUseCase,
-        UpdateEventUseCase updateEventUseCase)
+        UpdateEventSaleUseCase updateEventSaleUseCase)
     {
         _addEventSaleUseCase = addEventSaleUseCase;
         _deleteEventSaleUseCase = deleteEventSaleUseCase;
         _getAllEventSalesUseCase = getAllEventSalesUseCase;
         _getEventSaleByIdUseCase = getEventSaleByIdUseCase;
-        _updateEventUseCase = updateEventUseCase;
+        _updateEventSaleUseCase = updateEventSaleUseCase;
     }
 
     [HttpPost]
@@ -54,7 +54,7 @@ public class EventSaleController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventSaleUpdateRequestDTO dto)
     {
-        var result = await _updateEventUseCase.UpdateEvent(id, dto);
+        var result = await _updateEventSaleUseCase.UpdateEvent(id, dto);
         return Ok(result);
     }
 
