@@ -30,11 +30,11 @@ export default function HeaderOrganizer() {
 	};
 
 	function handleCreateEvent() {
-		navigate("/create-event");
+		navigate("/organizer/create");
 	}
 
 	function handleGoHome() {
-		navigate("/home");
+		navigate("/organizer/home");
 	}
 
 	return (
