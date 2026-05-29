@@ -1,11 +1,8 @@
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
 import { Ticket, Plus, LogIn, UserPlus } from "lucide-react";
-import { canCreateEvent } from "../../utils/auth";
-
 function Header() {
   const navigate = useNavigate();
-  const canAccessCreateEvent = canCreateEvent();
 
   return (
     <header className="header">
@@ -18,12 +15,10 @@ function Header() {
         <nav className="nav-buttons">
           <button className="active">Eventos</button>
 
-          {canAccessCreateEvent ? (
-            <button className="outline" type="button" onClick={() => navigate("/create-event")}>
-              <Plus size={16} />
-              Criar Evento
-            </button>
-          ) : null}
+          <button className="outline" type="button" onClick={() => navigate("/organizer/create")}>
+            <Plus size={16} />
+            Criar Evento
+          </button>
         </nav>
       </div>
     </header>

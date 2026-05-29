@@ -6,7 +6,7 @@ import {
   Upload,
   UserPlus,
 } from "lucide-react";
-import { registerUser } from "../../api/users";
+import { registerOrganizer, registerUser } from "../../api/users";
 
 const initialFormData = {
   firstName: "",
@@ -19,7 +19,7 @@ const initialFormData = {
   photoProfile: "",
 };
 
-function RegisterForm() {
+function RegisterForm({ isOrganizerRegistration = false }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialFormData);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
@@ -48,7 +48,9 @@ function RegisterForm() {
     setIsSubmitting(true);
 
     try {
-      await registerUser({
+      const registerAction = isOrganizerRegistration ? registerOrganizer : registerUser;
+
+      await registerAction({
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         cpf: { value: formData.cpf.replace(/\D/g, "") },
@@ -64,7 +66,7 @@ function RegisterForm() {
       });
 
       setFormData(initialFormData);
-      navigate("/");
+      navigate(isOrganizerRegistration ? "/organizer/home" : "/user/home");
     } catch (error) {
       setFeedback({
         type: "error",
@@ -82,10 +84,10 @@ function RegisterForm() {
           <UserPlus size={28} />
         </div>
 
-        <h1>Cadastro de Usuário</h1>
+        <h1>{isOrganizerRegistration ? "Cadastro de Organizador" : "Cadastro de Usuário"}</h1>
 
         <p>
-          Crie sua conta para comprar ingressos
+          {isOrganizerRegistration ? "Crie sua conta para gerenciar eventos" : "Crie sua conta para comprar ingressos"}
         </p>
       </div>
 

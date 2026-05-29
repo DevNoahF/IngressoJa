@@ -113,8 +113,7 @@ public class EventController : ControllerBase
     {
         try
         {
-            var dtoWithId = dto with { EventId = id };
-            await _changeStatusOfEventUseCase.ChangeStatus(dtoWithId);
+            await _changeStatusOfEventUseCase.ChangeStatus(dto,id);
             return NoContent();
         }
         catch (Exception ex)

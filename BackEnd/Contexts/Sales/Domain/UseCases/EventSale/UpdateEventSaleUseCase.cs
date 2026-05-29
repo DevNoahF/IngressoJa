@@ -5,11 +5,11 @@ using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 
-public class UpdateEventUseCase
+public class UpdateEventSaleUseCase
 {
     private readonly IEventSaleRepository _eventSaleRepository;
 
-    public UpdateEventUseCase(IEventSaleRepository eventSaleRepository)
+    public UpdateEventSaleUseCase(IEventSaleRepository eventSaleRepository)
     {
         _eventSaleRepository = eventSaleRepository;
     }

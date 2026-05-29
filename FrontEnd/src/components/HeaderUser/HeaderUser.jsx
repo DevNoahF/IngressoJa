@@ -41,7 +41,7 @@ export default function HeaderUser() {
             src={ingressoJaLogo}
             alt="IngressoJá"
             className="header-user-logo-image"
-            onClick={() => navigate("/home")} // Implementar para voltar para home
+            onClick={() => navigate("/user/home")}
           />
         </div>
 

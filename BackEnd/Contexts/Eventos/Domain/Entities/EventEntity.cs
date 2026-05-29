@@ -6,26 +6,25 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities;
 
 public class EventEntity
 {
-
     public Guid Id { get; private set; }
-    public NameVO Name { get; private set; }
-    public DescriptionVO Description { get; private set; }
-    public StreetNameVo Street { get; private set; }
-    public NeighborhoodVO Neighborhood { get; private set; }
-    public CityVO City { get; private set; }
+    public NameVO Name { get; private set; } = default!;
+    public DescriptionVO Description { get; private set; } = default!;
+    public StreetNameVo Street { get; private set; } = default!;
+    public NeighborhoodVO Neighborhood { get; private set; } = default!;
+    public CityVO City { get; private set; } = default!;
     public int Number { get; private set; }
     public StatesEnum State { get; private set; }
-    public DateVO Date { get; private set; }
+    public DateVO Date { get; private set; } = default!;
    public TimeOnly Hour { get; private set; }
-    public TicketValueVO TicketValue { get; private set; }
-    public TotalTicketQuantity TotalTicketQuantity { get; private set; }
+    public TicketValueVO TicketValue { get; private set; } = default!;
+    public TotalTicketQuantity TotalTicketQuantity { get; private set; } = default!;
     public EventStatusEnum Status { get; private set; } = EventStatusEnum.Andamento;
-    public BannerImageVO BannerImage { get; private set; }
+    public BannerImageVO BannerImage { get; private set; } = default!;
     public Guid UserId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    public EventEntity(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
+    public EventEntity(Guid id, NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
         StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, Guid userId, BannerImageVO bannerImage, EventStatusEnum status)
     {
         
@@ -39,7 +38,7 @@ public class EventEntity
             throw new EventFieldNameRequiredException("OrganizerId");
         
 
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Description = description;
         Street = street;
@@ -57,6 +56,7 @@ public class EventEntity
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
     }
+    
 
     public void Update(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
         StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, BannerImageVO bannerImage)

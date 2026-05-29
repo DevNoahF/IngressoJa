@@ -11,9 +11,9 @@ public class ChangeEventStatusUseCase
         _eventRepository = eventRepository;
     }
     
-    public async Task ChangeStatus(EventChangeStatusOfEventRequestDTO dto)
+    public async Task ChangeStatus(EventChangeStatusOfEventRequestDTO dto, Guid id)
     {
-        var eventEntity = await _eventRepository.GetEventById(dto.EventId);
+        var eventEntity = await _eventRepository.GetEventById(id);
         eventEntity.ChangeStatus(dto.Status);
         await _eventRepository.UpdateEvent(eventEntity);
     }

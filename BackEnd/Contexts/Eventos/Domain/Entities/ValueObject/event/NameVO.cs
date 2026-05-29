@@ -11,7 +11,7 @@ public class NameVO
             if (string.IsNullOrWhiteSpace(value))
                 throw new EventFieldNameRequiredException("Event Name");
 
-            if (value.Length < 55)
+            if (value.Length > 55)
                 throw new EventMaxLenghtExceededException("Event Name", 55);
             Value = value;
         }

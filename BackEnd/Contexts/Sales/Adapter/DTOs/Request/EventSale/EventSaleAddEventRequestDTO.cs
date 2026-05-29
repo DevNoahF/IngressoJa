@@ -5,7 +5,7 @@ namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Request.EventSale;
 
 public record EventSaleAddEventRequestDTO(
     Guid EventId,
-    NameVO EventName,
+    NameVO Name,
     TicketValueVO TicketValue, 
     TotalTicketQuantity TotalTicketQuantity,
     EventStatusEnum Status
