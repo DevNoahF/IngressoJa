@@ -59,4 +59,9 @@ public static class TicketMapper
     {
         return new TicketEntity(model.Code, model.UserId);
     }
+
+    public static TicketEntity ToEntity(this UpdateTicketRequestDTO dto, TicketEntity existingTicket)
+    {
+        return new TicketEntity(existingTicket.Code, dto.UserId);
+    }
 }
