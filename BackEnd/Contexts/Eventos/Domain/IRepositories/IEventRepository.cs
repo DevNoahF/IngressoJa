@@ -17,7 +17,6 @@ public interface IEventRepository
     Task<EventEntity?> GetEventById(Guid id);
 
     Task<EventEntity?> GetEventByName(string name);
-    Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO eventChangeStatusOfEventRequestDto,Guid id);
 
     Task<IEnumerable<EventEntity>> GetEventsByOrganizerId(Guid organizerId);
 }

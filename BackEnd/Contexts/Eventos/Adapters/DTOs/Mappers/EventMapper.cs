@@ -1,6 +1,7 @@
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Data.Model;
 
@@ -46,7 +47,7 @@ public static class EventMapper
     public static EventCreateResponseDTO ToCreateResponse(this EventEntity eventEntity)
     {
         return new EventCreateResponseDTO(
-            Guid.NewGuid(),
+            eventEntity.Id,
             eventEntity.Name,
             eventEntity.Description,
             eventEntity.Street,
@@ -108,25 +109,7 @@ public static class EventMapper
             dto.Status
         );
     }
-
-    public static EventEntity ToEntity(this EventPutRequestDTO dto, EventEntity existingEvent)
-    {
-        existingEvent.Update(
-            dto.Name,
-            dto.Description,
-            dto.Street,
-            dto.Neighborhood,
-            dto.City,
-            dto.Number,
-            dto.State,
-            new DateVO(DateOnly.Parse(dto.Date)), 
-            TimeOnly.Parse(dto.Hour),
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
-            dto.BannerImage
-        );
-        return existingEvent;
-    }
+    
 
     public static EventModel ToModel(this EventEntity entity)
     {

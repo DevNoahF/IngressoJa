@@ -59,7 +59,7 @@ public class EventEntity
     
 
     public void Update(NameVO name, DescriptionVO description, StreetNameVo street, NeighborhoodVO neighborhood, CityVO city, int number,
-        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, BannerImageVO bannerImage)
+        StatesEnum state, DateVO date, TimeOnly hour, TicketValueVO ticketValue, TotalTicketQuantity totalTicketQuantity, BannerImageVO bannerImage, EventStatusEnum eventStatus)
     {
         if (Status == EventStatusEnum.Cancelado)
             throw new Exception("Cannot update a cancelled event");
@@ -88,12 +88,8 @@ public class EventEntity
         TotalTicketQuantity = totalTicketQuantity;
         UpdatedAt = DateTime.UtcNow;
         BannerImage = bannerImage;
+        Status = eventStatus;
 
     }
     
-    public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações-Todo
-    {
-        Status = newStatus;
-        UpdatedAt = DateTime.UtcNow;
-    }
 }
