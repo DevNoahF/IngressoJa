@@ -15,6 +15,7 @@ using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
+using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,12 @@ builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
 builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
 builder.Services.AddScoped<UpdateEventSaleUseCase>();
+
+//Tickets
+builder.Services.AddScoped<CreateTicketUseCase>();
+builder.Services.AddScoped<GetAllTicketsUseCase>();
+builder.Services.AddScoped<GetTicketByIdUseCase>();
+builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();

@@ -9,16 +9,13 @@ public static class TicketMapper
 {
     public static TicketEntity ToEntity(this CreateTicketRequestDTO dto)
     {
-        return new TicketEntity(
-            dto.Code,
-            dto.UserId
-        );
+        return new TicketEntity(dto.UserId);
     }
 
     public static CreateTicketResponseDTO ToCreateTicketResponseDTO(this TicketEntity entity)
     {
         return new CreateTicketResponseDTO(
-            Guid.NewGuid(),
+            entity.Code,
             entity.UserId
             );
     }
@@ -26,7 +23,7 @@ public static class TicketMapper
     public static TicketEntity ToEntity(this CreateTicketResponseDTO dto)
     {
         return new TicketEntity(
-            Guid.NewGuid(),
+            dto.Code,
             dto.UserId
         );
     }

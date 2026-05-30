@@ -13,20 +13,17 @@ public class GetTicketByIdUseCase
         _repository = repository;
     }
 
-    public async Task<GetTicketResponseDTO> GetTicketById(Guid ticketId)
+    public async Task<GetTicketResponseDTO?> GetTicketById(Guid ticketId)
     {
         try
         {
             var ticket = await _repository.GetTicketById(ticketId);
-            if (ticket == null)
-                throw new Exception("Ticket not found");
-
-            return ticket.ToGetTicketResponseDTO();
+            return ticket?.ToGetTicketResponseDTO();
 
         }
         catch (Exception ex)
         {
-            throw new Exception("Error getting event", ex);
+            throw new Exception("Error getting ticket", ex);
         }
     }
 }
