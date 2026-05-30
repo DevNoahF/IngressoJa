@@ -16,7 +16,10 @@ using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Eventos.Application.UseCases;
+using IngressoJa.Contexts.Shared.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +88,8 @@ builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserSaleRepository, UserSaleRepository>();
+builder.Services.AddScoped<IUserSaleMapper, UserSaleMapper>();
 builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();

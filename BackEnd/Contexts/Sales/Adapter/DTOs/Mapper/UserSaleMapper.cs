@@ -1,17 +1,16 @@
-﻿using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
-using IngressoJa.Contexts.Eventos.Domain.Entities;
-using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+﻿using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Request.UserSale;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.UserSale;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Data.Model;
 
 namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 
-public static class UserSaleMapper
+public class UserSaleMapper : IUserSaleMapper
 {
-    public static CreateUserSaleResponse ToCreateUserSaleResponse(this UserSaleEntity entity)
+    public CreateUserSaleResponse ToCreateUserSaleResponse(UserSaleEntity entity)
     {
         return new CreateUserSaleResponse(
             entity.Id,
@@ -22,7 +21,7 @@ public static class UserSaleMapper
         );
     }
 
-    public static UserSaleEntity ToEntity(this CreateUserSaleRequestDTO dto)
+    public UserSaleEntity ToEntity(CreateUserSaleRequestDTO dto)
     {
         return new UserSaleEntity(
             dto.FirstName,
@@ -32,7 +31,7 @@ public static class UserSaleMapper
             );
     }
 
-    public static GetUserSaleResponseDTO ToGetUserSaleResponseDTO(this UserSaleEntity entity)
+    public GetUserSaleResponseDTO ToGetUserSaleResponseDTO(UserSaleEntity entity)
     {
         return new GetUserSaleResponseDTO(
             entity.Id,
@@ -43,7 +42,7 @@ public static class UserSaleMapper
         );
     }
 
-    public static UpdateUserSaleResponseDTO ToUpdateUserSaleResponseDTO(this UserSaleEntity entity)
+    public UpdateUserSaleResponseDTO ToUpdateUserSaleResponseDTO(UserSaleEntity entity)
     {
         return new UpdateUserSaleResponseDTO(
             entity.Id,
@@ -54,7 +53,17 @@ public static class UserSaleMapper
             );
     }
 
-    public static UserSaleEntity ToEntity(this UpdateUserSaleRequestDTO dto)
+    public UserSaleEntity ToEntity(UpdateUserSaleRequestDTO dto)
+    {
+        return new UserSaleEntity(
+            dto.FirstName,
+            dto.LastName,
+            dto.Cpf.Value,
+            dto.Email.Value
+        );
+    }
+
+    public UserSaleEntity ToEntity(UpdateUserSaleRequestDTO dto, Guid id)
     {
         return new UserSaleEntity(
             dto.FirstName,
@@ -65,7 +74,7 @@ public static class UserSaleMapper
     }
     
 
-    public static UserSaleEntity ModelToEntity(this UserModel model)
+    public UserSaleEntity ModelToEntity(UserModel model)
     {
         return new UserSaleEntity(
             model.FirstName,
@@ -73,5 +82,22 @@ public static class UserSaleMapper
             model.Cpf.Value,
             model.Email.Value
             );
+    }
+
+    public UserModel ToModel(UserSaleEntity entity)
+    {
+        return new UserModel
+        {
+            Id = entity.Id,
+            Role = RoleEnum.User,
+            FirstName = entity.FirstName,
+            LastName = entity.LastName,
+            Cpf = entity.Cpf,
+            Email = entity.Email,
+            PasswordHash = new PasswordVO(),
+            PhotoProfile = null,
+            Token = string.Empty,
+            DateBirth = DateOnly.MinValue
+        };
     }
 }

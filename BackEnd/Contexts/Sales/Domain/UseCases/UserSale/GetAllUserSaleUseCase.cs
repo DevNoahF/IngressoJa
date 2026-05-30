@@ -1,5 +1,6 @@
 ﻿using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.UserSale;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
@@ -7,10 +8,12 @@ namespace IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
 public class GetAllUserSaleUseCase
 {
     private readonly IUserSaleRepository _repository;
+    private readonly IUserSaleMapper _mapper;
 
-    public GetAllUserSaleUseCase(IUserSaleRepository repository)
+    public GetAllUserSaleUseCase(IUserSaleRepository repository, IUserSaleMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<GetUserSaleResponseDTO>> GetUserAllUserSales()
@@ -19,7 +22,7 @@ public class GetAllUserSaleUseCase
         if (!userSales.Any()) 
             throw new Exception("No UserSales Found");
 
-        return userSales.Select(e => e.ToGetUserSaleResponseDTO());
+        return userSales.Select(e => _mapper.ToGetUserSaleResponseDTO(e));
 
     }
 }
