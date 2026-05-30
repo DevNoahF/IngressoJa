@@ -25,7 +25,13 @@ public class SaleRepository : ISaleRepository
     public async Task UpdateAsync(SaleEntity sale, CancellationToken cancellationToken = default)
     {
         var model = sale.ToModel();
-        _context.Sales.Update(model);
+        var trackedModel = _context.Sales.Local.FirstOrDefault(s => s.Id == sale.Id);
+
+        if (trackedModel is null)
+            _context.Sales.Update(model);
+        else
+            _context.Entry(trackedModel).CurrentValues.SetValues(model);
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -33,6 +39,14 @@ public class SaleRepository : ISaleRepository
     {
         var model = await _context.Sales.FindAsync([id], cancellationToken: cancellationToken);
         return model?.ToEntity();
+    }
+
+    public async Task<IEnumerable<SaleEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var models = await _context.Sales
+            .ToListAsync(cancellationToken);
+
+        return models.Select(model => model.ToEntity());
     }
 
     public async Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)

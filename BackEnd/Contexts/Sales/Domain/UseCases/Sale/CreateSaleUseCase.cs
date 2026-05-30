@@ -21,7 +21,6 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
 		Guid userId,
 		Guid eventId,
 		int selectedTicketsUser,
-		Guid? ticketId = null,
 		CancellationToken cancellationToken = default)
 	{
 		var eventSale = await _eventSaleRepository.GetEventSaleById(eventId);
@@ -38,8 +37,7 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
 			userId,
 			eventId,
 			selectedTicketsUser,
-			totalPrice,
-			ticketId);
+			totalPrice);
 
 		await _saleRepository.AddAsync(sale, cancellationToken);
 

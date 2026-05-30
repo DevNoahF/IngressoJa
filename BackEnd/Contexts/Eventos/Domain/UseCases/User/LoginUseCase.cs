@@ -38,8 +38,6 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
 
                 var token = _tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
                 userExisting.SetToken(token);
-                await _repository.UpdateUser(userExisting.Id, userExisting);
-                    
                 var response = _userMapper.AuthResponse(userExisting);
                 return response;
             }
