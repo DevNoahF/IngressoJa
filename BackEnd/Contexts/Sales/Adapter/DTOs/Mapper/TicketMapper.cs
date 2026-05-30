@@ -9,7 +9,10 @@ public static class TicketMapper
 {
     public static TicketEntity ToEntity(this CreateTicketRequestDTO dto)
     {
-        return new TicketEntity(dto.UserId);
+        return new TicketEntity(
+            Guid.NewGuid(),
+            dto.UserId
+        );
     }
 
     public static CreateTicketResponseDTO ToCreateTicketResponseDTO(this TicketEntity entity)

@@ -21,7 +21,7 @@ public class UserSaleEntity
         string email)
     {
         if (id == Guid.Empty)
-            throw new ArgumentException("The user is required.", nameof(id));
+            throw new Exception("The id is required.");
 
         ValidateRequired(firstName, nameof(firstName), 55);
         ValidateRequired(lastName, nameof(lastName), 55);
