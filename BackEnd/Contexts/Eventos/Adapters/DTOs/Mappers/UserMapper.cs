@@ -73,10 +73,10 @@ public class UserMapper : IUserMapper
     }
 
     // UserAuthUser para UserEntity
-    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             string.Empty,
             string.Empty,
@@ -90,10 +90,10 @@ public class UserMapper : IUserMapper
     }
 
     // UserAuthOrganizer para UserEntity
-    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             string.Empty,
             string.Empty,
@@ -107,10 +107,10 @@ public class UserMapper : IUserMapper
     }
 
     // UserRegisterRequestDTO para UserEntity
-    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             dto.FirstName,
             dto.LastName,
@@ -124,10 +124,10 @@ public class UserMapper : IUserMapper
     }
 
     // UserRegisterOrganizer para UserEntity
-    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             dto.FirstName,
             dto.LastName,

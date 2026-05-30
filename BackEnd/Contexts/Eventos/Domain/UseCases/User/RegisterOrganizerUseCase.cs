@@ -27,7 +27,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
                 if (alreadyExists)
                     throw new Exception("A user with this email or CPF already exists.");
 
-                var toEntity = _userMapper.RegisterOrganizerToEntity(dto);
+                var toEntity = _userMapper.RegisterOrganizerToEntity(dto, Guid.NewGuid());
                 await _repository.RegisterOrganizer(toEntity);
             }
             catch (Exception ex)
