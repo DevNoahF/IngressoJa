@@ -34,7 +34,7 @@ public class ApproveSaleUseCase : IApproveSaleUseCase
                 Guid.NewGuid(),
                 sale.UserId);
 
-            await _ticketRepository.CreateAsync(ticket);
+            await _ticketRepository.CreateTicket(ticket);
         }
     }
 }
