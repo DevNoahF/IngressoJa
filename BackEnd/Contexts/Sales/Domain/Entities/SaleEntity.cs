@@ -65,6 +65,14 @@ public class SaleEntity
         SaleStatus = saleStatus;
     }
 
+    public void AttachTicket(Guid ticketId)
+    {
+        if (ticketId == Guid.Empty)
+            throw new ArgumentException("The ticket is invalid.", nameof(ticketId));
+
+        TicketId = ticketId;
+    }
+
     public void UpdateStatus(SaleStatusEnum newStatus)
     {
         if (SaleStatus != SaleStatusEnum.Pending)

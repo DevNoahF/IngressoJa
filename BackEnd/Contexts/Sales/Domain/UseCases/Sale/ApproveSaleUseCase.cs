@@ -1,20 +1,21 @@
 using IngressoJa.Contexts.Sales.Adapter.Interfaces;
-using IngressoJa.Contexts.Sales.Domain.Entities;
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Request.Ticket;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
+using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 
 namespace IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 
 public class ApproveSaleUseCase : IApproveSaleUseCase
 {
     private readonly ISaleRepository _saleRepository;
-    private readonly ITicketRepository _ticketRepository;
+    private readonly CreateTicketUseCase _createTicketUseCase;
 
     public ApproveSaleUseCase(
         ISaleRepository saleRepository,
-        ITicketRepository ticketRepository)
+        CreateTicketUseCase createTicketUseCase)
     {
         _saleRepository = saleRepository;
-        _ticketRepository = ticketRepository;
+        _createTicketUseCase = createTicketUseCase;
     }
 
     public async Task ExecuteAsync(int saleId)
@@ -28,13 +29,9 @@ public class ApproveSaleUseCase : IApproveSaleUseCase
 
         await _saleRepository.UpdateAsync(sale);
 
-        for (int i = 0; i < sale.SelectedTicketsUser; i++)
-        {
-            var ticket = new TicketEntity(
-                Guid.NewGuid(),
-                sale.UserId);
-
-            await _ticketRepository.CreateTicket(ticket);
-        }
+        await _createTicketUseCase.CreateTicket(new CreateTicketRequestDTO(
+            sale.UserId,
+            sale.EventId,
+            sale.Id));
     }
 }

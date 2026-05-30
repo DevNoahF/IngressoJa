@@ -8,6 +8,5 @@ public interface ICreateSaleUseCase
 		Guid userId,
 		Guid eventId,
 		int selectedTicketsUser,
-		Guid? ticketId = null,
 		CancellationToken cancellationToken = default);
 }

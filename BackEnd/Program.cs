@@ -61,6 +61,7 @@ builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IEventSaleRepository, EventSaleRepository>();
 builder.Services.AddScoped<CreateSaleUseCase>();
+builder.Services.AddScoped<GetAllSalesUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<GetSaleByEventUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
