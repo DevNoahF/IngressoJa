@@ -87,7 +87,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting user by id: {ex.Message}", ex);
+                throw new Exception($"Error getting user by id: {ex.Message}" );
             }
         }
 
@@ -105,7 +105,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting user by email: {ex.Message}", ex);
+                throw new Exception($"Error getting user by email: {ex.Message}");
             }
         }
 
@@ -121,7 +121,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting all users: {ex.Message}", ex);
+                throw new Exception($"Error getting all users: {ex.Message}");
             }
         }
         public async Task<List<UserEntity>> getAllOrganizers()
@@ -136,7 +136,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting all organizers: {ex.Message}", ex);
+                throw new Exception($"Error getting all organizers: {ex.Message}");
             }
         }
 
@@ -159,7 +159,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error updating user: {ex.Message}", ex);
+                throw new Exception($"Error updating user: {ex.Message}");
             }
         }
 

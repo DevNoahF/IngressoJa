@@ -86,7 +86,6 @@ builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();

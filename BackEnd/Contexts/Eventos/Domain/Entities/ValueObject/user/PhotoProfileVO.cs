@@ -9,10 +9,6 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
     {
         public String Value { get; set; }
 
-        public PhotoProfileVO()
-        {
-            Value = string.Empty;
-        }
 
         public PhotoProfileVO(string value)
         {
@@ -21,11 +17,9 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
                 Value = string.Empty;
                 return;
             }
-
-            if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
-                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            if (value.Length < 10)
             {
-                throw new ArgumentException("Photo profile must be a valid URL.");
+                throw new Exception("Photo profile must be valid");
             }
 
             Value = value;
