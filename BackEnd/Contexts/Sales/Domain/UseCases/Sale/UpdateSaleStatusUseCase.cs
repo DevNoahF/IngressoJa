@@ -28,9 +28,17 @@ public class UpdateSaleStatusUseCase
         if (sale is null)
             return null;
 
-        var status = Random.Shared.Next(2) == 0
-            ? SaleStatusEnum.Approved
-            : SaleStatusEnum.Denied;
+        if (sale.SaleStatus == SaleStatusEnum.Approved)
+        {
+            await _createTicketUseCase.CreateTicket(new CreateTicketRequestDTO(
+                sale.UserId,
+                sale.EventId,
+                sale.Id), cancellationToken);
+
+            return await _saleRepository.GetByIdAsync(saleId, cancellationToken);
+        }
+
+        var status = SaleStatusEnum.Approved;
 
         sale.UpdateStatus(status);
 
