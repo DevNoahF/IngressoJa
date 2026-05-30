@@ -42,9 +42,9 @@ public class UserMapper : IUserMapper
             model.LastName,
             model.Cpf,
             model.Email,
-            PasswordVO.FromHash(model.PasswordHash.Value),
-            model.PhotoProfile ?? new PhotoProfileVO(string.Empty),
-            model.Token ?? string.Empty,
+            model.PasswordHash,
+            model.PhotoProfile = new PhotoProfileVO(string.Empty),
+            model.Token= string.Empty,
             model.DateBirth
         );
     }
