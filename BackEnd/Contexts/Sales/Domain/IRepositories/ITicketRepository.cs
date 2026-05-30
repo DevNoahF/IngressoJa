@@ -8,4 +8,7 @@ public interface ITicketRepository
     Task<IEnumerable<TicketEntity>> GetAllTickets();
     Task<TicketEntity?> GetTicketById(Guid ticketId);
     Task<IEnumerable<TicketEntity?>> GetTicketByUserId(Guid UserId);
+    Task<bool> existsEventId(Guid eventId);
+    Task<bool> existsUserId(Guid userId);
+    Task<bool> salePaymentSucess(int saleId);
 }
