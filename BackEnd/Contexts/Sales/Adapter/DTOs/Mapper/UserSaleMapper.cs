@@ -1,4 +1,4 @@
-﻿using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
+using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Request.UserSale;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.UserSale;
@@ -96,8 +96,8 @@ public class UserSaleMapper : IUserSaleMapper
             Email = entity.Email,
             PasswordHash = new PasswordVO(),
             PhotoProfile = null,
-            Token = string.Empty,
-            DateBirth = DateOnly.MinValue
+            DateBirth = DateOnly.MinValue,
+            CreatedAt = DateTime.UtcNow
         };
     }
 }

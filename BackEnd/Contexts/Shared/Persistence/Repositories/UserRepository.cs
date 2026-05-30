@@ -153,7 +153,8 @@ namespace IngressoJa.Data.Persistence.Repositories
                 existingUser.LastName = user.LastName;
                 existingUser.PhotoProfile = user.PhotoProfile;
                 existingUser.PasswordHash = user.PasswordHash;
-                existingUser.Token = user.Token;
+                existingUser.UpdatedAt = DateTime.UtcNow;
+
 
                 await _context.SaveChangesAsync();
             }

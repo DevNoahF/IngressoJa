@@ -18,11 +18,12 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
         
         public PasswordVO PasswordHash { get; private set; }
 
-        public String Token { get; private set; }
-
         public DateOnly DateBirth { get; private set; } // formato: dd-MM-yyyy 
 
-        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateOnly dateBirth)
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
+
+        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, DateOnly dateBirth, DateTime? createdAt = null, DateTime? updatedAt = null)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new Exception("First name is required");
@@ -43,14 +44,14 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
             PhotoProfile = photoProfile;
             Email = email;
             PasswordHash = password;
-            Token = token;
             DateBirth = dateBirth;
+            CreatedAt = createdAt ?? DateTime.UtcNow;
+            UpdatedAt = updatedAt;
         }
-        public void SetToken(String token)
+
+        public void SetUpdatedAt()
         {
-            Token = token;
+            UpdatedAt = DateTime.UtcNow;
         }
     }
-
-    
-}
+}

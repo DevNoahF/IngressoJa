@@ -26,8 +26,9 @@ public class UserMapper : IUserMapper
             Email = entity.Email,
             PhotoProfile = entity.PhotoProfile,
             PasswordHash = entity.PasswordHash,
-            Token = entity.Token,
-            DateBirth = entity.DateBirth
+            DateBirth = entity.DateBirth,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -43,9 +44,10 @@ public class UserMapper : IUserMapper
             model.Cpf,
             model.Email,
             model.PasswordHash,
-            model.PhotoProfile = new PhotoProfileVO(string.Empty),
-            model.Token= string.Empty,
-            model.DateBirth
+            model.PhotoProfile ?? new PhotoProfileVO(string.Empty),
+            model.DateBirth,
+            model.CreatedAt,
+            model.UpdatedAt
         );
     }
 
@@ -84,7 +86,6 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
@@ -101,7 +102,6 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
@@ -118,7 +118,6 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
@@ -135,15 +134,14 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
 
     // responseAuth to UserEntity
-    public UserAuthResponseDTO AuthResponse(UserEntity entity)
+    public UserAuthResponseDTO AuthResponse(string token)
     {
-        return new UserAuthResponseDTO(entity.Token);
+        return new UserAuthResponseDTO(token);
     }
 
     // UserAuthRequestDTO para UserAuthResponseDTO
@@ -166,8 +164,8 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            currentUser.Token,
-            currentUser.DateBirth
+            currentUser.DateBirth,
+            currentUser.CreatedAt
         );
     }
     
