@@ -40,6 +40,16 @@ public static class TicketMapper
     }
     public static TicketModel ToModel(this TicketEntity entity)
     {
+        return entity.EntityToModel();
+    }
+
+    public static TicketEntity ToEntity(this TicketModel model)
+    {
+        return model.ModelToEntity();
+    }
+
+    public static TicketModel EntityToModel(this TicketEntity entity)
+    {
         return new TicketModel
         {
             Code = entity.Code,
@@ -47,7 +57,7 @@ public static class TicketMapper
         };
     }
 
-    public static TicketEntity ToEntity(this TicketModel model)
+    public static TicketEntity ModelToEntity(this TicketModel model)
     {
         return new TicketEntity(model.Code, model.UserId);
     }

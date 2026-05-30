@@ -4,6 +4,7 @@ using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace IngressoJa.Data.Persistence.Repositories;
 
@@ -16,46 +17,33 @@ public class TicketRepository : ITicketRepository
         _context = context;
     }
 
-    public async Task CreateAsync(TicketEntity ticket)
+    public async Task<TicketEntity> CreateTicket(TicketEntity ticket)
     {
         var model = ticket.ToModel();
         await _context.Tickets.AddAsync(model);
         await _context.SaveChangesAsync();
+        return model.ModelToEntity();
     }
-    
+
     public async Task<IEnumerable<TicketEntity>> GetAllTickets()
     {
         var models = await _context.Tickets.ToListAsync();
-        return models.Select(model => model.ToEntity());
+        return models.Select(m => m.ModelToEntity());
     }
 
     public async Task<TicketEntity?> GetTicketById(Guid ticketId)
     {
         var model = await _context.Tickets.FindAsync(ticketId);
-        return model?.ToEntity();
+        return model?.ModelToEntity();
+
     }
 
-    public Task UpdateTicket(TicketEntity ticket)
+    public async Task<IEnumerable<TicketEntity?>> GetTicketByUserId(Guid UserId)
     {
-        var model = ticket.ToModel();
-        _context.Tickets.Update(model);
-        return _context.SaveChangesAsync();
-    }
+        var models = await _context.Tickets
+            .Where(ticket => ticket.UserId == UserId)
+            .ToListAsync();
 
-    public async Task DeleteTicket(Guid code)
-    {
-        var model = await _context.Tickets.FindAsync(code);
-
-        if (model is null)
-            return;
-
-        _context.Tickets.Remove(model);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task<TicketEntity?> GetTicketByUserId(Guid userId)
-    {
-        var model = await _context.Tickets.FirstOrDefaultAsync(ticket => ticket.UserId == userId);
-        return model?.ToEntity();
+        return models.Select(model => model.ModelToEntity());
     }
 }
