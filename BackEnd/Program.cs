@@ -16,6 +16,7 @@ using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
+using IngressoJa.Contexts.Eventos.Application.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
