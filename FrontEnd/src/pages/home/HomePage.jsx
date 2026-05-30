@@ -1,5 +1,6 @@
 import "./HomePage.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
@@ -9,6 +10,10 @@ import { getEventById, getEvents, getStateCode } from "../../api/events";
 import { setStoredEventId } from "../../utils/eventContext";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
+
+function isGuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
 
 
 
@@ -30,6 +35,7 @@ const PERMANENT_EVENT = {
 };
 
 function Home() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -145,8 +151,14 @@ function Home() {
       return;
     }
 
+    if (!isGuid(String(eventId))) {
+      setPaymentMessage("Este evento e demonstrativo. Escolha um evento cadastrado para comprar ingresso.");
+      return;
+    }
+
     setStoredEventId(String(eventId));
     setPaymentMessage("Evento selecionado para pagamento.");
+    navigate("/user/payment");
   }
 
   return (
