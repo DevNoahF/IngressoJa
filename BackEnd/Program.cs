@@ -72,7 +72,6 @@ builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
 builder.Services.AddScoped<GetAllEventsUseCase>();
 builder.Services.AddScoped<UpdateEventUseCase>();
-builder.Services.AddScoped<ChangeEventStatusUseCase>();
 
 // Events in sales
 builder.Services.AddScoped<GetEventByIdUseCase>();

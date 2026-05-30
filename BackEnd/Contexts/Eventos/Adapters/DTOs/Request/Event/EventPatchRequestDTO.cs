@@ -15,5 +15,6 @@ public record EventPatchRequestDTO(
     string? Hour,
     TicketValueVO? TicketValue,
     TotalTicketQuantity? TotalTicketQuantity,
-    BannerImageVO? BannerImage
+    BannerImageVO? BannerImage,
+    EventStatusEnum? EventStatus
 );
