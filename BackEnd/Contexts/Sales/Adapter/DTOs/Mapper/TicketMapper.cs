@@ -1,3 +1,4 @@
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Request.Ticket;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.Ticket;
 using IngressoJa.Contexts.Sales.Domain.Entities;
 using IngressoJa.Contexts.Shared.Data.Model;
@@ -6,6 +7,13 @@ namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 
 public static class TicketMapper
 {
+    public static TicketEntity ToEntity(this CreateTicketRequestDTO dto)
+    {
+        return new TicketEntity(
+            dto.Code,
+            dto.UserId
+        );
+    }
 
     public static CreateTicketResponseDTO ToCreateTicketResponseDTO(this TicketEntity entity)
     {
