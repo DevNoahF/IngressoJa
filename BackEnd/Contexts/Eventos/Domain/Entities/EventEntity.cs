@@ -91,7 +91,7 @@ public class EventEntity
 
     }
     
-    public void ChangeStatus(EventStatusEnum newStatus)//Necessário realizar verificações-Todo
+    public void ChangeStatus(EventStatusEnum newStatus)
     {
         Status = newStatus;
         UpdatedAt = DateTime.UtcNow;

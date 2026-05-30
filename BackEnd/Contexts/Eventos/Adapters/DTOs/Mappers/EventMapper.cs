@@ -1,6 +1,7 @@
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Data.Model;
 
@@ -46,7 +47,7 @@ public static class EventMapper
     public static EventCreateResponseDTO ToCreateResponse(this EventEntity eventEntity)
     {
         return new EventCreateResponseDTO(
-            Guid.NewGuid(),
+            eventEntity.Id,
             eventEntity.Name,
             eventEntity.Description,
             eventEntity.Street,
@@ -108,39 +109,7 @@ public static class EventMapper
             dto.Status
         );
     }
-
-    public static EventEntity ToEntity(this EventPatchRequestDTO dto, EventEntity existingEvent)
-    {
-        var name = dto.Name ?? existingEvent.Name;
-        var description = dto.Description ?? existingEvent.Description;
-        var street = dto.Street ?? existingEvent.Street;
-        var neighborhood = dto.Neighborhood ?? existingEvent.Neighborhood;
-        var city = dto.City ?? existingEvent.City;
-        var number = dto.Number ?? existingEvent.Number;
-        var state = dto.State ?? existingEvent.State;
-        var date = dto.Date is not null ? new DateVO(DateOnly.Parse(dto.Date)) : existingEvent.Date;
-        var hour = dto.Hour is not null ? TimeOnly.Parse(dto.Hour) : existingEvent.Hour;
-        var ticketValue = dto.TicketValue ?? existingEvent.TicketValue;
-        var totalTicketQuantity = dto.TotalTicketQuantity ?? existingEvent.TotalTicketQuantity;
-        var bannerImage = dto.BannerImage ?? existingEvent.BannerImage;
-
-        existingEvent.Update(
-            name,
-            description,
-            street,
-            neighborhood,
-            city,
-            number,
-            state,
-            date,
-            hour,
-            ticketValue,
-            totalTicketQuantity,
-            bannerImage
-        );
-
-        return existingEvent;
-    }
+    
 
     public static EventModel ToModel(this EventEntity entity)
     {
