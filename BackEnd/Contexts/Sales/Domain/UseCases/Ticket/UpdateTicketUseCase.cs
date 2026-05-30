@@ -19,11 +19,11 @@ public class UpdateTicketUseCase
     {
         try
         {
-            var existingTicket = await _repository.GetTicketByUserId(updateTicketRequestDto.UserId);
+            var existingTicket = await _repository.GetTicketById(updateTicketRequestDto.Code);
 
             if (existingTicket == null)
                 throw new Exception("Ticket not Found");
-            
+
             var ticketToUpdate = updateTicketRequestDto.ToEntity(existingTicket);
 
             await _repository.UpdateTicket(ticketToUpdate);

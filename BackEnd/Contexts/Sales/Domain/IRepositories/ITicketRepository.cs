@@ -9,5 +9,5 @@ public interface ITicketRepository
     Task<TicketEntity?> GetTicketById(Guid ticketId);
     Task UpdateTicket(TicketEntity ticket);
     Task DeleteTicket(Guid Code);
-    Task<TicketEntity?> GetTicketByUserId(Guid UserId);
+    Task<IEnumerable<TicketEntity?>> GetTicketByUserId(Guid UserId);
 }
