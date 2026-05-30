@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
@@ -19,7 +20,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.IRepositories
         Task<List<UserEntity>> getAllOrganizers();
         Task<UserEntity> getUserById(Guid id);
         Task<UserEntity> getUserByEmail(EmailVO email);
-        Task UpdateUser(Guid userId, UserEntity user);
+        Task UpdateUser(Guid userId, UserUpdateRequestDTO dto);
         //Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto);
     }
 }

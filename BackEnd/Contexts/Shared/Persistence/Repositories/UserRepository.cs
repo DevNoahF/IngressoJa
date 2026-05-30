@@ -12,6 +12,7 @@ using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 
 namespace IngressoJa.Data.Persistence.Repositories
 {
@@ -140,7 +141,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
-        public async Task UpdateUser(Guid userId,UserEntity user)
+        public async Task UpdateUser(Guid userId, UserUpdateRequestDTO dto)
         {
             try
             {
@@ -148,13 +149,22 @@ namespace IngressoJa.Data.Persistence.Repositories
                 if (existingUser == null)
                     throw new Exception("User not found.");
 
-                existingUser.Email = user.Email;
-                existingUser.FirstName = user.FirstName;
-                existingUser.LastName = user.LastName;
-                existingUser.PhotoProfile = user.PhotoProfile;
-                existingUser.PasswordHash = user.PasswordHash;
-                existingUser.UpdatedAt = DateTime.UtcNow;
+                if (!string.IsNullOrWhiteSpace(dto.FirstName))
+                    existingUser.FirstName = dto.FirstName;
 
+                if (!string.IsNullOrWhiteSpace(dto.LastName))
+                    existingUser.LastName = dto.LastName;
+
+                if (dto.Email != null)
+                    existingUser.Email = dto.Email;
+
+                if (dto.PhotoProfile != null)
+                    existingUser.PhotoProfile = dto.PhotoProfile;
+
+                if (dto.Password != null)
+                    existingUser.PasswordHash = PasswordVO.CreatePassword(dto.Password.Value);
+
+                existingUser.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
             }

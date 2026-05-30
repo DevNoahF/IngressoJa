@@ -94,11 +94,12 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         }
 
         [HttpGet("/email")]
-        public async Task<IActionResult> GetUserByEmail([FromQuery] EmailVO email)
+        public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
             try
             {
-                var result = await _getUserByEmailUseCase.getUserByEmail(email);
+                var emailVO = new EmailVO(email);
+                var result = await _getUserByEmailUseCase.getUserByEmail(emailVO);
 
                 if (result == null)
                     return NotFound("User not found with the provided email.");
