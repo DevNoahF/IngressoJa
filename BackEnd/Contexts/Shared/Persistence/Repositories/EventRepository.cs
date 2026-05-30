@@ -66,20 +66,6 @@ public class EventRepository : IEventRepository
         return model?.ModelToEntity();
     }
 
-    public async Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO dto, Guid id)
-    {
-        var model = await _context.Events.FindAsync(id);
-        if (model is null)
-            throw new EventNotFoundException(id);
-
-        var entity = model.ModelToEntity();
-        entity.ChangeStatus(dto.Status);
-
-        _context.Entry(model).CurrentValues.SetValues(entity.ToModel());
-        await _context.SaveChangesAsync();
-        return entity.ToPutResponse();
-    }
-
     public async Task<IEnumerable<EventEntity>> GetEventsByOrganizerId(Guid organizerId)
     {
         var models = await _context.Events.Where(e => e.UserId == organizerId).ToListAsync();
