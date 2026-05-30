@@ -18,6 +18,7 @@ using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 using IngressoJa.Contexts.Sales.Adapter.Interfaces;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
+using IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
 using IngressoJa.Contexts.Eventos.Application.UseCases;
 using IngressoJa.Contexts.Shared.Persistence;
 
@@ -89,8 +90,6 @@ builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserSaleRepository, UserSaleRepository>();
-builder.Services.AddScoped<IUserSaleMapper, UserSaleMapper>();
 builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
@@ -101,6 +100,15 @@ builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGe
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetOrganizersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetOrganizerUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IUpdateUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.UpdateUseCase>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
+
+// User Sale
+builder.Services.AddScoped<IUserSaleRepository, UserSaleRepository>();
+builder.Services.AddScoped<IUserSaleMapper, UserSaleMapper>();
+builder.Services.AddScoped<CreateUserSaleUseCase>();
+builder.Services.AddScoped<GetAllUserSaleUseCase>();
+builder.Services.AddScoped<GetUserSaleByIdUseCase>();
+builder.Services.AddScoped<UpdateUserSaleUseCase>();
+builder.Services.AddScoped<DeleteUserSaleUseCase>();
 
 // JWT
 builder.Services.AddJwtAuthentication(builder.Configuration);
