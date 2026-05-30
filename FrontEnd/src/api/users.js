@@ -48,3 +48,14 @@ export function loginUser(payload) {
 export function getUserByEmail(email) {
   return request(`/email?email=${encodeURIComponent(email)}`);
 }
+
+export function getUser(userId) {
+  return request(`/users/${userId}`);
+}
+
+export function updateUser(userId, payload) {
+  return request(`/users/${userId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}

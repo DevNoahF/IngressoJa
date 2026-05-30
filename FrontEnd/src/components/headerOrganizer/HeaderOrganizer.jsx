@@ -3,11 +3,17 @@ import { ChevronDown, LogOut, Plus, UserCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderOrganizer.css";
+import { getStoredUserId, clearAuthSession } from "../../utils/auth";
+import { getUser } from "../../api/users";
 
 export default function HeaderOrganizer() {
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef(null);
+	const [userData, setUserData] = useState({
+		firstName: "Noah",
+		profileImage: "https://i.pravatar.cc/100?img=12",
+	});
 
     // IMPLEMENTAR PARA CLICAR NA LOGO E IR DIRETO PARA A PAGINA HOME
 	useEffect(() => {
@@ -24,10 +30,22 @@ export default function HeaderOrganizer() {
 		};
 	}, []);
 
-	const user = {
-		firstName: "Noah", // implementar firstname do backend
-		profileImage: "https://i.pravatar.cc/100?img=12", // implementar imagem do backend
-	};
+	// Carrega dados dinâmicos do organizador logado
+	useEffect(() => {
+		const userId = getStoredUserId();
+		if (userId) {
+			getUser(userId)
+				.then((data) => {
+					if (data) {
+						setUserData({
+							firstName: data.firstName || "Organizador",
+							profileImage: data.photoProfile?.value || data.photoProfile || "https://i.pravatar.cc/100?img=12",
+						});
+					}
+				})
+				.catch((err) => console.error("Erro ao carregar dados do organizador:", err));
+		}
+	}, []);
 
 	function handleCreateEvent() {
 		navigate("/organizer/create");
@@ -66,12 +84,12 @@ export default function HeaderOrganizer() {
 							className="header-organizer-button"
 						>
 							<img
-								src={user.profileImage}
+								src={userData.profileImage}
 								alt="Perfil"
 								className="header-organizer-image"
 							/>
 
-							<span className="header-organizer-name">{user.firstName}</span>
+							<span className="header-organizer-name">{userData.firstName}</span>
 
 							<ChevronDown
 								size={18}
@@ -81,13 +99,24 @@ export default function HeaderOrganizer() {
 
 						{open && (
 							<div className="header-organizer-dropdown">
-								<button type="button" className="header-organizer-dropdown-item">
+								<button
+									type="button"
+									onClick={() => {
+										setOpen(false);
+										navigate("/update");
+									}}
+									className="header-organizer-dropdown-item"
+								>
 									<UserCircle2 size={18} />
 									Atualizar dados
 								</button>
 
 								<button
 									type="button"
+									onClick={() => {
+										clearAuthSession();
+										navigate("/login");
+									}}
 									className="header-organizer-dropdown-item header-organizer-dropdown-logout"
 								>
 									<LogOut size={18} />

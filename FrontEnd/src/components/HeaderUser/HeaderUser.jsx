@@ -3,11 +3,17 @@ import { ChevronDown, LogOut, UserCircle2 } from "lucide-react";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
 import { useNavigate } from "react-router-dom";
+import { getStoredUserId, clearAuthSession } from "../../utils/auth";
+import { getUser } from "../../api/users";
 
 export default function HeaderUser() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    firstName: "Noah",
+    profileImage: "https://i.pravatar.cc/100?img=12",
+  });
 
   // Fecha o dropdown ao clicar fora
   useEffect(() => {
@@ -27,11 +33,22 @@ export default function HeaderUser() {
     };
   }, []);
 
-  const user = {
-    firstName: "Noah", // implementar firstname do backend
-    profileImage:
-      "https://i.pravatar.cc/100?img=12", // implementar imagem do backend
-  };
+  // Carrega dados dinâmicos do usuário logado
+  useEffect(() => {
+    const userId = getStoredUserId();
+    if (userId) {
+      getUser(userId)
+        .then((data) => {
+          if (data) {
+            setUserData({
+              firstName: data.firstName || "Usuário",
+              profileImage: data.photoProfile?.value || data.photoProfile || "https://i.pravatar.cc/100?img=12",
+            });
+          }
+        })
+        .catch((err) => console.error("Erro ao carregar dados do usuário:", err));
+    }
+  }, []);
 
   return (
     <header className="header-user">
@@ -51,12 +68,12 @@ export default function HeaderUser() {
             className="header-user-button"
           >
             <img
-              src={user.profileImage}
+              src={userData.profileImage}
               alt="Perfil"
               className="header-user-image"
             />
 
-            <span className="header-user-name">{user.firstName}</span>
+            <span className="header-user-name">{userData.firstName}</span>
 
             <ChevronDown
               size={18}
@@ -66,12 +83,24 @@ export default function HeaderUser() {
 
           {open && (
             <div className="header-user-dropdown">
-              <button className="header-user-dropdown-item">
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  navigate("/update");
+                }}
+                className="header-user-dropdown-item"
+              >
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
 
-              <button className="header-user-dropdown-item header-user-dropdown-logout">
+              <button
+                onClick={() => {
+                  clearAuthSession();
+                  navigate("/login");
+                }}
+                className="header-user-dropdown-item header-user-dropdown-logout"
+              >
                 <LogOut size={18} />
                 Sair
               </button>
