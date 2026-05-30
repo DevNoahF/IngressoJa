@@ -12,7 +12,7 @@ import UpdateProfile from './pages/updateUser/updateUser';
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Navigate to='/user/home' replace />} />
+      <Route path='/' element={<Navigate to='/login' replace />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/cadastro/usuario' element={<Register />} />
@@ -21,10 +21,7 @@ function App() {
       <Route path='/user/payment' element={<Payment />} />
       <Route path='/organizer/create' element={<CreateEvent />} />
       <Route path='/organizer/home' element={<OrganizerEvents />} />
-      <Route path='/home' element={<Navigate to='/user/home' replace />} />
-      <Route path='/create-event' element={<Navigate to='/organizer/create' replace />} />
       <Route path='/update' element={<UpdateProfile />} />
-      <Route path='*' element={<Navigate to='/user/home' replace />} />
     </Routes>
   )
 }

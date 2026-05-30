@@ -9,10 +9,10 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
         public Guid Id { get; private set; }
         public RoleEnum Role { get; private set; }
 
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
+        public String FirstName { get; private set; }
+        public String LastName { get; private set; }
         public CpfVO Cpf { get; set; }
-        public PhotoProfileVO PhotoProfile { get; set; }
+        public PhotoProfileVO PhotoProfile { get; private set; }
 
         public EmailVO Email { get; private set; }
         
@@ -20,7 +20,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
 
         public String Token { get; private set; }
 
-        public DateOnly DateBirth { get; set; } // formato: dd-MM-yyyy 
+        public DateOnly DateBirth { get; private set; } // formato: dd-MM-yyyy 
 
         public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateOnly dateBirth)
         {
@@ -43,11 +43,14 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
             PhotoProfile = photoProfile;
             Email = email;
             PasswordHash = password;
-            Token = String.Empty;
+            Token = token;
             DateBirth = dateBirth;
         }
-    
-    
-    }   
+        public void SetToken(String token)
+        {
+            Token = token;
+        }
+    }
 
+    
 }

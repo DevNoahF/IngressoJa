@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly IUserUseCase _userUseCase;
@@ -18,18 +18,18 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             _userUseCase = userUseCase;
         }
-        [HttpPost()]
-        public async Task<IActionResult> Login([FromBody] UserAuthRequestDTO dto)
+        [HttpPost("/login")]
+    public async Task<IActionResult> Login([FromBody] UserAuthRequestDTO dto)
+    {
+        try
         {
-            try
-            {
-                var result = await _userUseCase.LoginUser(dto);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
-            }
+            var result = await _userUseCase.Login(dto);
+            return Ok(result);
         }
+        catch (Exception ex)
+        {
+            return StatusCode(401, "Login failed: " + ex.Message);
+        }
+}
     }
 }

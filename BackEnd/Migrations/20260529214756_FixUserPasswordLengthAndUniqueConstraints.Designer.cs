@@ -4,6 +4,7 @@ using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IngressoJa.Migrations
 {
     [DbContext(typeof(IngressoJaContext))]
-    partial class IngressoJaContextModelSnapshot : ModelSnapshot
+    [Migration("20260529214756_FixUserPasswordLengthAndUniqueConstraints")]
+    partial class FixUserPasswordLengthAndUniqueConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

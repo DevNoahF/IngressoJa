@@ -58,6 +58,19 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
+        public async Task<bool> UserExistsByEmailOrCpf(EmailVO email, CpfVO cpf)
+        {
+            try
+            {
+                var users = await _context.Users.ToListAsync();
+                return users.Any(u => u.Email.Value == email.Value || u.Cpf.Value == cpf.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error checking if user exists: {ex.Message}", ex);
+            }
+        }
+
         // Login should be handled at UseCase layer: repository exposes getUserByEmail and persistence methods
 
         public async Task<UserEntity> getUserById(Guid id)
@@ -82,8 +95,8 @@ namespace IngressoJa.Data.Persistence.Repositories
         {
             try
             {
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email.Value == email.Value);
+                var users = await _context.Users.ToListAsync();
+                var user = users.FirstOrDefault(u => u.Email.Value == email.Value);
 
                 if (user == null)
                     throw new Exception("User not found.");
@@ -140,8 +153,7 @@ namespace IngressoJa.Data.Persistence.Repositories
                 existingUser.LastName = user.LastName;
                 existingUser.PhotoProfile = user.PhotoProfile;
                 existingUser.PasswordHash = user.PasswordHash;
-
-                var userModel = userMapper.EntityToUserModel(user);
+                existingUser.Token = user.Token;
 
                 await _context.SaveChangesAsync();
             }
@@ -151,12 +163,6 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
-        /*public async Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO dto)
-        {
-            try
-            {
-    
-        }*/
-
+        
     }
 }

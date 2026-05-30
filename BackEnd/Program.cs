@@ -84,10 +84,10 @@ builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IUserUseCase>(); ->Lembrar de tirar os comentários assim que LoginUseCase for implementado em Repository
+builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
-builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
+builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetUsersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetUsersUseCase>();

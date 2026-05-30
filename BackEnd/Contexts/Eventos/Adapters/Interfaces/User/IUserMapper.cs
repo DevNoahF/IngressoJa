@@ -22,8 +22,8 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Interfaces.User
         
         public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto);
         public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto);
-        public UserAuthResponseDTO AuthResponse(UserEntity entity, string token);
+        public UserAuthResponseDTO AuthResponse(UserEntity entity);
         public UserAuthRequestDTO UserAuthRequestToAuthResponse(UserAuthRequestDTO dto);
-        public UserEntity UpdateUserToEntity(UserUpdateRequestDTO dto);
+        public UserEntity UpdateUserToEntity(UserEntity currentUser, UserUpdateRequestDTO dto);
     }
 }

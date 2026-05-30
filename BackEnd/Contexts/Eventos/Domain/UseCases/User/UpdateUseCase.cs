@@ -27,7 +27,7 @@ namespace BackEnd.Contexts.Eventos.Domain.UseCases.User
                 if(user == null)
                     throw new Exception("User not found.");
                     
-                var updatedUser = _userMapper.UpdateUserToEntity(dto);
+                var updatedUser = _userMapper.UpdateUserToEntity(user, dto);
                 await _repository.UpdateUser(userId, updatedUser);
             }
             catch(Exception ex)

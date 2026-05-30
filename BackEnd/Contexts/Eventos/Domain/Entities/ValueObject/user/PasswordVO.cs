@@ -34,6 +34,14 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
             return new PasswordVO(hash);
         }
 
+        public static PasswordVO FromHash(String hash)
+        {
+            if (string.IsNullOrWhiteSpace(hash))
+                throw new Exception("Password hash must not be empty.");
+
+            return new PasswordVO(hash);
+        }
+
         public static bool VerifyPassword(String password, String hash)
         {
             return BCrypt.Net.BCrypt.Verify(password, hash);
