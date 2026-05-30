@@ -109,22 +109,36 @@ public static class EventMapper
         );
     }
 
-    public static EventEntity ToEntity(this EventPutRequestDTO dto, EventEntity existingEvent)
+    public static EventEntity ToEntity(this EventPatchRequestDTO dto, EventEntity existingEvent)
     {
+        var name = dto.Name ?? existingEvent.Name;
+        var description = dto.Description ?? existingEvent.Description;
+        var street = dto.Street ?? existingEvent.Street;
+        var neighborhood = dto.Neighborhood ?? existingEvent.Neighborhood;
+        var city = dto.City ?? existingEvent.City;
+        var number = dto.Number ?? existingEvent.Number;
+        var state = dto.State ?? existingEvent.State;
+        var date = dto.Date is not null ? new DateVO(DateOnly.Parse(dto.Date)) : existingEvent.Date;
+        var hour = dto.Hour is not null ? TimeOnly.Parse(dto.Hour) : existingEvent.Hour;
+        var ticketValue = dto.TicketValue ?? existingEvent.TicketValue;
+        var totalTicketQuantity = dto.TotalTicketQuantity ?? existingEvent.TotalTicketQuantity;
+        var bannerImage = dto.BannerImage ?? existingEvent.BannerImage;
+
         existingEvent.Update(
-            dto.Name,
-            dto.Description,
-            dto.Street,
-            dto.Neighborhood,
-            dto.City,
-            dto.Number,
-            dto.State,
-            new DateVO(DateOnly.Parse(dto.Date)), 
-            TimeOnly.Parse(dto.Hour),
-            dto.TicketValue,
-            dto.TotalTicketQuantity,
-            dto.BannerImage
+            name,
+            description,
+            street,
+            neighborhood,
+            city,
+            number,
+            state,
+            date,
+            hour,
+            ticketValue,
+            totalTicketQuantity,
+            bannerImage
         );
+
         return existingEvent;
     }
 

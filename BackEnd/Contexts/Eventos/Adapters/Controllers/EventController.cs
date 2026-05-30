@@ -65,8 +65,8 @@ public class EventController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventPutRequestDTO dto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventPatchRequestDTO dto)
     {
         try
         {
@@ -108,7 +108,7 @@ public class EventController : ControllerBase
     }
 
 
-    [HttpPatch("{id}")]
+    [HttpPatch("{id}/status")]
     public async Task<IActionResult> ChangeStatusOfEvent(Guid id, [FromBody] EventChangeStatusOfEventRequestDTO dto)
     {
         try
