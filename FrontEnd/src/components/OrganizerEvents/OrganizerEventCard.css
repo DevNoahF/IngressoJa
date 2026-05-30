@@ -65,7 +65,6 @@
   opacity: 0.92;
 }
 
-/* Delete (X) button in top-right corner */
 .organizer-event-card {
   position: relative;
 }
@@ -115,6 +114,24 @@
 
 .organizer-event-revenue-button:hover {
   background: #f7f7fb;
+}
+
+.organizer-event-status-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 10px;
+  border: 1px solid #05051a;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #05051a;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.organizer-event-status-button:hover {
+  background: #05051a;
+  color: #ffffff;
 }
 
 @media (max-width: 640px) {
