@@ -7,23 +7,32 @@ namespace IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 public sealed class CreateSaleUseCase : ICreateSaleUseCase
 {
 	private readonly ISaleRepository _saleRepository;
+	private readonly IEventSaleRepository _eventSaleRepository;
 
-	public CreateSaleUseCase(ISaleRepository saleRepository)
+	public CreateSaleUseCase(
+		ISaleRepository saleRepository,
+		IEventSaleRepository eventSaleRepository)
 	{
 		_saleRepository = saleRepository;
+		_eventSaleRepository = eventSaleRepository;
 	}
 
 	public async Task<SaleEntity> ExecuteAsync(
 		Guid userId,
 		Guid eventId,
 		int selectedTicketsUser,
-		double totalPrice,
-		int availableTickets,
 		Guid? ticketId = null,
 		CancellationToken cancellationToken = default)
 	{
-		if (selectedTicketsUser > availableTickets)
+		var eventSale = await _eventSaleRepository.GetEventSaleById(eventId);
+
+		if (eventSale is null)
+			throw new InvalidOperationException($"Event {eventId} not found.");
+
+		if (selectedTicketsUser > eventSale.TotalTicketQuantity.Value)
 			throw new InvalidOperationException("There are not enough tickets available.");
+
+		var totalPrice = eventSale.TicketValue.Value * selectedTicketsUser;
 
 		var sale = new SaleEntity(
 			userId,
