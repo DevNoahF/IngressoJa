@@ -10,17 +10,20 @@ namespace IngressoJa.Contexts.Sales.Presentation.Controllers;
 public class SalesController : ControllerBase
 {
     private readonly CreateSaleUseCase _createSaleUseCase;
+    private readonly GetAllSalesUseCase _getAllSalesUseCase;
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
     private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
 
     public SalesController(
         CreateSaleUseCase createSaleUseCase,
+        GetAllSalesUseCase getAllSalesUseCase,
         GetSaleByIdUseCase getSaleByIdUseCase,
         GetSaleByEventUseCase getSaleByEventUseCase,
         UpdateSaleStatusUseCase updateSaleStatusUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
+        _getAllSalesUseCase = getAllSalesUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
         _getSaleByEventUseCase = getSaleByEventUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
@@ -35,7 +38,6 @@ public class SalesController : ControllerBase
                 request.UserId,
                 request.EventId,
                 request.SelectedTicketsUser,
-                request.TicketId,
                 cancellationToken);
             var response = sale.ToResponse();
 
@@ -51,6 +53,14 @@ public class SalesController : ControllerBase
             Console.WriteLine(exception.Message);
             return BadRequest(exception.Message);
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    {
+        var sales = await _getAllSalesUseCase.ExecuteAsync(cancellationToken);
+
+        return Ok(sales.ToResponse());
     }
 
     [HttpGet("{id:int}")]
