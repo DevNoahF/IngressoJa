@@ -8,7 +8,7 @@ public class TicketEntity
 
     public TicketEntity(Guid code, Guid userId)
     {
-        Code = new Guid();
+        Code = code;
         UserId = userId;
     }
 }

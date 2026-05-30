@@ -35,7 +35,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
                 if (alreadyExists)
                     throw new Exception("A user with this email or CPF already exists.");
 
-                var user = __userMapper.RegisterUserToEntity(dto);
+                var user = __userMapper.RegisterUserToEntity(dto, Guid.NewGuid());
                 await __repository.RegisterUser(user);
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases
                 if (alreadyExists)
                     throw new Exception("A user with this email or CPF already exists.");
 
-                var user = __userMapper.RegisterOrganizerToEntity(dto);
+                var user = __userMapper.RegisterOrganizerToEntity(dto, Guid.NewGuid());
                 await __repository.RegisterOrganizer(user);
             }
             catch (Exception ex)

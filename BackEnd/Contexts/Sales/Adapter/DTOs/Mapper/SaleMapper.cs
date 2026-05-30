@@ -7,16 +7,6 @@ namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 
 public static class SaleMapper
 {
-    public static SaleEntity ToEntity(this CreateSaleRequestDTO dto)
-    {
-        return new SaleEntity(
-            dto.UserId,
-            dto.EventId,
-            dto.SelectedTicketsUser,
-            dto.TotalPrice,
-            dto.TicketId);
-    }
-
     public static SaleResponseDTO ToResponse(this SaleEntity entity)
     {
         return new SaleResponseDTO(
@@ -53,11 +43,14 @@ public static class SaleMapper
     public static SaleEntity ToEntity(this SaleModel model)
     {
         var entity = new SaleEntity(
+            model.Id,
             model.UserId,
             model.EventId,
+            model.TicketId,
             model.SelectedTicketsUser,
             model.TotalPrice,
-            model.TicketId);
+            model.CreatedAt,
+            model.SaleStatus);
         return entity;
     }
 }
