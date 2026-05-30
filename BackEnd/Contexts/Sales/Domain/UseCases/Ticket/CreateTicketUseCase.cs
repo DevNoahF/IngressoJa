@@ -19,9 +19,15 @@ public class CreateTicketUseCase
     {
         try
         {
+            if (await _repository.existsEventId(createTicketRequestDto.EventId) == false)
+                throw new Exception("Event does not exist");
+            if (await _repository.existsUserId(createTicketRequestDto.UserId) == false)
+                throw new Exception("User not found");
+            if (await _repository.salePaymentSucess(createTicketRequestDto.SaleId) == false)
+                throw new Exception("Sale payment failed");
+
             var ticketEntity = createTicketRequestDto.ToEntity();
             var createdTicket=await _repository.CreateTicket(ticketEntity);
-
             return createdTicket.ToCreateTicketResponseDTO(); 
         }
         catch (Exception ex)
