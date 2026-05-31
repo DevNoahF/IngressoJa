@@ -1,4 +1,4 @@
-﻿using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Request.Ticket;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.Ticket;
 using IngressoJa.Contexts.Sales.Domain.Entities;
@@ -42,22 +42,8 @@ public class CreateTicketUseCase
             if (sale.TicketId is not null)
             {
                 var existingTicket = await _repository.GetTicketById(sale.TicketId.Value);
-
                 if (existingTicket is not null)
                     return existingTicket.ToCreateTicketResponseDTO();
             }
 
-            var ticketEntity = createTicketRequestDto.ToEntity();
-            var createdTicket=await _repository.CreateTicket(ticketEntity);
-            sale.AttachTicket(createdTicket.Code);
-
-            await _saleRepository.UpdateAsync(sale, cancellationToken);
-
-            return createdTicket.ToCreateTicketResponseDTO(); 
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error creating ticket", ex);
-        }
-    }
-}
+            var ticketEntity = createTicketRequestDto.ToEntity(

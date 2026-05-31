@@ -6,9 +6,10 @@
 .organizer-event-card {
   background: #ffffff;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #e5e5e5;
   transition: 0.2s;
+  position: relative;
 }
 
 .organizer-event-card:hover {
@@ -20,11 +21,13 @@
   width: 100%;
   height: 220px;
   object-fit: cover;
+  border-radius: 16px 16px 0 0;
 }
 
 .organizer-event-meta {
   padding: 18px;
   background: #ffffff;
+  border-radius: 0 0 16px 16px;
 }
 
 .organizer-event-meta h3 {
@@ -63,11 +66,6 @@
 
 .organizer-event-edit-button:hover {
   opacity: 0.92;
-}
-
-/* Delete (X) button in top-right corner */
-.organizer-event-card {
-  position: relative;
 }
 
 .organizer-event-delete {
@@ -115,6 +113,24 @@
 
 .organizer-event-revenue-button:hover {
   background: #f7f7fb;
+}
+
+.organizer-event-status-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 10px;
+  border: 1px solid #05051a;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #05051a;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.organizer-event-status-button:hover {
+  background: #05051a;
+  color: #ffffff;
 }
 
 @media (max-width: 640px) {

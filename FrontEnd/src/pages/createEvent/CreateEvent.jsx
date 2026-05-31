@@ -1,18 +1,14 @@
 import "./CreateEvent.css";
-
-import Header from "../../components/Home/Header";
-import Footer from "../../components/Home/Footer";
+import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import CreateEventForm from "../../components/CreateEventForm/CreateEventForm";
 
 function CreateEvent() {
   return (
     <>
-      <Header />
-
+      <HeaderOrganizer />
       <main className="create-event-page">
         <CreateEventForm />
       </main>
-      <Footer/>
     </>
   );
 }
