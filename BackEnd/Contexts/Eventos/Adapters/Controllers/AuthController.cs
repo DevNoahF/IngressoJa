@@ -12,18 +12,18 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
-        private readonly IUserUseCase _userUseCase;
+        private readonly ILoginUseCase _loginUseCase;
 
-        public AuthController(IUserUseCase userUseCase)
+        public AuthController(ILoginUseCase loginUseCase)
         {
-            _userUseCase = userUseCase;
+            _loginUseCase = loginUseCase;
         }
         [HttpPost("/login")]
     public async Task<IActionResult> Login([FromBody] UserAuthRequestDTO dto)
     {
         try
         {
-            var result = await _userUseCase.Login(dto);
+            var result = await _loginUseCase.Login(dto);
             return Ok(result);
         }
         catch (Exception ex)

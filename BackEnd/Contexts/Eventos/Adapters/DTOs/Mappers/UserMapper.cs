@@ -26,8 +26,9 @@ public class UserMapper : IUserMapper
             Email = entity.Email,
             PhotoProfile = entity.PhotoProfile,
             PasswordHash = entity.PasswordHash,
-            Token = entity.Token,
-            DateBirth = entity.DateBirth
+            DateBirth = entity.DateBirth,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -42,10 +43,11 @@ public class UserMapper : IUserMapper
             model.LastName,
             model.Cpf,
             model.Email,
-            PasswordVO.FromHash(model.PasswordHash.Value),
+            model.PasswordHash,
             model.PhotoProfile ?? new PhotoProfileVO(string.Empty),
-            model.Token ?? string.Empty,
-            model.DateBirth
+            model.DateBirth,
+            model.CreatedAt,
+            model.UpdatedAt
         );
     }
 
@@ -73,10 +75,10 @@ public class UserMapper : IUserMapper
     }
 
     // UserAuthUser para UserEntity
-    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             string.Empty,
             string.Empty,
@@ -84,16 +86,15 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
     // UserAuthOrganizer para UserEntity
-    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             string.Empty,
             string.Empty,
@@ -101,16 +102,15 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
     // UserRegisterRequestDTO para UserEntity
-    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             dto.FirstName,
             dto.LastName,
@@ -118,16 +118,15 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
 
     // UserRegisterOrganizer para UserEntity
-    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             dto.FirstName,
             dto.LastName,
@@ -135,15 +134,14 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
 
     // responseAuth to UserEntity
-    public UserAuthResponseDTO AuthResponse(UserEntity entity)
+    public UserAuthResponseDTO AuthResponse(string token)
     {
-        return new UserAuthResponseDTO(entity.Token);
+        return new UserAuthResponseDTO(token);
     }
 
     // UserAuthRequestDTO para UserAuthResponseDTO
@@ -166,8 +164,8 @@ public class UserMapper : IUserMapper
             dto.Email,
             PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            currentUser.Token,
-            currentUser.DateBirth
+            currentUser.DateBirth,
+            currentUser.CreatedAt
         );
     }
     
