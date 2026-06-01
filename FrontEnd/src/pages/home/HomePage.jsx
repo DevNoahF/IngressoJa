@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
+import { useNavigate } from "react-router-dom";
 import EventCard from "../../components/Home/EventCard";
-import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventById, getEvents, getStateCode } from "../../api/events";
 import { setStoredEventId } from "../../utils/eventContext";
 
@@ -30,6 +30,7 @@ const PERMANENT_EVENT = {
 };
 
 function Home() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -146,7 +147,7 @@ function Home() {
     }
 
     setStoredEventId(String(eventId));
-    setPaymentMessage("Evento selecionado para pagamento.");
+    navigate("/user/payment");
   }
 
   return (
@@ -161,19 +162,21 @@ function Home() {
 
         <section className="permanent-event-section">
           <h2>Evento permanente</h2>
-          <OrganizerEventCard
+          <EventCard
             key={PERMANENT_EVENT.id}
             event={{
               id: PERMANENT_EVENT.id,
               name: PERMANENT_EVENT.name,
-              formattedDate: PERMANENT_EVENT.date,
-              bannerImage: PERMANENT_EVENT.bannerImage,
-              location: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
+              title: PERMANENT_EVENT.name,
+              description: PERMANENT_EVENT.description,
+              date: PERMANENT_EVENT.date,
+              image: PERMANENT_EVENT.bannerImage,
+              city: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
               hour: PERMANENT_EVENT.hour,
               totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
               ticketValue: PERMANENT_EVENT.ticketValue,
             }}
-            onPhotoClick={() => setSelectedEvent(PERMANENT_EVENT)}
+            onReadMore={setSelectedEvent}
           />
         </section>
 
@@ -216,7 +219,7 @@ function Home() {
                   alt={(selectedEventDetails ?? selectedEvent).name ?? (selectedEventDetails ?? selectedEvent).title}
                 />
 
-                <p className="event-modal-description">{(selectedEventDetails ?? selectedEvent).description}</p>
+                <p className="event-modal-description">{(selectedEventDetails ?? selectedEvent).description || selectedEvent.description}</p>
 
                 <div className="event-modal-details">
                   <span>

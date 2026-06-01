@@ -42,9 +42,11 @@ function EventCard({ event, onReadMore }) {
           ) : null}
         </div>
 
-        <button type="button" onClick={() => onReadMore(event)}>
-          Ler Mais
-        </button>
+        {onReadMore ? (
+          <button type="button" onClick={() => onReadMore(event)}>
+            Ler Mais
+          </button>
+        ) : null}
       </div>
     </div>
   );

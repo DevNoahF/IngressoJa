@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, LogOut, UserCircle2 } from "lucide-react";
+import { ChevronDown, LogOut, Ticket, UserCircle2 } from "lucide-react";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
 import { useNavigate } from "react-router-dom";
@@ -66,12 +66,24 @@ export default function HeaderUser() {
 
           {open && (
             <div className="header-user-dropdown">
-              <button className="header-user-dropdown-item">
+              <button
+                className="header-user-dropdown-item"
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  navigate("/user/tickets");
+                }}
+              >
+                <Ticket size={18} />
+                Meus ingressos
+              </button>
+
+              <button className="header-user-dropdown-item" type="button">
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
 
-              <button className="header-user-dropdown-item header-user-dropdown-logout">
+              <button className="header-user-dropdown-item header-user-dropdown-logout" type="button">
                 <LogOut size={18} />
                 Sair
               </button>
