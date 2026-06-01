@@ -24,6 +24,7 @@ function App() {
       <Route path='/organizer/create' element={<CreateEvent />} />
       <Route path='/organizer/home' element={<OrganizerEvents />} />
       <Route path='/update' element={<UpdateProfile />} />
+      <Route path='*' element={<Navigate to='/login' replace />} />
     </Routes>
   )
 }
