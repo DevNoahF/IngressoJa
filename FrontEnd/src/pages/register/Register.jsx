@@ -7,14 +7,16 @@ import Footer from "../../components/Home/Footer";
 
 function Register() {
   const location = useLocation();
-  const isOrganizerRegistration = location.pathname.includes("organizador");
+  const path = location.pathname.toLowerCase();
+  const isOrganizerRegistration = path.includes("organizer") || path.includes("organizador") || path.includes("admin");
+  const roleName = path.includes("admin") ? "Admin" : isOrganizerRegistration ? "Organizador" : "Usuário";
 
   return (
     <>
       <Header />
 
       <main className="register-page">
-        <RegisterForm isOrganizerRegistration={isOrganizerRegistration} />
+        <RegisterForm isOrganizerRegistration={isOrganizerRegistration} roleName={roleName} />
       </main>
 
       <Footer />

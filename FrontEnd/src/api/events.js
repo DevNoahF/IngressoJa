@@ -162,7 +162,7 @@ export function createEvent(payload) {
 
 export function updateEvent(eventId, payload) {
   return request(`/events/${eventId}`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify(buildUpdatePayload(payload)),
   }).then(normalizeEvent);
 }
