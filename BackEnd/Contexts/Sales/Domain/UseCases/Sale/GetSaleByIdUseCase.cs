@@ -12,8 +12,8 @@ public sealed class GetSaleByIdUseCase
         _saleRepository = saleRepository;
     }
 
-    public async Task<SaleEntity?> ExecuteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<SaleEntity?> ExecuteAsync(int id)
     {
-        return await _saleRepository.GetByIdAsync(id, cancellationToken);
+        return await _saleRepository.GetByIdAsync(id);
     }
 }

@@ -12,8 +12,8 @@ public sealed class GetAllSalesUseCase
         _saleRepository = saleRepository;
     }
 
-    public async Task<IEnumerable<SaleEntity>> ExecuteAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SaleEntity>> ExecuteAsync()
     {
-        return await _saleRepository.GetAllAsync(cancellationToken);
+        return await _saleRepository.GetAllAsync();
     }
 }

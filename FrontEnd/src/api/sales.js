@@ -12,7 +12,7 @@ async function request(path, options = {}) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Falha ao comunicar com a API de tickets.");
+    throw new Error(errorText || "Falha ao comunicar com a API de vendas.");
   }
 
   if (response.status === 204) return null;
@@ -21,13 +21,19 @@ async function request(path, options = {}) {
   return responseText ? JSON.parse(responseText) : null;
 }
 
-export function getTicketsByUserId(userId) {
-  return request(`/tickets/user/${userId}`);
+export function createSale(payload) {
+  return request("/sales", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
-export function createTicket(payload) {
-  return request('/tickets', {
-    method: 'POST',
-    body: JSON.stringify(payload),
+export function getSaleById(id) {
+  return request(`/sales/${id}`);
+}
+
+export function updateSaleStatus(id) {
+  return request(`/sales/${id}/status`, {
+    method: "PATCH",
   });
 }

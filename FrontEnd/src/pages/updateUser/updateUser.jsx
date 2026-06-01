@@ -1,6 +1,10 @@
 import "./updateUser.css";
-import { useState } from "react";
-import { UserRound, Upload } from "lucide-react";
+import { useState, useEffect } from "react";
+import { UserRound, Upload, Loader } from "lucide-react";
+import HeaderUser from "../../components/HeaderUser/HeaderUser";
+import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
+import { getStoredRole, getStoredUserId } from "../../utils/auth";
+import { getUser, updateUser as updateUserApi } from "../../api/users";
 
 export default function UpdateProfile() {
   const [formData, setFormData] = useState({
@@ -11,6 +15,41 @@ export default function UpdateProfile() {
     confirmPassword: "",
     photoProfile: "",
   });
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
+  const role = getStoredRole();
+
+  useEffect(() => {
+    const userId = getStoredUserId();
+    if (!userId) {
+      setFeedback({ type: "error", message: "Usuário não autenticado." });
+      setLoading(false);
+      return;
+    }
+
+    getUser(userId)
+      .then((data) => {
+        if (data) {
+          setFormData({
+            firstName: data.firstName || "",
+            lastName: data.lastName || "",
+            email: data.email?.value || data.email || "",
+            photoProfile: data.photoProfile?.value || data.photoProfile || "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar dados do usuário:", err);
+        setFeedback({ type: "error", message: "Erro ao buscar dados no servidor." });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +64,6 @@ export default function UpdateProfile() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        // Converter imagem para string base64
         const imageString = event.target?.result;
         setFormData((prev) => ({
           ...prev,
@@ -36,96 +74,178 @@ export default function UpdateProfile() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Dados do formulário:", formData);
-    // Aqui você pode enviar os dados para o backend
+    setFeedback({ type: "", message: "" });
+
+    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
+      setFeedback({ type: "error", message: "A nova senha e a confirmação precisam ser iguais." });
+      return;
+    }
+
+    const userId = getStoredUserId();
+    if (!userId) {
+      setFeedback({ type: "error", message: "Usuário não autenticado." });
+      return;
+    }
+
+    setSaving(true);
+
+    const payload = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      email: { value: formData.email.trim() },
+      photoProfile: { value: formData.photoProfile.trim() },
+    };
+
+    if (formData.newPassword) {
+      payload.password = { value: formData.newPassword };
+    }
+
+    try {
+      await updateUserApi(userId, payload);
+      setFeedback({ type: "success", message: "Dados atualizados com sucesso!" });
+      setFormData((prev) => ({
+        ...prev,
+        newPassword: "",
+        confirmPassword: "",
+      }));
+    } catch (err) {
+      console.error("Erro ao atualizar dados:", err);
+      setFeedback({
+        type: "error",
+        message: err instanceof Error ? err.message : "Não foi possível atualizar os dados.",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
+
   return (
-    <div className="update-container">
-      <div className="update-card">
-        <div className="icon-top">
-          <UserRound size={28} />
+    <>
+      {role === "Organizer" ? <HeaderOrganizer /> : <HeaderUser />}
+      <div className="update-container">
+        <div className="update-card">
+          <div className="icon-top">
+            <UserRound size={28} />
+          </div>
+
+          <h1>Atualizar Dados</h1>
+          <p>Mantenha suas informações sempre atualizadas</p>
+
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center", padding: "40px 0" }}>
+              <Loader size={36} className="animate-spin" style={{ color: "#020221" }} />
+            </div>
+          ) : (
+            <>
+              <div className="photo-upload">
+                <label
+                  htmlFor="photo-input"
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                  }}
+                >
+                  {formData.photoProfile ? (
+                    <img
+                      src={formData.photoProfile}
+                      alt="Foto de Perfil"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                      <Upload size={36} />
+                      <span style={{ fontSize: "12px" }}>Enviar Foto</span>
+                    </div>
+                  )}
+                </label>
+                <input
+                  id="photo-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: "none" }}
+                />
+              </div>
+
+              <form className="update-form" onSubmit={handleSubmit}>
+                <div className="input-group">
+                  <label>Nome</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="João"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>Sobrenome</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Silva"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group full-width">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>Nova Senha</label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    placeholder="Deixe em branco para não alterar"
+                    value={formData.newPassword}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>Confirmar Nova Senha</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Deixe em branco para não alterar"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {feedback.message && (
+                  <div className={`form-feedback ${feedback.type}`}>{feedback.message}</div>
+                )}
+
+                <button type="submit" className="save-btn" disabled={saving}>
+                  {saving ? "Salvando..." : "Salvar Alterações"}
+                </button>
+              </form>
+            </>
+          )}
         </div>
-
-        <h1>Atualizar Dados</h1>
-        <p>Mantenha suas informações sempre atualizadas</p>
-
-        <div className="photo-upload">
-          <label htmlFor="photo-input" style={{ cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-            <Upload size={36} />
-            {formData.photoProfile && <span>Foto enviada</span>}
-          </label>
-          <input
-            id="photo-input"
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoUpload}
-            style={{ display: "none" }}
-          />
-        </div>
-
-        <form className="update-form" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Nome</label>
-            <input 
-              type="text" 
-              name="firstName"
-              placeholder="João" 
-              value={formData.firstName}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Sobrenome</label>
-            <input 
-              type="text" 
-              name="lastName"
-              placeholder="Silva" 
-              value={formData.lastName}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="input-group full-width">
-            <label>Email</label>
-            <input 
-              type="email" 
-              name="email"
-              placeholder="seu@email.com" 
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Nova Senha</label>
-            <input 
-              type="password" 
-              name="newPassword"
-              placeholder="********" 
-              value={formData.newPassword}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Confirmar Nova Senha</label>
-            <input 
-              type="password" 
-              name="confirmPassword"
-              placeholder="********" 
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <button type="submit" className="save-btn">
-            Salvar Alterações
-          </button>
-        </form>
       </div>
-    </div>
+    </>
   );
 }

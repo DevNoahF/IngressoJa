@@ -20,12 +20,11 @@ public class CreateTicketUseCase
     }
 
     public async Task<CreateTicketResponseDTO> CreateTicket(
-        CreateTicketRequestDTO createTicketRequestDto,
-        CancellationToken cancellationToken = default)
+        CreateTicketRequestDTO createTicketRequestDto)
     {
         try
         {
-            var sale = await _saleRepository.GetByIdAsync(createTicketRequestDto.SaleId, cancellationToken);
+            var sale = await _saleRepository.GetByIdAsync(createTicketRequestDto.SaleId);
 
             if (sale is null)
                 throw new Exception("Sale not found");
@@ -51,7 +50,7 @@ public class CreateTicketUseCase
             var createdTicket=await _repository.CreateTicket(ticketEntity);
             sale.AttachTicket(createdTicket.Code);
 
-            await _saleRepository.UpdateAsync(sale, cancellationToken);
+            await _saleRepository.UpdateAsync(sale);
 
             return createdTicket.ToCreateTicketResponseDTO(); 
         }

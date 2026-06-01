@@ -130,6 +130,46 @@
   margin: 0 0 28px 0;
 }
 
+.payment-status {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.payment-status.error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.selected-event-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #eef0f2;
+  border-radius: 8px;
+  background: #fbfbfc;
+  color: #333;
+}
+
+.selected-event-summary strong {
+  color: #090b0e;
+  font-size: 15px;
+}
+
+.selected-event-label {
+  color: #666;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Formulário e Grupos */
 .checkout-form {
   display: flex;
@@ -471,4 +511,9 @@
 
 .btn-modal-submit:hover {
   opacity: 0.9;
+}
+
+.btn-modal-submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }

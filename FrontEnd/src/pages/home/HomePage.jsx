@@ -1,14 +1,19 @@
 import "./HomePage.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
-import { useNavigate } from "react-router-dom";
 import EventCard from "../../components/Home/EventCard";
+import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventById, getEvents, getStateCode } from "../../api/events";
 import { setStoredEventId } from "../../utils/eventContext";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
+
+function isGuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
 
 
 
@@ -146,7 +151,13 @@ function Home() {
       return;
     }
 
+    if (!isGuid(String(eventId))) {
+      setPaymentMessage("Este evento e demonstrativo. Escolha um evento cadastrado para comprar ingresso.");
+      return;
+    }
+
     setStoredEventId(String(eventId));
+    setPaymentMessage("Evento selecionado para pagamento.");
     navigate("/user/payment");
   }
 
@@ -162,21 +173,19 @@ function Home() {
 
         <section className="permanent-event-section">
           <h2>Evento permanente</h2>
-          <EventCard
+          <OrganizerEventCard
             key={PERMANENT_EVENT.id}
             event={{
               id: PERMANENT_EVENT.id,
               name: PERMANENT_EVENT.name,
-              title: PERMANENT_EVENT.name,
-              description: PERMANENT_EVENT.description,
-              date: PERMANENT_EVENT.date,
-              image: PERMANENT_EVENT.bannerImage,
-              city: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
+              formattedDate: PERMANENT_EVENT.date,
+              bannerImage: PERMANENT_EVENT.bannerImage,
+              location: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
               hour: PERMANENT_EVENT.hour,
               totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
               ticketValue: PERMANENT_EVENT.ticketValue,
             }}
-            onReadMore={setSelectedEvent}
+            onPhotoClick={() => setSelectedEvent(PERMANENT_EVENT)}
           />
         </section>
 
@@ -219,7 +228,7 @@ function Home() {
                   alt={(selectedEventDetails ?? selectedEvent).name ?? (selectedEventDetails ?? selectedEvent).title}
                 />
 
-                <p className="event-modal-description">{(selectedEventDetails ?? selectedEvent).description || selectedEvent.description}</p>
+                <p className="event-modal-description">{(selectedEventDetails ?? selectedEvent).description}</p>
 
                 <div className="event-modal-details">
                   <span>

@@ -125,6 +125,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Assumindo que você está usando a imagem mysql:latest (que é a versão 8+)
+var sqlServerVersion = new MySqlServerVersion(new Version(8, 0, 32));
+
+builder.Services.AddDbContext<IngressoJaContext>(options =>
+    options.UseMySql(connectionString, serverVersion,
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)
+    )
+);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
