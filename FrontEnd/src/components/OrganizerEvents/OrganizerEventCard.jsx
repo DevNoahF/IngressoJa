@@ -1,7 +1,7 @@
 import "./OrganizerEventCard.css";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin, Ticket, Tag } from "lucide-react";
 
-function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete }) {
+function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete, onStatus }) {
   return (
     <article className="organizer-event-shell">
       <div className="organizer-event-card">
@@ -17,32 +17,28 @@ function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete }
           </button>
         ) : null}
 
-        <img 
-          src={event.bannerImage} 
-          alt={event.name} 
-          className="organizer-event-image" 
+        <img
+          src={event.bannerImage}
+          alt={event.name}
+          className="organizer-event-image"
           onClick={onPhotoClick}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
         />
 
         <div className="organizer-event-meta">
           <h3>{event.name}</h3>
 
           <div className="organizer-event-details">
-            <span>
-              <MapPin size={15} />
-              {event.location}
-            </span>
+            <span><MapPin size={15} />{event.location}</span>
+            <span><Calendar size={15} />{event.formattedDate}</span>
 
-            <span>
-              <Calendar size={15} />
-              {event.formattedDate}
-            </span>
+            {event.ticketValue !== undefined && event.ticketValue !== null ? (
+              <span><Ticket size={15} />R$ {Number(event.ticketValue).toFixed(2)}</span>
+            ) : null}
 
-            <span>
-              <Clock size={15} />
-              {event.hour}
-            </span>
+            {event.totalTicketQuantity !== undefined && event.totalTicketQuantity !== null ? (
+              <span><Ticket size={15} />{event.totalTicketQuantity} ingressos</span>
+            ) : null}
           </div>
 
           <button type="button" className="organizer-event-edit-button" onClick={onEdit}>
@@ -52,6 +48,12 @@ function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete }
           <button type="button" className="organizer-event-revenue-button" onClick={onRevenue}>
             Ver Receita
           </button>
+
+          {onStatus ? (
+            <button type="button" className="organizer-event-status-button" onClick={onStatus}>
+              <Tag size={14} /> Alterar Status
+            </button>
+          ) : null}
         </div>
       </div>
     </article>

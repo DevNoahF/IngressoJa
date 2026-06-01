@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
-import { getEventsByOrganizerId, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventsByOrganizerId, getEventById, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
@@ -80,6 +80,7 @@ function OrganizerEvents() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRevenueModal, setShowRevenueModal] = useState(false);
@@ -105,9 +106,25 @@ function OrganizerEvents() {
     setShowRevenueModal(true);
   };
 
-  const handlePhotoClick = (event) => {
+  const handlePhotoClick = async (event) => {
+    if (event.id === PERMANENT_EVENT.id) {
+      setSelectedEvent(event);
+      setShowDescriptionModal(true);
+      return;
+    }
+
     setSelectedEvent(event);
     setShowDescriptionModal(true);
+    setIsDetailLoading(true);
+
+    try {
+      const fullEvent = await getEventById(event.id);
+      setSelectedEvent(normalizeEvent(fullEvent));
+    } catch {
+      // mantém o evento parcial se falhar
+    } finally {
+      setIsDetailLoading(false);
+    }
   };
 
   const handleStatusClick = (event) => {
@@ -141,6 +158,7 @@ function OrganizerEvents() {
     setSelectedStatus(null);
     setStatusFeedback({ type: "", message: "" });
     setIsSavingStatus(false);
+    setIsDetailLoading(false);
   };
 
   function handleEditFormChange(event) {
@@ -312,11 +330,11 @@ function OrganizerEvents() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>DATA (DATE ONLY)</label>
+                  <label>DATA</label>
                   <input type="date" name="date" value={editForm?.date ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>HORA (TIME ONLY)</label>
+                  <label>HORA</label>
                   <input type="time" name="hour" value={editForm?.hour ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
@@ -376,16 +394,22 @@ function OrganizerEvents() {
               <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
             </div>
             <div className="organizer-description-modal-body">
-              <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
-              <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
-              <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
-              <div className="organizer-description-modal-details">
-                <span><MapPin size={16} />{selectedEvent.location}</span>
-                <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
-                <span><Clock size={16} />{selectedEvent.hour}</span>
-                <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
-                <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
-              </div>
+              {isDetailLoading ? (
+                <p style={{ textAlign: "center" }}>Carregando detalhes...</p>
+              ) : (
+                <>
+                  <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
+                  <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
+                  <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
+                  <div className="organizer-description-modal-details">
+                    <span><MapPin size={16} />{selectedEvent.location}</span>
+                    <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
+                    <span><Clock size={16} />{selectedEvent.hour}</span>
+                    <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
+                    <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
+                  </div>
+                </>
+              )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>
