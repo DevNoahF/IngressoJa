@@ -17,13 +17,13 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Interfaces.User
         public UserEntity ModelToEntity(UserModel model);
         public UserRecordedResponseDTO EntityToRecordedResponse(UserEntity entity);
         public UserAuthRequestDTO EntityToAuthRequestDTO(UserEntity entity);
-        public  UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto);
-        public  UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto);
-        
-        public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto);
-        public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto);
-        public UserAuthResponseDTO AuthResponse(UserEntity entity, string token);
+        public  UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dtom, Guid id);
+        public  UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto, Guid id);
+
+        public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto, Guid id);
+        public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto, Guid id);
+        public UserAuthResponseDTO AuthResponse(string token);
         public UserAuthRequestDTO UserAuthRequestToAuthResponse(UserAuthRequestDTO dto);
-        public UserEntity UpdateUserToEntity(UserUpdateRequestDTO dto);
+        public UserEntity UpdateUserToEntity(UserEntity currentUser, UserUpdateRequestDTO dto);
     }
 }

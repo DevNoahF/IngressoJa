@@ -15,7 +15,12 @@ using IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 using IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 using IngressoJa.Data.dbContext;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
-using IngressoJa.Contexts.Eventos.Application.UseCases;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
+using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
+using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
+using IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
+using IngressoJa.Contexts.Shared.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +61,9 @@ builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IEventSaleRepository, EventSaleRepository>();
 builder.Services.AddScoped<CreateSaleUseCase>();
+builder.Services.AddScoped<GetAllSalesUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
+builder.Services.AddScoped<GetSaleByEventUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 
 // Eventos
@@ -64,6 +71,7 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<CreateEventUseCase>();
 builder.Services.AddScoped<DeleteEventUseCase>();
 builder.Services.AddScoped<GetAllEventsUseCase>();
+builder.Services.AddScoped<UpdateEventUseCase>();
 
 // Events in sales
 builder.Services.AddScoped<GetEventByIdUseCase>();
@@ -72,20 +80,34 @@ builder.Services.AddScoped<DeleteEventSaleUseCase>();
 builder.Services.AddScoped<GetAllEventSalesUseCase>();
 builder.Services.AddScoped<GetEventSaleByIdUseCase>();
 builder.Services.AddScoped<GetEventsByOrganizerIdUseCase>();
-builder.Services.AddScoped<IngressoJa.Contexts.Sales.Application.UseCases.EventSale.UpdateEventUseCase>();
+builder.Services.AddScoped<UpdateEventSaleUseCase>();
+
+//Tickets
+builder.Services.AddScoped<CreateTicketUseCase>();
+builder.Services.AddScoped<GetAllTicketsUseCase>();
+builder.Services.AddScoped<GetTicketByIdUseCase>();
+builder.Services.AddScoped<GetTicketByUserIdUseCase>();
 
 // User 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserUseCase, UserUseCase>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<IRegisterOrganizerUseCase, RegisterOrganizerUseCase>();
-builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
+builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 builder.Services.AddScoped<IGetUserUseCase, GetUserUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetUsersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetUsersUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IGetOrganizersUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.GetOrganizerUseCase>();
 builder.Services.AddScoped<BackEnd.Contexts.Eventos.Adapters.Interfaces.User.IUpdateUseCase, BackEnd.Contexts.Eventos.Domain.UseCases.User.UpdateUseCase>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
+
+// User Sale
+builder.Services.AddScoped<IUserSaleRepository, UserSaleRepository>();
+builder.Services.AddScoped<IUserSaleMapper, UserSaleMapper>();
+builder.Services.AddScoped<CreateUserSaleUseCase>();
+builder.Services.AddScoped<GetAllUserSaleUseCase>();
+builder.Services.AddScoped<GetUserSaleByIdUseCase>();
+builder.Services.AddScoped<UpdateUserSaleUseCase>();
+builder.Services.AddScoped<DeleteUserSaleUseCase>();
 
 // JWT
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -103,6 +125,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Assumindo que você está usando a imagem mysql:latest (que é a versão 8+)
+var sqlServerVersion = new MySqlServerVersion(new Version(8, 0, 32));
+
+builder.Services.AddDbContext<IngressoJaContext>(options =>
+    options.UseMySql(connectionString, serverVersion,
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)
+    )
+);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

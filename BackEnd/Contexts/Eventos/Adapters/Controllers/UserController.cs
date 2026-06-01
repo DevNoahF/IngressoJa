@@ -7,6 +7,7 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using BackEnd.Contexts.Eventos.Adapters.Interfaces.User;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 
 namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
 //[FromQuery]: Use quando os dados vão visíveis na URL (após a ?). É ideal para consultas, filtros, paginação ou parâmetros simples.
@@ -19,7 +20,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
     {
         private readonly IRegisterUserUseCase _registerUserUseCase;
         private readonly IRegisterOrganizerUseCase _registerOrganizerUseCase;
-        private readonly ILoginUserUseCase _loginUserUseCase;
         private readonly IGetUserByEmailUseCase _getUserByEmailUseCase;
         private readonly IGetUserUseCase _getUserUseCase;
         private readonly IGetUsersUseCase _getUsersUseCase;
@@ -29,7 +29,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         public UserController(
             IRegisterUserUseCase registerUserUseCase,
             IRegisterOrganizerUseCase registerOrganizerUseCase,
-            ILoginUserUseCase loginUserUseCase,
             IGetUserByEmailUseCase getUserByEmailUseCase,
             IGetUserUseCase getUserUseCase,
             IGetUsersUseCase getUsersUseCase,
@@ -39,7 +38,6 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         {
             _registerUserUseCase = registerUserUseCase;
             _registerOrganizerUseCase = registerOrganizerUseCase;
-            _loginUserUseCase = loginUserUseCase;
             _getUserByEmailUseCase = getUserByEmailUseCase;
             _getUserUseCase = getUserUseCase;
             _getUsersUseCase = getUsersUseCase;
@@ -53,7 +51,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             try
             {
                 await _registerUserUseCase.RegisterUser(dto);
-                return Ok();
+                return Created();
             }
             catch (Exception ex)
             {
@@ -67,7 +65,7 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             try
             {
                 await _registerOrganizerUseCase.RegisterOrganizer(dto);
-                return Ok();
+                return Created();
             }
             catch (Exception ex)
             {
@@ -83,6 +81,10 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             try
             {
                 var result = await _getUserUseCase.getUser(id);
+
+                if (result == null)
+                    return NotFound("User not found with the provided id.");
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -92,11 +94,16 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
         }
 
         [HttpGet("/email")]
-        public async Task<IActionResult> GetUserByEmail([FromQuery] EmailVO email)
+        public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
             try
             {
-                var result = await _getUserByEmailUseCase.getUserByEmail(email);
+                var emailVO = new EmailVO(email);
+                var result = await _getUserByEmailUseCase.getUserByEmail(emailVO);
+
+                if (result == null)
+                    return NotFound("User not found with the provided email.");
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -130,6 +137,20 @@ namespace IngressoJa.Contexts.Eventos.Adapters.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "Error fetching organizers. " + ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateRequestDTO dto)
+        {
+            try
+            {
+                await _updateUseCase.Update(id,dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "Error updating user: " + ex.Message);
             }
         }
     }

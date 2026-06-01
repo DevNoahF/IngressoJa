@@ -7,9 +7,5 @@ public interface ICreateSaleUseCase
 	Task<SaleEntity> ExecuteAsync(
 		Guid userId,
 		Guid eventId,
-		int selectedTicketsUser,
-		double totalPrice,
-		int availableTickets,
-		Guid? ticketId = null,
-		CancellationToken cancellationToken = default);
+		int selectedTicketsUser);
 }

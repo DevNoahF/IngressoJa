@@ -30,6 +30,9 @@ namespace IngressoJa.Data.dbContext
 
                 entity.HasKey(e => e.Id);
 
+                entity.HasIndex(e => e.Email).IsUnique();
+                entity.HasIndex(e => e.Cpf).IsUnique();
+
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever();
 
@@ -72,6 +75,11 @@ namespace IngressoJa.Data.dbContext
                     .HasMaxLength(255)
                     .IsRequired();
 
+                entity.Property(e => e.DateBirth)
+                    .HasColumnName("date_birth")
+                    .HasColumnType("date")
+                    .IsRequired();
+
                 entity.Property(e => e.CreatedAt)
                     .HasColumnName("created_at")
                     .HasColumnType("datetime(6)")
@@ -81,10 +89,6 @@ namespace IngressoJa.Data.dbContext
                     .HasColumnName("updated_at")
                     .HasColumnType("datetime(6)");
 
-                entity.Property(e => e.DateBirth)
-                    .HasColumnName("date_birth")
-                    .HasColumnType("date")
-                    .IsRequired();
 
                 entity.Property(e => e.Role)
                     .IsRequired();

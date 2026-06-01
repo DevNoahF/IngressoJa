@@ -11,7 +11,7 @@ using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
 
 {
-    public class LoginUseCase : IngressoJa.Contexts.Eventos.Application.Interfaces.User.ILoginUseCase
+    public class LoginUseCase : ILoginUseCase
     {
         private readonly IUserRepository _repository;
         private readonly ITokenGenerate _tokenGenerate;
@@ -37,8 +37,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
                     throw new Exception("Invalid password.");
 
                 var token = _tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
-                userExisting.SetToken(token);
-                var response = _userMapper.AuthResponse(userExisting);
+                var response = _userMapper.AuthResponse(token);
                 return response;
             }
             catch (Exception ex)

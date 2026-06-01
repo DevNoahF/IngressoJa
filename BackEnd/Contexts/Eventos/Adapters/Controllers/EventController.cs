@@ -14,7 +14,7 @@ public class EventController : ControllerBase
     private readonly UpdateEventUseCase _updateEventUseCase;
     private readonly GetAllEventsUseCase _getAllEventsUseCase;
     private readonly GetEventByIdUseCase _getEventByIdUseCase;
-    private readonly ChangeEventStatusUseCase _changeStatusOfEventUseCase;
+
     private readonly GetEventsByOrganizerIdUseCase _getEventsByOrganizerIdUseCase;
 
     public EventController(
@@ -23,7 +23,6 @@ public class EventController : ControllerBase
         UpdateEventUseCase updateEventUseCase,
         GetAllEventsUseCase getAllEventsUseCase,
         GetEventByIdUseCase getEventByIdUseCase,
-        ChangeEventStatusUseCase changeStatusOfEventUseCase,
         GetEventsByOrganizerIdUseCase getEventsByOrganizerIdUseCase
     )
     {
@@ -32,7 +31,6 @@ public class EventController : ControllerBase
         _updateEventUseCase = updateEventUseCase;
         _getAllEventsUseCase = getAllEventsUseCase;
         _getEventByIdUseCase = getEventByIdUseCase;
-        _changeStatusOfEventUseCase = changeStatusOfEventUseCase;
         _getEventsByOrganizerIdUseCase = getEventsByOrganizerIdUseCase;
     }
 
@@ -65,8 +63,8 @@ public class EventController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventPutRequestDTO dto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventPatchRequestDTO dto)
     {
         try
         {
@@ -107,21 +105,6 @@ public class EventController : ControllerBase
         }
     }
 
-
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> ChangeStatusOfEvent(Guid id, [FromBody] EventChangeStatusOfEventRequestDTO dto)
-    {
-        try
-        {
-            var dtoWithId = dto with { EventId = id };
-            await _changeStatusOfEventUseCase.ChangeStatus(dtoWithId);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.InnerException?.Message ?? ex.Message);
-        }
-    }
 
     [HttpGet("organizer/{organizerId}")]
     public async Task<IActionResult> GetEventsByOrganizerId(Guid organizerId)

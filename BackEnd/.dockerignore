@@ -1,0 +1,14 @@
+bin/
+obj/
+.git
+.gitignore
+.dockerignore
+node_modules/
+.env
+.env.local
+FrontEnd/
+Docs/
+*.md
+.vscode/
+.idea/
+*.log

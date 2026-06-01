@@ -5,8 +5,8 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response.User;
 
 namespace IngressoJa.Contexts.Eventos.Application.Interfaces.User
 {
-    public interface ILoginUserUseCase
+    public interface ILoginUseCase
     {
-        Task<UserAuthResponseDTO> LoginUser(UserAuthRequestDTO userAuthRequestDTO);
+        Task<UserAuthResponseDTO> Login(UserAuthRequestDTO userAuthRequestDTO);
     }
 }

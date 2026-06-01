@@ -8,9 +8,8 @@ public interface IEventUseCase
 {
     Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto);
     Task DeleteEvent(Guid id);
-    Task<EventPutResponseDTO> UpdateEvent(EventPutRequestDTO eventPutRequestDto);
+    Task<EventPutResponseDTO> UpdateEvent(EventPatchRequestDTO eventPatchRequestDto);
     Task<IEnumerable<EventSummaryResponseDTO>> GetAllEvents();//Pega todos os eventos
     Task<EventDetailResponseDTO> GetEventById(Guid id);//Pega Somente 1 evento
-    Task<EventPutResponseDTO> ChangeStatusOfEvent(EventChangeStatusOfEventRequestDTO eventChangeStatusOfEventRequestDto);
     Task<IEnumerable<EventEntity>> GetEventsByOrganizerId(Guid organizerId);
 }

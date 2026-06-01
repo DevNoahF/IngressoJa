@@ -10,35 +10,35 @@ namespace IngressoJa.Contexts.Sales.Presentation.Controllers;
 public class SalesController : ControllerBase
 {
     private readonly CreateSaleUseCase _createSaleUseCase;
+    private readonly GetAllSalesUseCase _getAllSalesUseCase;
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
     private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
 
     public SalesController(
         CreateSaleUseCase createSaleUseCase,
+        GetAllSalesUseCase getAllSalesUseCase,
         GetSaleByIdUseCase getSaleByIdUseCase,
         GetSaleByEventUseCase getSaleByEventUseCase,
         UpdateSaleStatusUseCase updateSaleStatusUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
+        _getAllSalesUseCase = getAllSalesUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
         _getSaleByEventUseCase = getSaleByEventUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateSale([FromBody] CreateSaleRequestDTO request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateSale([FromBody] CreateSaleRequestDTO request     )
     {
         try
         {
             var sale = await _createSaleUseCase.ExecuteAsync(
                 request.UserId,
                 request.EventId,
-                request.SelectedTicketsUser,
-                request.TotalPrice,
-                request.AvailableTickets,
-                request.TicketId,
-                cancellationToken);
+                request.SelectedTicketsUser
+                   );
             var response = sale.ToResponse();
 
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
@@ -55,24 +55,29 @@ public class SalesController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    [HttpGet]
+    public async Task<IActionResult> GetAll(       )
     {
-        var sale = await _getSaleByIdUseCase.ExecuteAsync(id, cancellationToken);
+        var sales = await _getAllSalesUseCase.ExecuteAsync(   );
+
+        return Ok(sales.ToResponse());
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id     )
+    {
+        var sale = await _getSaleByIdUseCase.ExecuteAsync(id   );
 
         return sale is null ? NotFound() : Ok(sale.ToResponse());
     }
 
     [HttpPatch("{id:int}/status")]
     public async Task<IActionResult> UpdateStatus(
-        int id,
-        CancellationToken cancellationToken)
+        int id)
     {
         try
         {
-            var sale = await _updateSaleStatusUseCase.ExecuteAsync(
-                id,
-                cancellationToken);
+            var sale = await _updateSaleStatusUseCase.ExecuteAsync(id);
 
             return sale is null ? NotFound() : Ok(sale.ToResponse());
         }
@@ -89,11 +94,11 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("event/{eventId:guid}")]
-    public async Task<IActionResult> GetByEventId(Guid eventId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByEventId(Guid eventId)
     {
         try 
         {
-            var sale = await _getSaleByEventUseCase.ExecuteAsync(eventId, cancellationToken);
+            var sale = await _getSaleByEventUseCase.ExecuteAsync(eventId);
         
             return Ok(sale.ToResponse());
         }

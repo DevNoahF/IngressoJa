@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using IngressoJa.Contexts.Eventos.Adapters.Interfaces.User;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Request;
+using IngressoJa.Contexts.Eventos.Application.DTOs.Response;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.Entities.Enums;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Data.dbContext;
 using Microsoft.EntityFrameworkCore;
+using BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User;
 
 namespace IngressoJa.Data.Persistence.Repositories
 {
@@ -56,6 +59,19 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
         }
 
+        public async Task<bool> UserExistsByEmailOrCpf(EmailVO email, CpfVO cpf)
+        {
+            try
+            {
+                var users = await _context.Users.ToListAsync();
+                return users.Any(u => u.Email.Value == email.Value || u.Cpf.Value == cpf.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error checking if user exists: {ex.Message}", ex);
+            }
+        }
+
         // Login should be handled at UseCase layer: repository exposes getUserByEmail and persistence methods
 
         public async Task<UserEntity> getUserById(Guid id)
@@ -72,7 +88,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting user by id: {ex.Message}", ex);
+                throw new Exception($"Error getting user by id: {ex.Message}" );
             }
         }
 
@@ -80,8 +96,8 @@ namespace IngressoJa.Data.Persistence.Repositories
         {
             try
             {
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email == email);
+                var users = await _context.Users.ToListAsync();
+                var user = users.FirstOrDefault(u => u.Email.Value == email.Value);
 
                 if (user == null)
                     throw new Exception("User not found.");
@@ -90,7 +106,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting user by email: {ex.Message}", ex);
+                throw new Exception($"Error getting user by email: {ex.Message}");
             }
         }
 
@@ -106,7 +122,7 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting all users: {ex.Message}", ex);
+                throw new Exception($"Error getting all users: {ex.Message}");
             }
         }
         public async Task<List<UserEntity>> getAllOrganizers()
@@ -121,11 +137,11 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting all organizers: {ex.Message}", ex);
+                throw new Exception($"Error getting all organizers: {ex.Message}");
             }
         }
 
-        public async Task UpdateUser(Guid userId,UserEntity user)
+        public async Task UpdateUser(Guid userId, UserUpdateRequestDTO dto)
         {
             try
             {
@@ -133,13 +149,22 @@ namespace IngressoJa.Data.Persistence.Repositories
                 if (existingUser == null)
                     throw new Exception("User not found.");
 
-                existingUser.Email = user.Email;
-                existingUser.FirstName = user.FirstName;
-                existingUser.LastName = user.LastName;
-                existingUser.PhotoProfile = user.PhotoProfile;
-                existingUser.PasswordHash = user.PasswordHash;
+                if (!string.IsNullOrWhiteSpace(dto.FirstName))
+                    existingUser.FirstName = dto.FirstName;
 
-                var userModel = userMapper.EntityToUserModel(user);
+                if (!string.IsNullOrWhiteSpace(dto.LastName))
+                    existingUser.LastName = dto.LastName;
+
+                if (dto.Email != null)
+                    existingUser.Email = dto.Email;
+
+                if (dto.PhotoProfile != null)
+                    existingUser.PhotoProfile = dto.PhotoProfile;
+
+                if (dto.Password != null)
+                    existingUser.PasswordHash = PasswordVO.CreatePassword(dto.Password.Value);
+
+                existingUser.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
                 existingUser.UpdatedAt = DateTime.UtcNow;
@@ -147,9 +172,10 @@ namespace IngressoJa.Data.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error updating user: {ex.Message}", ex);
+                throw new Exception($"Error updating user: {ex.Message}");
             }
         }
 
+        
     }
 }

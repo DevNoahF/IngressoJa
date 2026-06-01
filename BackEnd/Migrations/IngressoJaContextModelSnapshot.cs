@@ -165,6 +165,10 @@ namespace IngressoJa.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("varchar(11)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
                     b.Property<DateOnly>("DateBirth")
                         .HasColumnType("date")
                         .HasColumnName("date_birth");
@@ -188,8 +192,8 @@ namespace IngressoJa.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("varchar(12)")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PhotoProfile")
@@ -200,11 +204,17 @@ namespace IngressoJa.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<string>("Token")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Cpf")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });

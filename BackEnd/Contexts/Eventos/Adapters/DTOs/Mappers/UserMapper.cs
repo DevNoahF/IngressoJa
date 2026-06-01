@@ -26,9 +26,9 @@ public class UserMapper : IUserMapper
             Email = entity.Email,
             PhotoProfile = entity.PhotoProfile,
             PasswordHash = entity.PasswordHash,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = null,
-            DateBirth = entity.DateBirth
+            DateBirth = entity.DateBirth,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -44,9 +44,10 @@ public class UserMapper : IUserMapper
             model.Cpf,
             model.Email,
             model.PasswordHash,
-            model.PhotoProfile,
-                string.Empty,
-            model.DateBirth
+            model.PhotoProfile ?? new PhotoProfileVO(string.Empty),
+            model.DateBirth,
+            model.CreatedAt,
+            model.UpdatedAt
         );
     }
 
@@ -74,75 +75,71 @@ public class UserMapper : IUserMapper
     }
 
     // UserAuthUser para UserEntity
-    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestUserToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             string.Empty,
             string.Empty,
             new CpfVO(string.Empty),
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
     // UserAuthOrganizer para UserEntity
-    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto)
+    public UserEntity UserAuthRequestOrganizerToEntity(UserAuthRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             string.Empty,
             string.Empty,
             new CpfVO(string.Empty),
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             new PhotoProfileVO(string.Empty),
-            string.Empty,
             DateOnly.FromDateTime(DateTime.Now)
         );
     }
 
     // UserRegisterRequestDTO para UserEntity
-    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterUserToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.User,
             dto.FirstName,
             dto.LastName,
             dto.Cpf,
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
 
     // UserRegisterOrganizer para UserEntity
-    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto)
+    public UserEntity RegisterOrganizerToEntity(UserRegisterRequestDTO dto, Guid id)
     {
         return new UserEntity(
-            Guid.NewGuid(),
+            id,
             RoleEnum.Organizer,
             dto.FirstName,
             dto.LastName,
             dto.Cpf,
             dto.Email,
-            dto.Password,
+            PasswordVO.CreatePassword(dto.Password.Value),
             dto.PhotoProfile,
-            string.Empty,
             dto.DateBirth
         );
     }
 
     // responseAuth to UserEntity
-    public UserAuthResponseDTO AuthResponse(UserEntity entity, string token)
+    public UserAuthResponseDTO AuthResponse(string token)
     {
         return new UserAuthResponseDTO(token);
     }
@@ -156,19 +153,19 @@ public class UserMapper : IUserMapper
         );
     }
 
-    public  UserEntity UpdateUserToEntity(  UserUpdateRequestDTO dto)
+    public  UserEntity UpdateUserToEntity(UserEntity currentUser, UserUpdateRequestDTO dto)
     {
         return new UserEntity(
-            Guid.NewGuid(),
-            RoleEnum.User,
+            currentUser.Id,
+            currentUser.Role,
             dto.FirstName,
             dto.LastName,
-            new CpfVO(string.Empty),
+            currentUser.Cpf,
             dto.Email,
-            dto.Password,
-            new PhotoProfileVO(string.Empty),
-            string.Empty,
-            DateOnly.FromDateTime(DateTime.Now)
+            PasswordVO.CreatePassword(dto.Password.Value),
+            dto.PhotoProfile,
+            currentUser.DateBirth,
+            currentUser.CreatedAt
         );
     }
     

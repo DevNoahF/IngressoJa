@@ -8,9 +8,11 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
 {
     public class EmailVO
     {
-        public String Value { get; private set; } 
+        public String Value { get;  private set; } 
 
-        public EmailVO(string value)
+
+        
+        public EmailVO (string value)
         {
             if (string.IsNullOrEmpty(value))
                 throw new Exception("Email must not be empty.");
@@ -21,8 +23,7 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject
             if (value.StartsWith("@") || value.EndsWith("@") || value.StartsWith(".") || value.EndsWith("."))
                 throw new Exception("Invalid Email format. Can't start or end with '@' or '.' !" );
             
-            Value = value.ToLower();
-           
+            Value = value;
         }
     }
 }

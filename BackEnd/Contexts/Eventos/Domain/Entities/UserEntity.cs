@@ -9,20 +9,21 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
         public Guid Id { get; private set; }
         public RoleEnum Role { get; private set; }
 
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
+        public String FirstName { get; private set; }
+        public String LastName { get; private set; }
         public CpfVO Cpf { get; set; }
-        public PhotoProfileVO PhotoProfile { get; set; }
+        public PhotoProfileVO PhotoProfile { get; private set; }
 
         public EmailVO Email { get; private set; }
         
         public PasswordVO PasswordHash { get; private set; }
 
-        public String Token { get; private set; }
+        public DateOnly DateBirth { get; private set; } // formato: dd-MM-yyyy 
 
-        public DateOnly DateBirth { get; set; } // formato: dd-MM-yyyy 
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
-        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, String token, DateOnly dateBirth)
+        public UserEntity(Guid id, RoleEnum role, String firstName, String lastName, CpfVO cpf, EmailVO email, PasswordVO password, PhotoProfileVO photoProfile, DateOnly dateBirth, DateTime? createdAt = null, DateTime? updatedAt = null)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new Exception("First name is required");
@@ -43,11 +44,14 @@ namespace IngressoJa.Contexts.Eventos.Domain.Entities
             PhotoProfile = photoProfile;
             Email = email;
             PasswordHash = password;
-            Token = String.Empty;
             DateBirth = dateBirth;
+            CreatedAt = createdAt ?? DateTime.UtcNow;
+            UpdatedAt = updatedAt;
         }
-    
-    
-    }   
 
-}
+        public void SetUpdatedAt()
+        {
+            UpdatedAt = DateTime.UtcNow;
+        }
+    }
+}

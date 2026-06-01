@@ -4,8 +4,9 @@ namespace IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 public interface ISaleRepository
 {
-    Task AddAsync(SaleEntity sale, CancellationToken cancellationToken = default);
-    Task UpdateAsync(SaleEntity sale, CancellationToken cancellationToken = default);
-    Task<SaleEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-    Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task AddAsync(SaleEntity sale);
+    Task UpdateAsync(SaleEntity sale);
+    Task<SaleEntity?> GetByIdAsync(int id);
+    Task<IEnumerable<SaleEntity>> GetAllAsync();
+    Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId);
 }

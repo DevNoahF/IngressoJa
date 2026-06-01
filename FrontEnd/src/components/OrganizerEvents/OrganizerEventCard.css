@@ -6,9 +6,10 @@
 .organizer-event-card {
   background: #ffffff;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #e5e5e5;
   transition: 0.2s;
+  position: relative;
 }
 
 .organizer-event-card:hover {
@@ -20,11 +21,13 @@
   width: 100%;
   height: 220px;
   object-fit: cover;
+  border-radius: 16px 16px 0 0;
 }
 
 .organizer-event-meta {
   padding: 18px;
   background: #ffffff;
+  border-radius: 0 0 16px 16px;
 }
 
 .organizer-event-meta h3 {
@@ -65,6 +68,36 @@
   opacity: 0.92;
 }
 
+.organizer-event-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.organizer-event-delete:hover {
+  background: #ff3b30;
+  transform: scale(1.06);
+}
+
+.organizer-event-delete:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 .organizer-event-revenue-button {
   width: 100%;
   height: 42px;
@@ -80,6 +113,24 @@
 
 .organizer-event-revenue-button:hover {
   background: #f7f7fb;
+}
+
+.organizer-event-status-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 10px;
+  border: 1px solid #05051a;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #05051a;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.organizer-event-status-button:hover {
+  background: #05051a;
+  color: #ffffff;
 }
 
 @media (max-width: 640px) {

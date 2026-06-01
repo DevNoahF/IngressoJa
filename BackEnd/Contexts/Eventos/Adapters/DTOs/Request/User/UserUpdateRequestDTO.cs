@@ -7,10 +7,10 @@ using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 namespace BackEnd.Contexts.Eventos.Adapters.DTOs.Request.User
 {
     public record UserUpdateRequestDTO(
-        string FirstName, 
-        string LastName, 
-        EmailVO Email, 
-        PhotoProfileVO PhotoProfile, 
-        PasswordVO Password);
+        string? FirstName, 
+        string? LastName, 
+        EmailVO? Email, 
+        PhotoProfileVO? PhotoProfile, 
+        PasswordVO? Password);
     
-}
+}

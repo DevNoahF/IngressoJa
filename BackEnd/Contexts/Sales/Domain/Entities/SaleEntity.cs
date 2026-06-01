@@ -1,12 +1,9 @@
 namespace IngressoJa.Contexts.Sales.Domain.Entities;
 using Enums;
-using Events;
 using ValueObject;
 
 public class SaleEntity
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
-
     public int Id { get; private set; }
     public Guid UserId { get; private set; }
     public Guid EventId { get; private set; }
@@ -15,7 +12,6 @@ public class SaleEntity
     public double TotalPrice { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public SaleStatusEnum SaleStatus { get; private set; } = SaleStatusEnum.Pending;
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     protected SaleEntity()
     {
@@ -49,6 +45,34 @@ public class SaleEntity
 
     }
 
+    public SaleEntity(
+        int id,
+        Guid userId,
+        Guid eventId,
+        Guid? ticketId,
+        int selectedTicketsUser,
+        double totalPrice,
+        DateTime createdAt,
+        SaleStatusEnum saleStatus)
+    {
+        Id = id;
+        UserId = userId;
+        EventId = eventId;
+        TicketId = ticketId;
+        SelectedTicketsUser = selectedTicketsUser;
+        TotalPrice = totalPrice;
+        CreatedAt = createdAt;
+        SaleStatus = saleStatus;
+    }
+
+    public void AttachTicket(Guid ticketId)
+    {
+        if (ticketId == Guid.Empty)
+            throw new ArgumentException("The ticket is invalid.", nameof(ticketId));
+
+        TicketId = ticketId;
+    }
+
     public void UpdateStatus(SaleStatusEnum newStatus)
     {
         if (SaleStatus != SaleStatusEnum.Pending)
@@ -58,31 +82,10 @@ public class SaleEntity
             throw new ArgumentException("Invalid status.", nameof(newStatus));
 
         SaleStatus = newStatus;
-
-        if (newStatus == SaleStatusEnum.Approved)
-        {
-            AddDomainEvent(new SalePaidEvent(
-                Id,
-                UserId,
-                EventId,
-                SelectedTicketsUser,
-                TotalPrice,
-                DateTime.UtcNow));
-        }
     }
 
     public void ApproveSale()
     {
         UpdateStatus(SaleStatusEnum.Approved);
-    }
-
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
-
-    private void AddDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
     }
 }

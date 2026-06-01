@@ -1,93 +1,41 @@
 import "./HomePage.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
 import EventCard from "../../components/Home/EventCard";
+import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventById, getEvents, getStateCode } from "../../api/events";
 import { setStoredEventId } from "../../utils/eventContext";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
-const mockEvents = [
-  {
-    id: "1",
-    name: "Festival de Verão",
-    description: "Um evento incrível com apresentações musicais, comida de rua e muita diversão. Venha se divertir com amigos e família.",
-    city: "São Paulo",
-    state: "SP",
-    date: "15/07/2026",
-    hour: "18:00",
-    bannerImage: "https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=800",
-    ticketValue: 80.00,
-    totalTicketQuantity: 500,
-    street: "Avenida Paulista",
-    number: 1000,
-    neighborhood: "Bela Vista",
-  },
-  {
-    id: "2",
-    name: "Noite Eletrônica",
-    description: "A maior festa eletrônica do ano com DJs internacionais. Som de qualidade, luzes impressionantes e ambiente incrível.",
-    city: "Rio de Janeiro",
-    state: "RJ",
-    date: "22/07/2026",
-    hour: "20:30",
-    bannerImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800",
-    ticketValue: 120.00,
-    totalTicketQuantity: 800,
-    street: "Rua da Lapa",
-    number: 500,
-    neighborhood: "Lapa",
-  },
-  {
-    id: "3",
-    name: "Samba Sunset",
-    description: "Samba ao vivo com vista para o mar. Venha dançar ao som da melhor música brasileira durante o pôr do sol.",
-    city: "Belo Horizonte",
-    state: "MG",
-    date: "28/07/2026",
-    hour: "17:00",
-    bannerImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
-    ticketValue: 65.00,
-    totalTicketQuantity: 600,
-    street: "Avenida Mineirão",
-    number: 300,
-    neighborhood: "Funcionários",
-  },
-  {
-    id: "4",
-    name: "Tech Conference 2026",
-    description: "Conferência de tecnologia com palestras de experts da indústria. Aprenda sobre as últimas tendências e inovações.",
-    city: "Curitiba",
-    state: "PR",
-    date: "02/08/2026",
-    hour: "09:00",
-    bannerImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
-    ticketValue: 150.00,
-    totalTicketQuantity: 1000,
-    street: "Centro de Convenções",
-    number: 1,
-    neighborhood: "Centro",
-  },
-  {
-    id: "5",
-    name: "Festival de Gastronomia",
-    description: "Mergulhe em uma experiência culinária única com chefs renomados. Deguste pratos especiais e bebidas selecionadas.",
-    city: "Salvador",
-    state: "BA",
-    date: "05/08/2026",
-    hour: "19:00",
-    bannerImage: "https://images.unsplash.com/photo-1564183346067-c92cdd611de8?w=800",
-    ticketValue: 95.00,
-    totalTicketQuantity: 400,
-    street: "Praça da Republica",
-    number: 200,
-    neighborhood: "Pelourinho",
-  },
-];
+function isGuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+
+
+const PERMANENT_EVENT = {
+  id: "permanent-semanca-1",
+  name: "Show da SeManca e SeMata",
+  description:
+    "Uma noite inesquecível onde a SeManca toca trompete com os pés e a SeMata ensina passos de dança proibidos até pela física. Riso garantido ou SeMata direto para sua casa.",
+  city: "Cidade Imaginária",
+  state: "ZZ",
+  date: "31/12/2026",
+  hour: "23:59",
+  bannerImage: "https://i.pinimg.com/736x/c5/53/79/c55379996a160a72d08150c3b05db17d.jpg",
+  ticketValue: 99.9,
+  totalTicketQuantity: 420,
+  street: "Rua dos Tropeços",
+  number: 13,
+  neighborhood: "Vila do Riso",
+};
 
 function Home() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -203,8 +151,14 @@ function Home() {
       return;
     }
 
+    if (!isGuid(String(eventId))) {
+      setPaymentMessage("Este evento e demonstrativo. Escolha um evento cadastrado para comprar ingresso.");
+      return;
+    }
+
     setStoredEventId(String(eventId));
     setPaymentMessage("Evento selecionado para pagamento.");
+    navigate("/user/payment");
   }
 
   return (
@@ -215,6 +169,24 @@ function Home() {
         <section className="hero">
           <h1>Eventos em Destaque</h1>
           <p>Descubra os melhores eventos da sua cidade</p>
+        </section>
+
+        <section className="permanent-event-section">
+          <h2>Evento permanente</h2>
+          <OrganizerEventCard
+            key={PERMANENT_EVENT.id}
+            event={{
+              id: PERMANENT_EVENT.id,
+              name: PERMANENT_EVENT.name,
+              formattedDate: PERMANENT_EVENT.date,
+              bannerImage: PERMANENT_EVENT.bannerImage,
+              location: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
+              hour: PERMANENT_EVENT.hour,
+              totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
+              ticketValue: PERMANENT_EVENT.ticketValue,
+            }}
+            onPhotoClick={() => setSelectedEvent(PERMANENT_EVENT)}
+          />
         </section>
 
         <section className="events-grid">

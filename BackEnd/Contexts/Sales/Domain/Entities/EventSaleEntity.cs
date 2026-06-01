@@ -5,17 +5,21 @@ namespace IngressoJa.Contexts.Sales.Domain.Entities;
 
 public class EventSaleEntity
 {
+
     public Guid EventId { get; set; }
-    public NameVO EventName { get; set; }
+    public NameVO Name { get; set; }
     public TicketValueVO TicketValue { get; set; }
     public TotalTicketQuantity TotalTicketQuantity { get; set; }
     public EventStatusEnum Status { get; set; }
 
-    public EventSaleEntity(Guid eventId, NameVO eventName, TicketValueVO ticketValue,TotalTicketQuantity totalTicketQuantity,
+    public EventSaleEntity(Guid eventId, NameVO name, TicketValueVO ticketValue,TotalTicketQuantity totalTicketQuantity,
         EventStatusEnum status)
     {
+        if (!Enum.IsDefined(typeof(EventStatusEnum), status))
+            throw new Exception("Invalid event sale status");
+
         EventId = eventId;
-        EventName = eventName;
+        Name = name;
         TicketValue = ticketValue;
         TotalTicketQuantity = totalTicketQuantity;
         Status = status;
