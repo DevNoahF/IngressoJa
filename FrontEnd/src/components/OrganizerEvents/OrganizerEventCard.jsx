@@ -49,11 +49,12 @@ function OrganizerEventCard({ event, onEdit, onRevenue, onPhotoClick, onDelete, 
             Ver Receita
           </button>
 
-          {onStatus ? (
+         {/* {onStatus ? (
             <button type="button" className="organizer-event-status-button" onClick={onStatus}>
               <Tag size={14} /> Alterar Status
             </button>
           ) : null}
+           */}
         </div>
       </div>
     </article>
