@@ -19,7 +19,7 @@ const initialFormData = {
   photoProfile: "",
 };
 
-function RegisterForm({ isOrganizerRegistration = false }) {
+function RegisterForm({ isOrganizerRegistration = false, roleName = "Usuário" }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialFormData);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
@@ -48,7 +48,8 @@ function RegisterForm({ isOrganizerRegistration = false }) {
     setIsSubmitting(true);
 
     try {
-      const registerAction = isOrganizerRegistration ? registerOrganizer : registerUser;
+      // Map admin to organizer backend route
+      const registerAction = (isOrganizerRegistration || roleName === "Admin") ? registerOrganizer : registerUser;
 
       await registerAction({
         firstName: formData.firstName.trim(),
@@ -60,13 +61,10 @@ function RegisterForm({ isOrganizerRegistration = false }) {
         dateBirth: formData.dateBirth,
       });
 
-      setFeedback({
-        type: "success",
-        message: "Cadastro realizado com sucesso.",
-      });
+      setFeedback({ type: "success", message: "Cadastro realizado com sucesso." });
 
       setFormData(initialFormData);
-      navigate(isOrganizerRegistration ? "/organizer/home" : "/user/home");
+      navigate("/login", { replace: true });
     } catch (error) {
       setFeedback({
         type: "error",
@@ -84,11 +82,9 @@ function RegisterForm({ isOrganizerRegistration = false }) {
           <UserPlus size={28} />
         </div>
 
-        <h1>{isOrganizerRegistration ? "Cadastro de Organizador" : "Cadastro de Usuário"}</h1>
+        <h1>{`Cadastro de ${roleName}`}</h1>
 
-        <p>
-          {isOrganizerRegistration ? "Crie sua conta para gerenciar eventos" : "Crie sua conta para comprar ingressos"}
-        </p>
+        <p>{roleName === "Organizador" || roleName === "Admin" ? "Crie sua conta para gerenciar eventos" : "Crie sua conta para comprar ingressos"}</p>
       </div>
 
       <div className="avatar-upload">

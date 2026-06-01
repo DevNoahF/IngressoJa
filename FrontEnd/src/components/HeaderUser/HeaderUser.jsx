@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, LogOut, UserCircle2 } from "lucide-react";
+import { ChevronDown, LogOut, Ticket, UserCircle2 } from "lucide-react";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,8 @@ export default function HeaderUser() {
 
         <div className="header-user-profile" ref={dropdownRef}>
           <button
-            onClick={() => setOpen(!open)}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
             className="header-user-button"
           >
             <img
@@ -84,9 +85,10 @@ export default function HeaderUser() {
           {open && (
             <div className="header-user-dropdown">
               <button
+                type="button"
                 onClick={() => {
                   setOpen(false);
-                  navigate("/update");
+                  try { navigate("/update"); } catch(e) { console.error(e); }
                 }}
                 className="header-user-dropdown-item"
               >
@@ -95,9 +97,22 @@ export default function HeaderUser() {
               </button>
 
               <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  try { navigate('/user/purchases'); } catch(e) { console.error(e); }
+                }}
+                className="header-user-dropdown-item"
+              >
+                <Ticket size={18} />
+                Minhas compras
+              </button>
+
+              <button
+                type="button"
                 onClick={() => {
                   clearAuthSession();
-                  navigate("/login");
+                  try { navigate("/login"); } catch(e) { console.error(e); }
                 }}
                 className="header-user-dropdown-item header-user-dropdown-logout"
               >

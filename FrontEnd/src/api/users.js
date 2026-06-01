@@ -39,7 +39,7 @@ export function registerOrganizer(payload) {
 }
 
 export function loginUser(payload) {
-  return request("/api/auth", {
+  return request("/login", {
     method: "POST",
     body: JSON.stringify(payload),
   });

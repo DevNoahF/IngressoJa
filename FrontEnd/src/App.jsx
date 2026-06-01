@@ -5,6 +5,7 @@ import OrganizerEvents from './pages/organizerEvents/OrganizerEvents'
 import Register from "./pages/register/Register"
 import Login from "./pages/login/LoginPage"
 import Payment from './pages/Payment/PaymentPage'
+import PurchasesPage from './pages/purchases/PurchasesPage'
 import UpdateProfile from './pages/updateUser/updateUser'
 import ChangeEventStatus from './pages/changeEventStatus/ChangeEventStatusPage'
 import './App.css'
@@ -14,10 +15,13 @@ function App() {
     <Routes>
       <Route path='/' element={<Navigate to='/login' replace />} />
       <Route path='/login' element={<Login />} />
+      <Route path='/cadastro/usuario' element={<Navigate to='/user/register' replace />} />
+      <Route path='/cadastro/organizador' element={<Navigate to='/organizer/register' replace />} />
       <Route path='/user/register' element={<Register />} />
       <Route path='/organizer/register' element={<Register />} />
       <Route path='/user/home' element={<Home />} />
       <Route path='/user/payment' element={<Payment />} />
+      <Route path='/user/purchases' element={<PurchasesPage />} />
       <Route path='/organizer/create' element={<CreateEvent />} />
       <Route path='/organizer/home' element={<OrganizerEvents />} />
       <Route path='/update' element={<UpdateProfile />} />

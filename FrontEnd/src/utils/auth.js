@@ -6,6 +6,18 @@ const AUTH_ROLE_KEY = "role";
 const AUTH_USER_ID_KEY = "userId";
 const MOCK_ORGANIZER_USER_ID = "ddd4ec10-52b8-44ae-8bd0-6473d37e9257";
 
+function normalizeRole(role) {
+  if (role === 1 || role === "1" || role === "User") {
+    return "User";
+  }
+
+  if (role === 2 || role === "2" || role === "Organizer") {
+    return "Organizer";
+  }
+
+  return "";
+}
+
 export function getStoredRole() {
   return localStorage.getItem(AUTH_ROLE_KEY) ?? "";
 }
@@ -45,10 +57,11 @@ export async function loginAndStoreSession({ email, password }) {
   });
 
   const user = await getUserByEmail(email);
+  const role = normalizeRole(user?.role ?? user?.Role);
 
   storeAuthSession({
     token: authResponse?.token ?? authResponse?.Token ?? "",
-    role: user?.role ?? user?.Role ?? "",
+    role,
     userId: user?.id ?? user?.Id ?? "",
   });
 
