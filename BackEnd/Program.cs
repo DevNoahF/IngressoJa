@@ -125,7 +125,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Assumindo que você está usando a imagem mysql:latest (que é a versão 8+)
+// ultima verao mysql
 var sqlServerVersion = new MySqlServerVersion(new Version(8, 0, 32));
 
 builder.Services.AddDbContext<IngressoJaContext>(options =>
@@ -153,5 +153,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Apply migrations automatically - TODO: VER COMO FUNCIONA DE FATO
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<IngressoJaContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
