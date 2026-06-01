@@ -15,14 +15,14 @@ public class SaleRepository : ISaleRepository
         _context = context;
     }
 
-    public async Task AddAsync(SaleEntity sale, CancellationToken cancellationToken = default)
+    public async Task AddAsync(SaleEntity sale)
     {
         var model = sale.ToModel();
-        await _context.Sales.AddAsync(model, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.Sales.AddAsync(model);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(SaleEntity sale, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(SaleEntity sale  )
     {
         var model = sale.ToModel();
         var trackedModel = _context.Sales.Local.FirstOrDefault(s => s.Id == sale.Id);
@@ -32,28 +32,28 @@ public class SaleRepository : ISaleRepository
         else
             _context.Entry(trackedModel).CurrentValues.SetValues(model);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<SaleEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<SaleEntity?> GetByIdAsync(int id  )
     {
-        var model = await _context.Sales.FindAsync([id], cancellationToken: cancellationToken);
+        var model = await _context.Sales.FindAsync(id);
         return model?.ToEntity();
     }
 
-    public async Task<IEnumerable<SaleEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SaleEntity>> GetAllAsync(   )
     {
         var models = await _context.Sales
-            .ToListAsync(cancellationToken);
+            .ToListAsync();
 
         return models.Select(model => model.ToEntity());
     }
 
-    public async Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId   )
     {
         var models = await _context.Sales
             .Where(s => s.EventId == eventId)
-            .ToListAsync(cancellationToken);
+            .ToListAsync();
 
         return models.Select(model => model.ToEntity());
     }

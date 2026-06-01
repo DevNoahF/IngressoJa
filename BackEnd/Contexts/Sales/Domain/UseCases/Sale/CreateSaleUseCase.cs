@@ -20,8 +20,7 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
 	public async Task<SaleEntity> ExecuteAsync(
 		Guid userId,
 		Guid eventId,
-		int selectedTicketsUser,
-		CancellationToken cancellationToken = default)
+		int selectedTicketsUser   )
 	{
 		var eventSale = await _eventSaleRepository.GetEventSaleById(eventId);
 
@@ -39,7 +38,7 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
 			selectedTicketsUser,
 			totalPrice);
 
-		await _saleRepository.AddAsync(sale, cancellationToken);
+		await _saleRepository.AddAsync(sale);
 
 		return sale;
 	}

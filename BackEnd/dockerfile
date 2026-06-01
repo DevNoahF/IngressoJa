@@ -1,19 +1,26 @@
+# Estágio de Build
 FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0-amd64 AS build
 WORKDIR /App
-# Copy everything
-COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -o out
 
-# Build runtime image
+# 1. Copia APENAS o arquivo de projeto primeiro (O Segredo do Cache!)
+COPY *.csproj ./
+RUN dotnet restore
+
+# 2. Agora copia o resto do código da aplicação
+COPY . ./
+
+# 3. Compila e publica
+RUN dotnet publish -c Release -o out
+
+# Estágio de Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-azurelinux3.0-amd64
 WORKDIR /App
 EXPOSE 80
-COPY --from=build /App/out .
-ENTRYPOINT ["dotnet", "IngressoJa.dll"]
-ENV ASPNETCORE_URLS=http://+:80
-ENV ASPNETCORE_ENVIRONMENT=development
 
-#docker build -t backend-ingressoja .
+# Copia os arquivos compilados do estágio anterior
+COPY --from=build /App/out .
+
+# Define apenas as portas. Deixe o Environment ser injetado pelo docker-compose!
+ENV ASPNETCORE_URLS=http://+:80
+
+ENTRYPOINT ["dotnet", "IngressoJa.dll"]

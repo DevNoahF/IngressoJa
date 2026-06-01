@@ -14,7 +14,7 @@ namespace IngressoJa.Contexts.Sales.Application.UseCases.Sale
     public GetSaleByEventUseCase(ISaleRepository saleRepository) 
         => _saleRepository = saleRepository;
 
-    public async Task<IEnumerable<SaleEntity>> ExecuteAsync(Guid eventId, CancellationToken ct) 
-        => await _saleRepository.GetByEventIdAsync(eventId, ct);
+    public async Task<IEnumerable<SaleEntity>> ExecuteAsync(Guid eventId) 
+        => await _saleRepository.GetByEventIdAsync(eventId);
     }
 }
