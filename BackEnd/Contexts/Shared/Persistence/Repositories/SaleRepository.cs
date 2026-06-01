@@ -20,6 +20,8 @@ public class SaleRepository : ISaleRepository
         var model = sale.ToModel();
         await _context.Sales.AddAsync(model);
         await _context.SaveChangesAsync();
+
+        sale.Id = model.Id;
     }
 
     public async Task UpdateAsync(SaleEntity sale  )
