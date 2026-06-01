@@ -24,3 +24,5 @@ COPY --from=build /App/out .
 ENV ASPNETCORE_URLS=http://+:80
 
 ENTRYPOINT ["dotnet", "IngressoJa.dll"]
+
+
