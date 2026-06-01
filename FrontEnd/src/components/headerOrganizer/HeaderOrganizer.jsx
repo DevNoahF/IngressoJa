@@ -3,6 +3,7 @@ import { ChevronDown, LogOut, Plus, UserCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderOrganizer.css";
+import { clearAuthSession } from "../../utils/auth";
 
 export default function HeaderOrganizer() {
 	const navigate = useNavigate();
@@ -36,6 +37,17 @@ export default function HeaderOrganizer() {
 	function handleGoHome() {
 		navigate("/organizer/home");
 	}
+
+		function handleUpdateData() {
+			setOpen(false);
+			navigate("/update");
+		}
+
+		function handleLogout() {
+			clearAuthSession();
+			setOpen(false);
+			navigate("/login");
+		}
 
 	return (
 		<header className="header-organizer">
@@ -81,7 +93,7 @@ export default function HeaderOrganizer() {
 
 						{open && (
 							<div className="header-organizer-dropdown">
-								<button type="button" className="header-organizer-dropdown-item">
+								<button type="button" className="header-organizer-dropdown-item" onClick={handleUpdateData}>
 									<UserCircle2 size={18} />
 									Atualizar dados
 								</button>
@@ -89,6 +101,7 @@ export default function HeaderOrganizer() {
 								<button
 									type="button"
 									className="header-organizer-dropdown-item header-organizer-dropdown-logout"
+									onClick={handleLogout}
 								>
 									<LogOut size={18} />
 									Sair

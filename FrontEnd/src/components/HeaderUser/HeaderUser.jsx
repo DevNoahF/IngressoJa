@@ -3,6 +3,7 @@ import { ChevronDown, LogOut, Ticket, UserCircle2 } from "lucide-react";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
 import { useNavigate } from "react-router-dom";
+import { clearAuthSession } from "../../utils/auth";
 
 export default function HeaderUser() {
   const [open, setOpen] = useState(false);
@@ -32,6 +33,17 @@ export default function HeaderUser() {
     profileImage:
       "https://i.pravatar.cc/100?img=12", // implementar imagem do backend
   };
+
+  function handleUpdateData() {
+    setOpen(false);
+    navigate("/update");
+  }
+
+  function handleLogout() {
+    clearAuthSession();
+    setOpen(false);
+    navigate("/login");
+  }
 
   return (
     <header className="header-user">
@@ -78,12 +90,12 @@ export default function HeaderUser() {
                 Meus ingressos
               </button>
 
-              <button className="header-user-dropdown-item" type="button">
+              <button className="header-user-dropdown-item" type="button" onClick={handleUpdateData}>
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
 
-              <button className="header-user-dropdown-item header-user-dropdown-logout" type="button">
+              <button className="header-user-dropdown-item header-user-dropdown-logout" type="button" onClick={handleLogout}>
                 <LogOut size={18} />
                 Sair
               </button>
