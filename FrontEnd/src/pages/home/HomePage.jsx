@@ -34,6 +34,8 @@ const PERMANENT_EVENT = {
   neighborhood: "Vila do Riso",
 };
 
+// No mockEvents fallback anymore; when the API fails we show an empty list
+
 function Home() {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
@@ -71,16 +73,8 @@ function Home() {
       } catch (requestError) {
         if (isMounted) {
           setError("");
-          setEvents(mockEvents.map((event) => ({
-            id: event.id,
-            title: event.name,
-            city: `${event.city}${event.state ? ` - ${getStateCode(event.state)}` : ""}`,
-            date: event.date,
-            hour: event.hour,
-            image: event.bannerImage || fallbackImage,
-            ticketValue: event.ticketValue,
-            totalTicketQuantity: event.totalTicketQuantity,
-          })));
+          // No remote events available and no local mock - show empty list
+          setEvents([]);
         }
       } finally {
         if (isMounted) {
@@ -120,8 +114,12 @@ function Home() {
         setSelectedEventDetails(response);
       } catch (requestError) {
         if (isMounted) {
-          const mockEvent = mockEvents.find(e => e.id === selectedEvent.id);
-          setSelectedEventDetails(mockEvent || selectedEvent);
+          // If the selected event is the permanent demo event, use it as fallback
+          if (selectedEvent && selectedEvent.id === PERMANENT_EVENT.id) {
+            setSelectedEventDetails(PERMANENT_EVENT);
+          } else {
+            setSelectedEventDetails(selectedEvent);
+          }
           setDetailError("");
         }
       } finally {
@@ -173,19 +171,19 @@ function Home() {
 
         <section className="permanent-event-section">
           <h2>Evento permanente</h2>
-          <OrganizerEventCard
+          <EventCard
             key={PERMANENT_EVENT.id}
             event={{
               id: PERMANENT_EVENT.id,
-              name: PERMANENT_EVENT.name,
-              formattedDate: PERMANENT_EVENT.date,
-              bannerImage: PERMANENT_EVENT.bannerImage,
-              location: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
+              title: PERMANENT_EVENT.name,
+              city: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
+              date: PERMANENT_EVENT.date,
               hour: PERMANENT_EVENT.hour,
-              totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
+              image: PERMANENT_EVENT.bannerImage,
               ticketValue: PERMANENT_EVENT.ticketValue,
+              totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
             }}
-            onPhotoClick={() => setSelectedEvent(PERMANENT_EVENT)}
+            onReadMore={setSelectedEvent}
           />
         </section>
 
