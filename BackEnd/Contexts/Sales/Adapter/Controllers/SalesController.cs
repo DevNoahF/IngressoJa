@@ -13,6 +13,7 @@ public class SalesController : ControllerBase
     private readonly GetAllSalesUseCase _getAllSalesUseCase;
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
     private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
+    private readonly GetEventSalesSummaryUseCase _getEventSalesSummaryUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
     private readonly GetByUserIdUseCase _getByUserIdUseCase;
 
@@ -22,12 +23,14 @@ public class SalesController : ControllerBase
         GetSaleByIdUseCase getSaleByIdUseCase,
         GetSaleByEventUseCase getSaleByEventUseCase,
         UpdateSaleStatusUseCase updateSaleStatusUseCase,
-        GetByUserIdUseCase getByUserIdUseCase)
+        GetByUserIdUseCase getByUserIdUseCase,
+        GetEventSalesSummaryUseCase getEventSalesSummaryUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
         _getAllSalesUseCase = getAllSalesUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
         _getSaleByEventUseCase = getSaleByEventUseCase;
+        _getEventSalesSummaryUseCase = getEventSalesSummaryUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
         _getByUserIdUseCase = getByUserIdUseCase;
     }
@@ -123,6 +126,27 @@ public class SalesController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("event/{eventId:guid}/summary")]
+    public async Task<IActionResult> GetEventSalesSummary(Guid eventId)
+    {
+        try
+        {
+            var summary = await _getEventSalesSummaryUseCase.ExecuteAsync(eventId);
+
+            return summary is null ? NotFound() : Ok(summary);
+        }
+        catch (ArgumentException exception)
+        {
+            Console.WriteLine(exception.Message);
+            return BadRequest(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 }

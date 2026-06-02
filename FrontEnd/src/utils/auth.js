@@ -4,6 +4,8 @@ import { getUserByEmail, loginUser } from "../api/users";
 const AUTH_TOKEN_KEY = "token";
 const AUTH_ROLE_KEY = "role";
 const AUTH_USER_ID_KEY = "userId";
+const AUTH_NAME_KEY = "userName";
+const AUTH_PHOTO_KEY = "userPhoto";
 const MOCK_ORGANIZER_USER_ID = "ddd4ec10-52b8-44ae-8bd0-6473d37e9257";
 
 function normalizeRole(role) {
@@ -30,7 +32,16 @@ export function getStoredUserId() {
   return localStorage.getItem(AUTH_USER_ID_KEY) ?? MOCK_ORGANIZER_USER_ID;
 }
 
-export function storeAuthSession({ token, role, userId }) {
+export function getStoredUserName() {
+  return localStorage.getItem(AUTH_NAME_KEY) ?? "";
+}
+
+export function getStoredUserPhoto() {
+  return localStorage.getItem(AUTH_PHOTO_KEY) ?? "";
+}
+
+// seta no localstorage os dados da sessão de autenticação
+export function storeAuthSession({ token, role, userId, name, photo }) {
   if (token) {
     localStorage.setItem(AUTH_TOKEN_KEY, token);
   }
@@ -42,12 +53,22 @@ export function storeAuthSession({ token, role, userId }) {
   if (userId) {
     localStorage.setItem(AUTH_USER_ID_KEY, userId);
   }
+
+  if (name) {
+    localStorage.setItem(AUTH_NAME_KEY, name);
+  }
+
+  if (photo) {
+    localStorage.setItem(AUTH_PHOTO_KEY, JSON.stringify(photo));
+  }
 }
 
 export function clearAuthSession() {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(AUTH_ROLE_KEY);
   localStorage.removeItem(AUTH_USER_ID_KEY);
+  localStorage.removeItem(AUTH_NAME_KEY);
+  localStorage.removeItem(AUTH_PHOTO_KEY);
 }
 
 export async function loginAndStoreSession({ email, password }) {
@@ -56,16 +77,15 @@ export async function loginAndStoreSession({ email, password }) {
     password: { value: password },
   });
 
-  const user = await getUserByEmail(email);
-  const role = normalizeRole(user?.role ?? user?.Role);
-
   storeAuthSession({
     token: authResponse?.token ?? authResponse?.Token ?? "",
-    role,
-    userId: user?.id ?? user?.Id ?? "",
+    role: "User", // Será atualizado conforme necessário
+    userId: authResponse?.id ?? authResponse?.Id ?? "",
+    name: authResponse?.name ?? authResponse?.Name ?? "",
+    photo: authResponse?.photoProfile ?? authResponse?.PhotoProfile ?? null,
   });
 
-  return { authResponse, user };
+  return authResponse;
 }
 
 export function canCreateEvent(role = getStoredRole()) {

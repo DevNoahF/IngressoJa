@@ -64,6 +64,7 @@ builder.Services.AddScoped<CreateSaleUseCase>();
 builder.Services.AddScoped<GetAllSalesUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<GetSaleByEventUseCase>();
+builder.Services.AddScoped<GetEventSalesSummaryUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
 builder.Services.AddScoped<GetByUserIdUseCase>();
 

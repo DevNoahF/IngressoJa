@@ -49,6 +49,8 @@ Main rules:
 ```text
 POST /sales
 GET /sales/{id}
+GET /sales/event/{eventId}
+GET /sales/event/{eventId}/summary
 PATCH /sales/{id}/status
 ```
 
@@ -64,3 +66,5 @@ Example request:
 ```
 
 The sale use cases live in `Domain/UseCases/Sale`, ticket use cases live in `Domain/UseCases/Ticket`, and event sale use cases live in `Domain/UseCases/EventSale`.
+
+The new summary endpoint returns the event name, published ticket total, approved tickets sold, remaining tickets, ticket value, and total revenue. It only counts approved sales.
