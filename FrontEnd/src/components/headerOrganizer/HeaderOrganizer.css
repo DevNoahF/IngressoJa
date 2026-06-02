@@ -3,7 +3,7 @@
 	height: 80px;
 	border-bottom: 1px solid #dbe4f0;
 	background: #ffffff;
-	overflow: hidden;
+	overflow: visible
 }
 
 .header-organizer-container {
