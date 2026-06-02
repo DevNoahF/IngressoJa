@@ -5,6 +5,12 @@ import { getSalesByUser } from "../../api/sales";
 import { getEventById, getStateCode } from "../../api/events";
 import "./PurchasesPage.css";
 
+const STATUS_MAP = {
+  Pending: "Pendente",
+  Approved: "Pago",
+  Cancelled: "Cancelado",
+};
+
 export default function PurchasesPage() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,9 +51,11 @@ export default function PurchasesPage() {
         const fetchedTickets = await Promise.all(
           sales.map(async (sale) => {
             const event = await getEventById(sale.eventId);
+            const statusLabel = STATUS_MAP[sale.saleStatus] ?? sale.saleStatus;
+
             return {
               id: sale.id,
-              code: `TICKET-${sale.id}`,
+              code: sale.ticketId ? `TICKET-${sale.ticketId}` : `TICKET-${sale.id}`,
               eventId: sale.eventId,
               eventName: event?.name ?? "Evento desconhecido",
               eventDescription: event?.description ?? "",
@@ -63,7 +71,7 @@ export default function PurchasesPage() {
               unitPrice: event?.ticketValue ?? 0,
               totalPrice: sale.totalPrice,
               purchasedAt: sale.createdAt,
-              status: sale.saleStatus,
+              status: statusLabel,
             };
           })
         );
