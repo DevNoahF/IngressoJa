@@ -6,7 +6,7 @@ import { getEventById } from '../../api/events';
 import { createSale, updateSaleStatus } from '../../api/sales';
 import { getStoredUserId } from '../../utils/auth';
 import { getStoredEventId } from '../../utils/eventContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function PaymentPage() {
   const [step, setStep] = useState('checkout');
@@ -20,6 +20,7 @@ export default function PaymentPage() {
   const [error, setError] = useState('');
 
   const location = useLocation();
+  const navigate = useNavigate();
   const resolvedEventId = location.state?.eventId ?? getStoredEventId() ?? '';
   const valorUnitario = event?.ticketValue ?? location.state?.ticketValue ?? 150.00;
   const availableTickets = event?.totalTicketQuantity ?? location.state?.totalTicketQuantity ?? 100;
@@ -69,52 +70,64 @@ export default function PaymentPage() {
   }, [location.state, resolvedEventId]);
 
   const handlePayment = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    const userId = getStoredUserId();
+  const userId = getStoredUserId();
 
-    if (!resolvedEventId) {
-      setError('Selecione um evento válido para finalizar a compra.');
-      setLoading(false);
+  if (!resolvedEventId) {
+    setError('Selecione um evento válido para finalizar a compra.');
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const sale = await createSale({
+      userId,
+      eventId: resolvedEventId,
+      selectedTicketsUser: quantidade,
+    });
+
+    console.log('CONTEÚDO REAL DO BACK-END:', sale);
+
+    setSaleId(sale?.id ?? sale?.Id ?? null);
+    setStep('qrcode');
+  } catch (err) {
+    setError(err?.message?.includes('400') ? 'Não foi possível criar a venda. Verifique o evento selecionado e tente novamente.' : 'Erro ao criar venda. Tente novamente.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleConfirmPayment = async () => {
+  setLoading(true);
+  setError('');
+
+  try {
+    console.log('Confirmando pagamento para saleId:', saleId);
+    
+    if (saleId !== null && saleId !== undefined) {
+      const updatedSale = await updateSaleStatus(saleId);
+      
+      console.log('RESPOSTA DO PATCH (CONFIRMAÇÃO):', updatedSale);
+
+      const ticket = updatedSale?.ticketId ?? updatedSale?.TicketId ?? updatedSale?.ticketCode ?? '';
+      
+      setTicketCode(ticket);
+      
+      setStep('confirmed');
       return;
     }
 
-    try {
-      const sale = await createSale({
-        userId,
-        eventId: resolvedEventId,
-        selectedTicketsUser: quantidade,
-      });
-
-      setSaleId(sale?.id ?? sale?.Id ?? null);
-      setStep('qrcode');
-    } catch (err) {
-      setError(err?.message?.includes('400') ? 'Não foi possível criar a venda. Verifique o evento selecionado e tente novamente.' : 'Erro ao criar venda. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmPayment = async () => {
-    setLoading(true);
-    setError('');
-
-    try {
-      if (saleId) {
-        await updateSaleStatus(saleId);
-        setStep('confirmed');
-        return;
-      }
-
-      throw new Error('Sale id not available.');
-    } catch (confirmError) {
-      setError('Não foi possível aprovar a venda.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    throw new Error('Sale id not available.');
+  } catch (confirmError) {
+    console.error('Erro detalhado ao confirmar pagamento:', confirmError);
+    setError('Não foi possível aprovar a venda.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="page-wrapper">
@@ -223,7 +236,7 @@ export default function PaymentPage() {
             <div className="email-alert">
               Um e-mail de confirmação foi enviado com todos os detalhes do seu ingresso.
             </div>
-            <button type="button" className="btn-modal-submit" onClick={() => setStep('checkout')}>
+            <button type="button" className="btn-modal-submit" onClick={() => navigate('/user/home')}>
               Voltar para Eventos
             </button>
           </div>
