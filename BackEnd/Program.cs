@@ -65,6 +65,7 @@ builder.Services.AddScoped<GetAllSalesUseCase>();
 builder.Services.AddScoped<GetSaleByIdUseCase>();
 builder.Services.AddScoped<GetSaleByEventUseCase>();
 builder.Services.AddScoped<UpdateSaleStatusUseCase>();
+builder.Services.AddScoped<GetByUserIdUseCase>();
 
 // Eventos
 builder.Services.AddScoped<IEventRepository, EventRepository>();

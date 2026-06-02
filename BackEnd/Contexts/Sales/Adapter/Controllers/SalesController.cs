@@ -14,19 +14,22 @@ public class SalesController : ControllerBase
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
     private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
+    private readonly GetByUserIdUseCase _getByUserIdUseCase;
 
     public SalesController(
         CreateSaleUseCase createSaleUseCase,
         GetAllSalesUseCase getAllSalesUseCase,
         GetSaleByIdUseCase getSaleByIdUseCase,
         GetSaleByEventUseCase getSaleByEventUseCase,
-        UpdateSaleStatusUseCase updateSaleStatusUseCase)
+        UpdateSaleStatusUseCase updateSaleStatusUseCase,
+        GetByUserIdUseCase getByUserIdUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
         _getAllSalesUseCase = getAllSalesUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
         _getSaleByEventUseCase = getSaleByEventUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
+        _getByUserIdUseCase = getByUserIdUseCase;
     }
 
     [HttpPost]
@@ -105,6 +108,20 @@ public class SalesController : ControllerBase
         catch (Exception ex) 
         {
             Console.WriteLine(ex.Message);
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("user/{userId:guid}")]
+    public async Task<IActionResult> GetByUserId(Guid userId)
+    {
+        try
+        {
+            var user = await _getByUserIdUseCase.GetByUserIdAsync(userId);
+            return Ok(user.ToResponse());
+        }
+        catch (Exception ex)
+        {
             return BadRequest(ex.Message);
         }
     }

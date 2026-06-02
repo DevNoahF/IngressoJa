@@ -59,4 +59,10 @@ public class SaleRepository : ISaleRepository
 
         return models.Select(model => model.ToEntity());
     }
+
+    public async Task<IEnumerable<SaleEntity>> GetByUserIdAsync(Guid userId)
+    {
+        var models = await _context.Sales.Where(s=>s.UserId==userId).ToListAsync();
+        return models.Select(model => model.ToEntity());
+    }
 }
