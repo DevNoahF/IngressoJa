@@ -37,3 +37,7 @@ export function updateSaleStatus(id) {
     method: "PATCH",
   });
 }
+
+export function getSalesByUser(userId) {
+  return request(`/sales/user/${userId}`);
+}
