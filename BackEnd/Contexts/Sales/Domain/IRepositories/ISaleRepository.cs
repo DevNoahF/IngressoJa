@@ -9,4 +9,5 @@ public interface ISaleRepository
     Task<SaleEntity?> GetByIdAsync(int id);
     Task<IEnumerable<SaleEntity>> GetAllAsync();
     Task<IEnumerable<SaleEntity>> GetByEventIdAsync(Guid eventId);
+    Task<IEnumerable<SaleEntity>> GetByUserIdAsync(Guid UserId);
 }

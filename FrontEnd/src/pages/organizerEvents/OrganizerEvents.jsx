@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
-import { getEventsByOrganizerId, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventsByOrganizerId, getEventById, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventSalesSummary } from "../../api/sales";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
@@ -80,6 +81,7 @@ function OrganizerEvents() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRevenueModal, setShowRevenueModal] = useState(false);
@@ -93,6 +95,10 @@ function OrganizerEvents() {
   const [statusFeedback, setStatusFeedback] = useState({ type: "", message: "" });
   const [isSavingStatus, setIsSavingStatus] = useState(false);
 
+  const [revenueSummary, setRevenueSummary] = useState(null);
+  const [isRevenueLoading, setIsRevenueLoading] = useState(false);
+  const [revenueError, setRevenueError] = useState("");
+
   const handleEditClick = (event) => {
     setSelectedEvent(event);
     setEditForm(buildEditForm(event));
@@ -100,14 +106,44 @@ function OrganizerEvents() {
     setShowEditModal(true);
   };
 
-  const handleRevenueClick = (event) => {
+  const handleRevenueClick = async (event) => {
     setSelectedEvent(event);
+    setRevenueSummary(null);
+    setRevenueError("");
     setShowRevenueModal(true);
+
+    if (event.id === PERMANENT_EVENT.id) return;
+
+    setIsRevenueLoading(true);
+    try {
+      const summary = await getEventSalesSummary(event.id);
+      setRevenueSummary(summary);
+    } catch {
+      setRevenueError("Não foi possível carregar o relatório de vendas.");
+    } finally {
+      setIsRevenueLoading(false);
+    }
   };
 
-  const handlePhotoClick = (event) => {
+  const handlePhotoClick = async (event) => {
+    if (event.id === PERMANENT_EVENT.id) {
+      setSelectedEvent(event);
+      setShowDescriptionModal(true);
+      return;
+    }
+
     setSelectedEvent(event);
     setShowDescriptionModal(true);
+    setIsDetailLoading(true);
+
+    try {
+      const fullEvent = await getEventById(event.id);
+      setSelectedEvent(normalizeEvent(fullEvent));
+    } catch {
+      // mantém o evento parcial se falhar
+    } finally {
+      setIsDetailLoading(false);
+    }
   };
 
   const handleStatusClick = (event) => {
@@ -141,6 +177,10 @@ function OrganizerEvents() {
     setSelectedStatus(null);
     setStatusFeedback({ type: "", message: "" });
     setIsSavingStatus(false);
+    setIsDetailLoading(false);
+    setRevenueSummary(null);
+    setIsRevenueLoading(false);
+    setRevenueError("");
   };
 
   function handleEditFormChange(event) {
@@ -312,11 +352,11 @@ function OrganizerEvents() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>DATA (DATE ONLY)</label>
+                  <label>DATA</label>
                   <input type="date" name="date" value={editForm?.date ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>HORA (TIME ONLY)</label>
+                  <label>HORA</label>
                   <input type="time" name="hour" value={editForm?.hour ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
@@ -343,7 +383,7 @@ function OrganizerEvents() {
         </div>
       )}
 
-      {/* MODAL 2: VER RECEITA */}
+      {/* MODAL 2: RELATÓRIO DE VENDAS */}
       {showRevenueModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -353,21 +393,55 @@ function OrganizerEvents() {
             </div>
             <div className="revenue-stats">
               <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{selectedEvent.name}</h3>
-              <div className="stat-item">
-                <span className="stat-label">Ingressos Vendidos</span>
-                <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Receita Total Bruta</span>
-                <span className="stat-value">R$ 18.600,00</span>
-              </div>
+
+              {isRevenueLoading && (
+                <p style={{ textAlign: "center" }}>Carregando relatório...</p>
+              )}
+
+              {revenueError && (
+                <p style={{ textAlign: "center", color: "#dc2626" }}>{revenueError}</p>
+              )}
+
+              {!isRevenueLoading && !revenueError && revenueSummary && (
+                <>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Vendidos</span>
+                    <span className="stat-value">{revenueSummary.ticketsSold} / {revenueSummary.totalTicketsPublished}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Restantes</span>
+                    <span className="stat-value">{revenueSummary.ticketsRemaining}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Valor do Ingresso</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.ticketValue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Receita Total Bruta</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.totalRevenue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                </>
+              )}
+
+              {!isRevenueLoading && !revenueError && !revenueSummary && selectedEvent.id === PERMANENT_EVENT.id && (
+                <>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Vendidos</span>
+                    <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Receita Total Bruta</span>
+                    <span className="stat-value">R$ 18.600,00</span>
+                  </div>
+                </>
+              )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>
         </div>
       )}
 
-      {/* MODAL 3: VER DESCRIÇÃO DO EVENTO */}
+      {/* MODAL 3: DESCRIÇÃO DO EVENTO */}
       {showDescriptionModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -376,16 +450,22 @@ function OrganizerEvents() {
               <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
             </div>
             <div className="organizer-description-modal-body">
-              <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
-              <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
-              <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
-              <div className="organizer-description-modal-details">
-                <span><MapPin size={16} />{selectedEvent.location}</span>
-                <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
-                <span><Clock size={16} />{selectedEvent.hour}</span>
-                <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
-                <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
-              </div>
+              {isDetailLoading ? (
+                <p style={{ textAlign: "center" }}>Carregando detalhes...</p>
+              ) : (
+                <>
+                  <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
+                  <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
+                  <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
+                  <div className="organizer-description-modal-details">
+                    <span><MapPin size={16} />{selectedEvent.location}</span>
+                    <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
+                    <span><Clock size={16} />{selectedEvent.hour}</span>
+                    <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
+                    <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
+                  </div>
+                </>
+              )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>

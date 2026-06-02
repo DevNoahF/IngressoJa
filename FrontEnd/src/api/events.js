@@ -142,11 +142,15 @@ async function request(path, options = {}) {
 }
 
 export function getEvents() {
-  return request("/events").then((events) => (Array.isArray(events) ? events.map(normalizeEvent) : []));
+  return request("/events").then((events) =>
+    Array.isArray(events) ? events.map(normalizeEvent) : []
+  );
 }
 
 export function getEventsByOrganizerId(organizerId) {
-  return request(`/events/organizer/${organizerId}`).then((events) => (Array.isArray(events) ? events.map(normalizeEvent) : []));
+  return request(`/events/organizer/${organizerId}`).then((events) =>
+    Array.isArray(events) ? events.map(normalizeEvent) : []
+  );
 }
 
 export function getEventById(eventId) {

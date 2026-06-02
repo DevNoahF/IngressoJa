@@ -1,4 +1,33 @@
+const DEFAULT_API_URL = "http://localhost:5202";
+const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
+
 const PURCHASED_TICKETS_KEY = "ingressoja:purchasedTickets";
+
+async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers ?? {}),
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Falha ao comunicar com a API.");
+  }
+
+  if (response.status === 204) return null;
+
+  const responseText = await response.text();
+  return responseText ? JSON.parse(responseText) : null;
+}
+
+export function getTicketsByUserId(userId) {
+  return apiRequest(`/tickets/user/${userId}`).then((tickets) =>
+    Array.isArray(tickets) ? tickets : []
+  );
+}
 
 function createTicketCode() {
   const randomPart = Math.random().toString(36).slice(2, 10).toUpperCase();
