@@ -361,7 +361,7 @@ function OrganizerEvents() {
         </div>
       )}
 
-      {/* MODAL 2: VER RECEITA */}
+
       {showRevenueModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -385,7 +385,7 @@ function OrganizerEvents() {
         </div>
       )}
 
-      {/* MODAL 3: VER DESCRIÇÃO DO EVENTO */}
+
       {showDescriptionModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -416,7 +416,6 @@ function OrganizerEvents() {
         </div>
       )}
 
-      {/* MODAL 4: ALTERAR STATUS */}
       {showStatusModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
