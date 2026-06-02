@@ -13,6 +13,7 @@ public class SalesController : ControllerBase
     private readonly GetAllSalesUseCase _getAllSalesUseCase;
     private readonly GetSaleByIdUseCase _getSaleByIdUseCase;
     private readonly GetSaleByEventUseCase _getSaleByEventUseCase;
+    private readonly GetEventSalesSummaryUseCase _getEventSalesSummaryUseCase;
     private readonly UpdateSaleStatusUseCase _updateSaleStatusUseCase;
 
     public SalesController(
@@ -20,12 +21,14 @@ public class SalesController : ControllerBase
         GetAllSalesUseCase getAllSalesUseCase,
         GetSaleByIdUseCase getSaleByIdUseCase,
         GetSaleByEventUseCase getSaleByEventUseCase,
+        GetEventSalesSummaryUseCase getEventSalesSummaryUseCase,
         UpdateSaleStatusUseCase updateSaleStatusUseCase)
     {
         _createSaleUseCase = createSaleUseCase;
         _getAllSalesUseCase = getAllSalesUseCase;
         _getSaleByIdUseCase = getSaleByIdUseCase;
         _getSaleByEventUseCase = getSaleByEventUseCase;
+        _getEventSalesSummaryUseCase = getEventSalesSummaryUseCase;
         _updateSaleStatusUseCase = updateSaleStatusUseCase;
     }
 
@@ -106,6 +109,27 @@ public class SalesController : ControllerBase
         {
             Console.WriteLine(ex.Message);
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("event/{eventId:guid}/summary")]
+    public async Task<IActionResult> GetEventSalesSummary(Guid eventId)
+    {
+        try
+        {
+            var summary = await _getEventSalesSummaryUseCase.ExecuteAsync(eventId);
+
+            return summary is null ? NotFound() : Ok(summary);
+        }
+        catch (ArgumentException exception)
+        {
+            Console.WriteLine(exception.Message);
+            return BadRequest(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 }
