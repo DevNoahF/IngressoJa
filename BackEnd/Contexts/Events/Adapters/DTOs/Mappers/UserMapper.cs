@@ -138,18 +138,14 @@ public class UserMapper : IUserMapper
         );
     }
 
-    // responseAuth to UserEntity
-    public UserAuthResponseDTO AuthResponse(string token)
+    // UserEntity e token para UserAuthResponseDTO
+    public UserAuthResponseDTO AuthResponse(UserEntity user, string token)
     {
-        return new UserAuthResponseDTO(token);
-    }
-
-    // UserAuthRequestDTO para UserAuthResponseDTO
-    public UserAuthRequestDTO UserAuthRequestToAuthResponse(UserAuthRequestDTO dto)
-    {
-        return new UserAuthRequestDTO(
-            dto.Email,
-            dto.Password
+        return new UserAuthResponseDTO(
+            user.Id,
+            token,
+            user.FirstName,
+            user.PhotoProfile
         );
     }
 

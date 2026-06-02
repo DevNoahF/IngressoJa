@@ -1,12 +1,14 @@
 .header-user {
   width: 100%;
-  height: 70px;
+  height: 80px;
   border-bottom: 1px solid #e7e7e7;
   background: #ffffff;
+  overflow: hidden;
 }
 
 .header-user-container {
-  width: min(1280px, calc(100% - 32px));
+  width: calc(100% - 48px);
+  max-width: 1400px;
   height: 100%;
   margin: 0 auto;
   display: flex;
@@ -23,8 +25,9 @@
 }
 
 .header-user-logo-image {
-  width: 168px;
+  width: 110px;
   height: auto;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -55,8 +58,8 @@
 }
 
 .header-user-image {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   object-fit: cover;
   flex-shrink: 0;
@@ -142,25 +145,5 @@
 @media (min-width: 768px) {
   .header-user-name {
     display: block;
-  }
-}
-
-@media (max-width: 640px) {
-  .header-user-container {
-    width: calc(100% - 20px);
-  }
-
-  .header-user-logo-image {
-    width: 140px;
-  }
-
-  .header-user-button {
-    padding: 7px 10px;
-    gap: 10px;
-  }
-
-  .header-user-image {
-    width: 34px;
-    height: 34px;
   }
 }
