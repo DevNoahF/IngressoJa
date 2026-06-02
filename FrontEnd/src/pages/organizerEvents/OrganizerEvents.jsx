@@ -4,6 +4,7 @@ import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventsByOrganizerId, getEventById, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventSalesSummary } from "../../api/sales";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
@@ -94,6 +95,10 @@ function OrganizerEvents() {
   const [statusFeedback, setStatusFeedback] = useState({ type: "", message: "" });
   const [isSavingStatus, setIsSavingStatus] = useState(false);
 
+  const [revenueSummary, setRevenueSummary] = useState(null);
+  const [isRevenueLoading, setIsRevenueLoading] = useState(false);
+  const [revenueError, setRevenueError] = useState("");
+
   const handleEditClick = (event) => {
     setSelectedEvent(event);
     setEditForm(buildEditForm(event));
@@ -101,9 +106,23 @@ function OrganizerEvents() {
     setShowEditModal(true);
   };
 
-  const handleRevenueClick = (event) => {
+  const handleRevenueClick = async (event) => {
     setSelectedEvent(event);
+    setRevenueSummary(null);
+    setRevenueError("");
     setShowRevenueModal(true);
+
+    if (event.id === PERMANENT_EVENT.id) return;
+
+    setIsRevenueLoading(true);
+    try {
+      const summary = await getEventSalesSummary(event.id);
+      setRevenueSummary(summary);
+    } catch {
+      setRevenueError("Não foi possível carregar o relatório de vendas.");
+    } finally {
+      setIsRevenueLoading(false);
+    }
   };
 
   const handlePhotoClick = async (event) => {
@@ -159,6 +178,9 @@ function OrganizerEvents() {
     setStatusFeedback({ type: "", message: "" });
     setIsSavingStatus(false);
     setIsDetailLoading(false);
+    setRevenueSummary(null);
+    setIsRevenueLoading(false);
+    setRevenueError("");
   };
 
   function handleEditFormChange(event) {
@@ -361,7 +383,7 @@ function OrganizerEvents() {
         </div>
       )}
 
-
+      {/* MODAL 2: RELATÓRIO DE VENDAS */}
       {showRevenueModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -371,21 +393,55 @@ function OrganizerEvents() {
             </div>
             <div className="revenue-stats">
               <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{selectedEvent.name}</h3>
-              <div className="stat-item">
-                <span className="stat-label">Ingressos Vendidos</span>
-                <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Receita Total Bruta</span>
-                <span className="stat-value">R$ 18.600,00</span>
-              </div>
+
+              {isRevenueLoading && (
+                <p style={{ textAlign: "center" }}>Carregando relatório...</p>
+              )}
+
+              {revenueError && (
+                <p style={{ textAlign: "center", color: "#dc2626" }}>{revenueError}</p>
+              )}
+
+              {!isRevenueLoading && !revenueError && revenueSummary && (
+                <>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Vendidos</span>
+                    <span className="stat-value">{revenueSummary.ticketsSold} / {revenueSummary.totalTicketsPublished}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Restantes</span>
+                    <span className="stat-value">{revenueSummary.ticketsRemaining}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Valor do Ingresso</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.ticketValue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Receita Total Bruta</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.totalRevenue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                </>
+              )}
+
+              {!isRevenueLoading && !revenueError && !revenueSummary && selectedEvent.id === PERMANENT_EVENT.id && (
+                <>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Vendidos</span>
+                    <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Receita Total Bruta</span>
+                    <span className="stat-value">R$ 18.600,00</span>
+                  </div>
+                </>
+              )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>
         </div>
       )}
 
-
+      {/* MODAL 3: DESCRIÇÃO DO EVENTO */}
       {showDescriptionModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -416,6 +472,7 @@ function OrganizerEvents() {
         </div>
       )}
 
+      {/* MODAL 4: ALTERAR STATUS */}
       {showStatusModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">

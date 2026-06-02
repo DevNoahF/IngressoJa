@@ -41,3 +41,7 @@ export function updateSaleStatus(id) {
 export function getSalesByUser(userId) {
   return request(`/sales/user/${userId}`);
 }
+
+export function getEventSalesSummary(eventId) {
+  return request(`/sales/event/${eventId}/summary`);
+}
