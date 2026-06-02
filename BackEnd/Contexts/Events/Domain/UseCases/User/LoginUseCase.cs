@@ -37,7 +37,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
                     throw new Exception("Invalid password.");
 
                 var token = _tokenGenerate.GenerateToken(userExisting.Id, userExisting.Email.Value);
-                var response = _userMapper.AuthResponse(token);
+                var response = _userMapper.AuthResponse(userExisting, token);
                 return response;
             }
             catch (Exception ex)
