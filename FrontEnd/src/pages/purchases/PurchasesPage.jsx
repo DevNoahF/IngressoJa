@@ -16,27 +16,6 @@ export default function PurchasesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const mockTicket = {
-    id: 'mock-ticket-semanca-01',
-    code: 'TICKET-SEMANCA-01',
-    eventId: 'permanent-semanca-1',
-    eventName: 'Show da SeManca e SeMata',
-    eventDescription: 'Uma noite inesquecível onde a SeManca toca trompete com os pés e a SeMata ensina passos de dança proibidos até pela física.',
-    eventCity: 'Cidade Imaginária',
-    eventState: 'ZZ',
-    eventStreet: 'Praça do Caos Glorioso',
-    eventNeighborhood: 'Vila do Riso',
-    eventNumber: '1',
-    eventDate: '31/12/2026',
-    eventHour: '23:59',
-    bannerImage: 'https://i.pinimg.com/736x/c5/53/79/c55379996a160a72d08150c3b05db17d.jpg',
-    quantity: 2,
-    unitPrice: 99.9,
-    totalPrice: 199.8,
-    purchasedAt: new Date().toISOString(),
-    status: 'Pago'
-  };
-
   useEffect(() => {
     async function fetchPurchases() {
       try {
@@ -44,7 +23,7 @@ export default function PurchasesPage() {
         const sales = await getSalesByUser(userId);
 
         if (!sales || sales.length === 0) {
-          setTickets([mockTicket]);
+          setTickets([]);
           return;
         }
 
@@ -76,8 +55,7 @@ export default function PurchasesPage() {
           })
         );
 
-        const hasMock = fetchedTickets.some((t) => String(t.code) === mockTicket.code);
-        setTickets(hasMock ? fetchedTickets : [mockTicket, ...fetchedTickets]);
+        setTickets(fetchedTickets);
       } catch (err) {
         setError("Não foi possível carregar suas compras. Tente novamente.");
         console.error(err);
@@ -97,15 +75,14 @@ export default function PurchasesPage() {
         <section className="purchases-card">
           <h1 className="purchases-title">Minhas Compras</h1>
 
-          {loading && <p className="purchases-empty">Carregando compras...</p>}
+          {loading ? <p className="purchases-empty">Carregando compras...</p> : null}
+          {error ? <p className="purchases-empty">{error}</p> : null}
 
-          {error && <p className="purchases-empty">{error}</p>}
-
-          {!loading && !error && tickets.length === 0 && (
+          {!loading && !error && tickets.length === 0 ? (
             <p className="purchases-empty">Você não possui ingressos comprados.</p>
-          )}
+          ) : null}
 
-          {!loading && !error && tickets.length > 0 && (
+          {!loading && !error && tickets.length > 0 ? (
             <ul className="purchases-list">
               {tickets.map((t) => (
                 <li key={t.id} className="purchase-item">
@@ -132,7 +109,7 @@ export default function PurchasesPage() {
                 </li>
               ))}
             </ul>
-          )}
+          ) : null}
         </section>
       </main>
     </div>
