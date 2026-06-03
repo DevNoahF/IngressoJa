@@ -5,7 +5,6 @@ import { X, MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderUser from '../../components/HeaderUser/HeaderUser';
 import Footer from "../../components/Home/Footer";
 import EventCard from "../../components/Home/EventCard";
-import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
 import { getEventById, getEvents, getStateCode } from "../../api/events";
 import { setStoredEventId } from "../../utils/eventContext";
 
@@ -14,27 +13,6 @@ const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ff
 function isGuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
-
-
-
-const PERMANENT_EVENT = {
-  id: "permanent-semanca-1",
-  name: "Show da SeManca e SeMata",
-  description:
-    "Uma noite inesquecível onde a SeManca toca trompete com os pés e a SeMata ensina passos de dança proibidos até pela física. Riso garantido ou SeMata direto para sua casa.",
-  city: "Cidade Imaginária",
-  state: "ZZ",
-  date: "31/12/2026",
-  hour: "23:59",
-  bannerImage: "https://i.pinimg.com/736x/c5/53/79/c55379996a160a72d08150c3b05db17d.jpg",
-  ticketValue: 99.9,
-  totalTicketQuantity: 420,
-  street: "Rua dos Tropeços",
-  number: 13,
-  neighborhood: "Vila do Riso",
-};
-
-// No mockEvents fallback anymore; when the API fails we show an empty list
 
 function Home() {
   const navigate = useNavigate();
@@ -56,9 +34,7 @@ function Home() {
         setError("");
 
         const response = await getEvents();
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setEvents(response.map((event) => ({
           id: event.id,
@@ -70,24 +46,19 @@ function Home() {
           ticketValue: event.ticketValue,
           totalTicketQuantity: event.totalTicketQuantity,
         })));
-      } catch (requestError) {
+      } catch {
         if (isMounted) {
           setError("");
-          // No remote events available and no local mock - show empty list
           setEvents([]);
         }
       } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        if (isMounted) setIsLoading(false);
       }
     }
 
     loadEvents();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
@@ -107,33 +78,22 @@ function Home() {
 
         const response = await getEventById(selectedEvent.id);
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setSelectedEventDetails(response);
-      } catch (requestError) {
+      } catch {
         if (isMounted) {
-          // If the selected event is the permanent demo event, use it as fallback
-          if (selectedEvent && selectedEvent.id === PERMANENT_EVENT.id) {
-            setSelectedEventDetails(PERMANENT_EVENT);
-          } else {
-            setSelectedEventDetails(selectedEvent);
-          }
+          setSelectedEventDetails(selectedEvent);
           setDetailError("");
         }
       } finally {
-        if (isMounted) {
-          setIsDetailLoading(false);
-        }
+        if (isMounted) setIsDetailLoading(false);
       }
     }
 
     loadEventDetails();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [selectedEvent]);
 
   function handleCloseModal() {
@@ -145,12 +105,10 @@ function Home() {
     const currentEvent = selectedEventDetails ?? selectedEvent;
     const eventId = selectedEvent?.id ?? currentEvent?.id;
 
-    if (!eventId) {
-      return;
-    }
+    if (!eventId) return;
 
     if (!isGuid(String(eventId))) {
-      setPaymentMessage("Este evento e demonstrativo. Escolha um evento cadastrado para comprar ingresso.");
+      setPaymentMessage("Este evento é demonstrativo. Escolha um evento cadastrado para comprar ingresso.");
       return;
     }
 
@@ -167,24 +125,6 @@ function Home() {
         <section className="hero">
           <h1>Eventos em Destaque</h1>
           <p>Descubra os melhores eventos da sua cidade</p>
-        </section>
-
-        <section className="permanent-event-section">
-          <h2>Evento permanente</h2>
-          <EventCard
-            key={PERMANENT_EVENT.id}
-            event={{
-              id: PERMANENT_EVENT.id,
-              title: PERMANENT_EVENT.name,
-              city: `${PERMANENT_EVENT.city} - ${PERMANENT_EVENT.state}`,
-              date: PERMANENT_EVENT.date,
-              hour: PERMANENT_EVENT.hour,
-              image: PERMANENT_EVENT.bannerImage,
-              ticketValue: PERMANENT_EVENT.ticketValue,
-              totalTicketQuantity: PERMANENT_EVENT.totalTicketQuantity,
-            }}
-            onReadMore={setSelectedEvent}
-          />
         </section>
 
         <section className="events-grid">
@@ -233,12 +173,10 @@ function Home() {
                     <MapPin size={16} />
                     {(selectedEventDetails ?? selectedEvent).street}, {(selectedEventDetails ?? selectedEvent).number} - {(selectedEventDetails ?? selectedEvent).neighborhood}
                   </span>
-
                   <span>
                     <Calendar size={16} />
                     {(selectedEventDetails ?? selectedEvent).date}
                   </span>
-
                   <span>
                     <Clock size={16} />
                     {(selectedEventDetails ?? selectedEvent).hour}
@@ -247,7 +185,6 @@ function Home() {
                     <Ticket size={16} />
                     {Number((selectedEventDetails ?? selectedEvent).totalTicketQuantity).toLocaleString('pt-BR')} total de ingressos
                   </span>
-
                   <span>
                     <Ticket size={16} />
                     R$ {Number((selectedEventDetails ?? selectedEvent).ticketValue).toFixed(2)} por ingresso
