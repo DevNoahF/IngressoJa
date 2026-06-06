@@ -89,8 +89,6 @@ export default function PaymentPage() {
       selectedTicketsUser: quantidade,
     });
 
-    console.log('CONTEÚDO REAL DO BACK-END:', sale);
-
     setSaleId(sale?.id ?? sale?.Id ?? null);
     setStep('qrcode');
   } catch (err) {
@@ -105,13 +103,10 @@ const handleConfirmPayment = async () => {
   setError('');
 
   try {
-    console.log('Confirmando pagamento para saleId:', saleId);
     
     if (saleId !== null && saleId !== undefined) {
       const updatedSale = await updateSaleStatus(saleId);
       
-      console.log('RESPOSTA DO PATCH (CONFIRMAÇÃO):', updatedSale);
-
       const ticket = updatedSale?.ticketId ?? updatedSale?.TicketId ?? updatedSale?.ticketCode ?? '';
       
       setTicketCode(ticket);

@@ -40,7 +40,7 @@ function RegisterForm({ isOrganizerRegistration = false, roleName = "Usuário" }
     if (formData.password !== formData.confirmPassword) {
       setFeedback({
         type: "error",
-        message: "A senha e a confirmação precisam ser iguais.",
+        message: "As senhas precisam ser iguais.",
       });
       return;
     }

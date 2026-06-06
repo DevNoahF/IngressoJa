@@ -6,7 +6,6 @@ const AUTH_ROLE_KEY = "role";
 const AUTH_USER_ID_KEY = "userId";
 const AUTH_NAME_KEY = "userName";
 const AUTH_PHOTO_KEY = "userPhoto";
-const MOCK_ORGANIZER_USER_ID = "ddd4ec10-52b8-44ae-8bd0-6473d37e9257";
 
 function normalizeRole(role) {
   if (role === 1 || role === "1" || role === "User") {
@@ -29,7 +28,7 @@ export function getStoredToken() {
 }
 
 export function getStoredUserId() {
-  return localStorage.getItem(AUTH_USER_ID_KEY) ?? MOCK_ORGANIZER_USER_ID;
+  return localStorage.getItem(AUTH_USER_ID_KEY);
 }
 
 export function getStoredUserName() {
@@ -77,11 +76,17 @@ export async function loginAndStoreSession({ email, password }) {
     password: { value: password },
   });
 
+  console.log("Login response:", authResponse);
+  console.log("Role from response:", authResponse?.role);
+  
+  const normalizedRole = normalizeRole(authResponse?.role ?? authResponse?.Role ?? "User");
+  console.log("Normalized role:", normalizedRole);
+
   storeAuthSession({
     token: authResponse?.token ?? authResponse?.Token ?? "",
-    role: "User", // Será atualizado conforme necessário
+    role: normalizedRole,
     userId: authResponse?.id ?? authResponse?.Id ?? "",
-    name: authResponse?.name ?? authResponse?.Name ?? "",
+    name: authResponse?.firstName ?? authResponse?.FirstName ?? authResponse?.fistName ?? authResponse?.FistName ?? "",
     photo: authResponse?.photoProfile ?? authResponse?.PhotoProfile ?? null,
   });
 
