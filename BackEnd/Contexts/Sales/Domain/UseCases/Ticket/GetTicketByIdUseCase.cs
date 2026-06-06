@@ -1,10 +1,11 @@
 ﻿using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.Ticket;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces.Tickets;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 
-public class GetTicketByIdUseCase
+public class GetTicketByIdUseCase:IGetTicketByIdUseCase
 {
     private readonly ITicketRepository _repository;
 

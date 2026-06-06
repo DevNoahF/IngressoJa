@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.Ticket;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces.Tickets;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 
-public class GetTicketByUserIdUseCase
+public class GetTicketByUserIdUseCase:IGetTicketByUserIdUseCase
 {
     private readonly ITicketRepository _repository;
 
