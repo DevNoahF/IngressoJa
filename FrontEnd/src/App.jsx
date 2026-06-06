@@ -2,13 +2,14 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Home from './pages/home/HomePage'
 import CreateEvent from './pages/createEvent/CreateEvent'
 import OrganizerEvents from './pages/organizerEvents/OrganizerEvents'
-import Register from "./pages/register/Register"
 import Login from "./pages/login/LoginPage"
 import Payment from './pages/Payment/PaymentPage'
 import PurchasesPage from './pages/purchases/PurchasesPage'
 import TicketsPage from './pages/tickets/TicketsPage'
 import UpdateProfile from './pages/updateUser/updateUser'
 import ChangeEventStatus from './pages/changeEventStatus/ChangeEventStatusPage'
+import RegisterOrganizer from './pages/registerOrganizer/registerOrganizer'
+import RegisterUser from './pages/registerUser/RegisterUser'
 import './App.css'
 
 function App() {

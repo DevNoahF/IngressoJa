@@ -1,4 +1,5 @@
-import "./Register.css";
+import "./registerOrganizer.css";
+import "../../components/RegisterForm/RegisterForm.css";
 
 import { useLocation } from "react-router-dom";
 import RegisterForm from "../../components/RegisterForm/RegisterForm";
