@@ -143,6 +143,7 @@ public class UserMapper : IUserMapper
     {
         return new UserAuthResponseDTO(
             user.Id,
+            user.Role,
             token,
             user.FirstName,
             user.PhotoProfile
