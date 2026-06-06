@@ -146,6 +146,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
