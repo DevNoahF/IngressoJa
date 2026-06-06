@@ -19,6 +19,7 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/user/register' element={<RegisterUser />} />
       <Route path='/organizer/register' element={<RegisterOrganizer />} />
+      <Route path='*' element={<Navigate to='/user/home' replace />} />
       <Route path='/user/home' element={<Home />} />
       <Route path='/user/payment' element={<Payment />} />
       <Route path='/user/purchases' element={<PurchasesPage />} />
@@ -26,7 +27,6 @@ function App() {
       <Route path='/organizer/create' element={<CreateEvent />} />
       <Route path='/organizer/home' element={<OrganizerEvents />} />
       <Route path='/update' element={<UpdateProfile />} />
-      <Route path='*' element={<Navigate to='/user/home' replace />} />
     </Routes>
   )
 }

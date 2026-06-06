@@ -8,8 +8,8 @@ import Footer from "../../components/Home/Footer";
 function RegisterOrganizer() {
   const location = useLocation();
   const path = location.pathname.toLowerCase();
-  const isOrganizerRegistration = path.includes("organizer") || path.includes("user");
-  const roleName = 1
+  const isOrganizerRegistration = path.includes("organizer");
+  const roleName = "Organizador";
 
   return (
     <>
