@@ -5,5 +5,5 @@ namespace IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 
 public interface ICreateEventUseCase
 {
-    Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto,Guid UserId);
+    Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto);
 }
