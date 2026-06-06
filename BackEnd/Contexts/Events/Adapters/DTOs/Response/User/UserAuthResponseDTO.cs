@@ -9,9 +9,9 @@ namespace IngressoJa.Contexts.Eventos.Application.DTOs.Response
 {
     public record UserAuthResponseDTO(
         Guid Id,
-        RoleEnum role,
+        RoleEnum role,  
         String Token,
-        String FistName,
+        String FirstName,
         PhotoProfileVO PhotoProfile
         );
 }
