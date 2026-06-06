@@ -6,7 +6,7 @@ using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
 
-public class UpdateUserSaleUseCase
+public class UpdateUserSaleUseCase:IUpdateUserSaleUseCase
 {
     private readonly IUserSaleRepository _repository;
     private readonly IUserSaleMapper _mapper;
