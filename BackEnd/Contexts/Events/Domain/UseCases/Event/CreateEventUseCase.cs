@@ -2,10 +2,11 @@
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 
-public class CreateEventUseCase
+public class CreateEventUseCase:ICreateEventUseCase
 {
     private readonly IEventRepository _eventRepository;
     public CreateEventUseCase(IEventRepository eventRepository)

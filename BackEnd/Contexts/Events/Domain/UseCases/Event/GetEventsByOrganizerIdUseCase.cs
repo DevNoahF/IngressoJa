@@ -1,10 +1,11 @@
 ﻿using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 
-public class GetEventsByOrganizerIdUseCase
+public class GetEventsByOrganizerIdUseCase:IGetEventsByOrganizerIdUseCase
 {
     
     private readonly IEventRepository _eventRepository;

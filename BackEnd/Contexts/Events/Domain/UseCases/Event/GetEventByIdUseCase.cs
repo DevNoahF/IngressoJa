@@ -1,4 +1,5 @@
 ﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
@@ -8,7 +9,7 @@ using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 
-public class GetEventByIdUseCase
+public class GetEventByIdUseCase:IGetEventById
 {
     private readonly IEventRepository _eventRepository;
     public GetEventByIdUseCase(IEventRepository eventRepository)

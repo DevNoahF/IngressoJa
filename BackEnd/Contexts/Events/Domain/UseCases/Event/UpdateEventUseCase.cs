@@ -3,12 +3,13 @@ using IngressoJa.Contexts.Eventos.Application.DTOs.Response.Event;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+using IngressoJa.Contexts.Eventos.Application.Interfaces.Event;
 using IngressoJa.Contexts.Eventos.Domain.Entities;
 using IngressoJa.Contexts.Eventos.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Eventos.Application.UseCases.Event;
 
-public class UpdateEventUseCase
+public class UpdateEventUseCase:IUpdateEventUseCase
 {
     private readonly IEventRepository _eventRepository;
 
