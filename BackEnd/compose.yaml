@@ -22,7 +22,7 @@ services:
       - .env
     depends_on:
       database:
-        condition: service_healthy # <-- Agora o backend espera o MySQL ficar pronto!
+        condition: service_healthy
 
   database:
     image: mysql:latest
@@ -31,15 +31,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ingressoja}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-ingressoja}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    # Adicionamos um teste para verificar se o banco já aceita conexões
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
 volumes:
   mysql_data:
