@@ -13,7 +13,7 @@ public class UserSaleMapper : IUserSaleMapper
     public CreateUserSaleResponse ToCreateUserSaleResponse(UserSaleEntity entity)
     {
         return new CreateUserSaleResponse(
-            entity.Id,
+            entity.UserId,
             entity.FirstName,
             entity.LastName,
             entity.Cpf,
@@ -21,20 +21,22 @@ public class UserSaleMapper : IUserSaleMapper
         );
     }
 
-    public UserSaleEntity ToEntity(CreateUserSaleRequestDTO dto)
+    // Cria UserSaleEntity a partir de um UserModel já existente
+    public UserSaleEntity ToEntity(CreateUserSaleRequestDTO dto, UserModel user)
     {
         return new UserSaleEntity(
-            dto.FirstName,
-            dto.LastName,
-            dto.Cpf.Value,
-            dto.Email.Value
-            );
+            user.FirstName,
+            user.LastName,
+            user.Cpf.Value,
+            user.Email.Value,
+            user.Id
+        );
     }
 
     public GetUserSaleResponseDTO ToGetUserSaleResponseDTO(UserSaleEntity entity)
     {
         return new GetUserSaleResponseDTO(
-            entity.Id,
+            entity.UserId,
             entity.FirstName,
             entity.LastName,
             entity.Cpf,
@@ -45,34 +47,25 @@ public class UserSaleMapper : IUserSaleMapper
     public UpdateUserSaleResponseDTO ToUpdateUserSaleResponseDTO(UserSaleEntity entity)
     {
         return new UpdateUserSaleResponseDTO(
-            entity.Id,
+            entity.UserId,
             entity.FirstName,
             entity.LastName,
             entity.Cpf,
             entity.Email
-            );
-    }
-
-    public UserSaleEntity ToEntity(UpdateUserSaleRequestDTO dto)
-    {
-        return new UserSaleEntity(
-            dto.FirstName,
-            dto.LastName,
-            dto.Cpf.Value,
-            dto.Email.Value
         );
     }
 
-    public UserSaleEntity ToEntity(UpdateUserSaleRequestDTO dto, Guid id)
+    // Update também parte do usuário existente
+    public UserSaleEntity ToEntity(UpdateUserSaleRequestDTO dto, UserModel user)
     {
         return new UserSaleEntity(
-            dto.FirstName,
-            dto.LastName,
-            dto.Cpf.Value,
-            dto.Email.Value
+            user.FirstName,
+            user.LastName,
+            user.Cpf.Value,
+            user.Email.Value,
+            user.Id
         );
     }
-    
 
     public UserSaleEntity ModelToEntity(UserModel model)
     {
@@ -80,15 +73,16 @@ public class UserSaleMapper : IUserSaleMapper
             model.FirstName,
             model.LastName,
             model.Cpf.Value,
-            model.Email.Value
-            );
+            model.Email.Value,
+            model.Id
+        );
     }
 
     public UserModel ToModel(UserSaleEntity entity)
     {
         return new UserModel
         {
-            Id = entity.Id,
+            Id = entity.UserId,
             Role = RoleEnum.User,
             FirstName = entity.FirstName,
             LastName = entity.LastName,

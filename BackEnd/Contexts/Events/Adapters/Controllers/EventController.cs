@@ -39,7 +39,6 @@ public class EventController : ControllerBase
     {
         try
         {
-            var organizerId = dto.UserId; //Trocar mais tarde assim que tiver user 100% impementado
             var result = await _createEventUseCase.CreateEvent(dto);
             return Ok(result);
         }

@@ -5,5 +5,5 @@ namespace IngressoJa.Contexts.Sales.Adapter.Interfaces;
 
 public interface ICreateUserSaleUseCase
 {
-    Task<CreateUserSaleResponse> CreateUserSale(CreateUserSaleRequestDTO userSaleDto);
+    public record CreateUserSaleRequestDTO(Guid UserId);
 }

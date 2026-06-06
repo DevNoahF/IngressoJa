@@ -3,6 +3,7 @@
 namespace IngressoJa.Contexts.Sales.Adapter.DTOs.Request.UserSale;
 
 public record CreateUserSaleRequestDTO(
+    Guid UserId,
     string FirstName,
     string LastName,
     CpfVO Cpf,

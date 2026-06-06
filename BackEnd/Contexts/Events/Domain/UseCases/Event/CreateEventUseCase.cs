@@ -13,17 +13,10 @@ public class CreateEventUseCase : ICreateEventUseCase
         _eventRepository = eventRepository;
     }
 
-    public async Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO eventCreateRequestDto)
+    public async Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO dto)
     {
-        try
-        {
-            var eventEntity = eventCreateRequestDto.ToEntity(Guid.NewGuid());
-            var createdEvent = await _eventRepository.CreateEvent(eventEntity);
-            return createdEvent.ToCreateResponse();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error creating event", ex);
-        }
+        var eventEntity = dto.ToEntity(dto.UserId);
+        var createdEvent = await _eventRepository.CreateEvent(eventEntity);
+        return createdEvent.ToCreateResponse();
     }
 }
