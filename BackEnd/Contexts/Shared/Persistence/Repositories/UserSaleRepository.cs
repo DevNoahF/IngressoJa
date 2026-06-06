@@ -40,7 +40,7 @@ public class UserSaleRepository : IUserSaleRepository
 
     public async Task<UserSaleEntity> UpdateUserSale(UserSaleEntity userSale)
     {
-        var existing = await _context.Users.FindAsync(userSale.Id);
+        var existing = await _context.Users.FindAsync(userSale.UserId);
 
         if (existing is null)
             throw new Exception("UserSale not found.");

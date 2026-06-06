@@ -5,7 +5,7 @@ using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
 
-public class GetUserSaleByIdUseCase
+public class GetUserSaleByIdUseCase:IGetUserSaleByIdUseCase
 {
     private readonly IUserSaleRepository _repository;
     private readonly IUserSaleMapper _mapper;

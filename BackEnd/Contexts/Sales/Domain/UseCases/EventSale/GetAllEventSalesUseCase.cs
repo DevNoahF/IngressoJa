@@ -1,11 +1,12 @@
 using System.Linq;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Response.EventSale;
+using IngressoJa.Contexts.Sales.Adapter.Interfaces;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Application.UseCases.EventSale;
 
-public class GetAllEventSalesUseCase
+public class GetAllEventSalesUseCase:IGetAllEventsUseCase
 {
     private readonly IEventSaleRepository _eventSaleRepository;
 

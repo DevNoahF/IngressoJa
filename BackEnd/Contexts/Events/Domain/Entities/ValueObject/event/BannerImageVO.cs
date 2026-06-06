@@ -1,4 +1,6 @@
-﻿namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
+﻿using IngressoJa.Contexts.Eventos.Adapters.Exceptions.Event;
+
+namespace IngressoJa.Contexts.Eventos.Domain.Entities.ValueObject;
 
 public class BannerImageVO
 {
@@ -9,11 +11,8 @@ public class BannerImageVO
         if (string.IsNullOrWhiteSpace(value))
             throw new Exception("Banner Image can't be empty");
 
-        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-        {
-            throw new Exception("Banner Image must contain a valid URL.");
-        }
+        if (value.Length > 255)
+            throw new EventMaxLenghtExceededException("BannerImage", 255);
 
         Value = value;
     }
