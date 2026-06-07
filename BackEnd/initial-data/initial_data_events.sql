@@ -1,33 +1,28 @@
 USE ingressoja;
 
 
-CREATE TABLE IF NOT EXISTS `Events` (
-                                        `Id` char(36) COLLATE ascii_general_ci NOT NULL,
-    `Name` varchar(55) CHARACTER SET utf8mb4 NOT NULL,
-    `Description` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
-    `street_name` varchar(55) CHARACTER SET utf8mb4 NOT NULL,
-    `Neighborhood` varchar(55) CHARACTER SET utf8mb4 NOT NULL,
-    `City` varchar(55) CHARACTER SET utf8mb4 NOT NULL,
-    `Number` int NOT NULL,
-    `State` int NOT NULL,
-    `Date` date NOT NULL,
-    `Hour` time NOT NULL,
-    `ticket_value` decimal(18,2) NOT NULL,
-    `total_ticket_quantity` int NOT NULL,
-    `user_id` char(36) COLLATE ascii_general_ci NOT NULL,
-    `Status` int NOT NULL,
-    `banner_image` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
-    `created_at` datetime(6) NOT NULL,
-    `updated_at` datetime(6) NULL,
-    CONSTRAINT `PK_Events` PRIMARY KEY (`Id`)
-    )
+CREATE TABLE IF NOT EXISTS Events (
+                                      Id VARCHAR(36) NOT NULL PRIMARY KEY,
+    `Name` VARCHAR(55) NOT NULL,
+    `Description` VARCHAR(255) NOT NULL,
+    street_name VARCHAR(55) NOT NULL,
+    Neighborhood VARCHAR(55) NOT NULL,
+    City VARCHAR(55) NOT NULL,
+    Number INT NOT NULL,
+    State INT NOT NULL,
+    Date DATE NOT NULL,
+    Hour TIME NOT NULL,
+    ticket_value DECIMAL(18,2) NOT NULL,
+    total_ticket_quantity INT NOT NULL,
+    user_id VARCHAR(36) NOT NULL,
+    Status INT NOT NULL,
+    banner_image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL
+    );
 
-INSERT INTO `Events` (
-    `Id`, `Name`, `Description`, `street_name`, `Neighborhood`,
-    `City`, `Number`, `State`, `Date`, `Hour`,
-    `ticket_value`, `total_ticket_quantity`, `user_id`,
-    `Status`, `banner_image`, `created_at`, `updated_at`
-)
+
+INSERT INTO Events (Id, `Name`, `Description`, street_name, Neighborhood, City, Number, State, Date, Hour, ticket_value, total_ticket_quantity, user_id, Status, banner_image, created_at, updated_at)
 VALUES (
            'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
            'Show da SeManca e SeMata',
