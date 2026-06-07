@@ -63,10 +63,7 @@ public class EventEntity
     {
         if (Status == EventStatusEnum.Cancelado)
             throw new Exception("Cannot update a cancelled event");
-
-        if (Status == EventStatusEnum.Encerrado)
-            throw new Exception("Cannot update a finished event");
-
+        
         if (number < 0)
             throw new Exception("Number must be greater than or equal to zero");
 
