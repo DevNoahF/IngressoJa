@@ -1,4 +1,21 @@
+USE ingressoja;
 
+-- Cria a tabela se ela não existir
+CREATE TABLE IF NOT EXISTS Users (
+    Id VARCHAR(36) NOT NULL PRIMARY KEY,
+    `Role` INT NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    Cpf VARCHAR(11) NOT NULL,
+    Email VARCHAR(150) NOT NULL,
+    photo_profile TEXT,
+    password_hash VARCHAR(255) NOT NULL,
+    date_birth DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL
+);
+
+-- Agora o INSERT funciona porque a tabela existe!
 INSERT INTO Users (Id, `Role`, first_name, last_name, Cpf, Email, photo_profile, password_hash, date_birth, created_at, updated_at)
 VALUES (
     '85ad8a68-a2d7-4be3-aa89-3081785e7fae',
