@@ -11,7 +11,7 @@ public class BannerImageVO
         if (string.IsNullOrWhiteSpace(value))
             throw new Exception("Banner Image can't be empty");
 
-        if (value.Length > 255)
+        if (value.Length < 10)
             throw new EventMaxLenghtExceededException("BannerImage", 255);
 
         Value = value;
