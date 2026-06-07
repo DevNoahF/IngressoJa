@@ -1,0 +1,25 @@
+-- -- Template para inserção de Usuários
+-- -- Recomendação: Ordene os arquivos na pasta (01, 02) para garantir que Users sejam criados antes de Events
+-- INSERT INTO Users (
+--     Id, 
+--     Role, 
+--     FirstName, 
+--     LastName, 
+--     Cpf, 
+--     Email, 
+--     PasswordHash, 
+--     PhotoProfile, 
+--     DateBirth, 
+--     CreatedAt
+-- ) VALUES (
+--     'a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890', -- GUID do Usuário
+--     0,                                      -- RoleEnum (ex: 0 = Admin, 1 = Cliente)
+--     'João', 
+--     'Silva', 
+--     '12345678901',                          -- Valor interno do CpfVO
+--     'joao.silva@email.com',                 -- Valor interno do EmailVO
+--     '$2a$11$HashDaSenhaAqui...',            -- Valor interno do PasswordVO (Hash)
+--     'url-da-foto.jpg',                      -- Valor interno do PhotoProfileVO
+--     '1995-05-15',                           -- DateOnly (Formato YYYY-MM-DD)
+--     UTC_TIMESTAMP()
+-- );

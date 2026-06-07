@@ -1,0 +1,36 @@
+-- -- Template para inserção de Eventos
+-- INSERT INTO Events (
+--     Id, 
+--     Name, 
+--     Description, 
+--     Street, 
+--     Neighborhood, 
+--     City, 
+--     Number, 
+--     State, 
+--     Date, 
+--     Hour, 
+--     TicketValue, 
+--     TotalTicketQuantity, 
+--     Status, 
+--     BannerImage, 
+--     UserId, 
+--     CreatedAt
+-- ) VALUES (
+--     UUID(), -- Ou use um GUID fixo: '550e8400-e29b-41d4-a716-446655440000'
+--     'Nome do Evento', 
+--     'Descrição detalhada do evento', 
+--     'Rua Exemplo', 
+--     'Bairro Exemplo', 
+--     'São Paulo', 
+--     123, 
+--     0, -- Representando o índice do StatesEnum
+--     '2026-12-31', 
+--     '20:00:00', 
+--     150.00, 
+--     500, 
+--     0, -- Representando EventStatusEnum.Andamento
+--     'banner-default.jpg', 
+--     '00000000-0000-0000-0000-000000000000', -- ID do Usuário (Organizer)
+--     UTC_TIMESTAMP()
+-- );
