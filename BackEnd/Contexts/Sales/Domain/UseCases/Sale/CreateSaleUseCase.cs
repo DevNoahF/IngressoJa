@@ -30,7 +30,7 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
     var existingSales = await _saleRepository.GetByEventIdAsync(eventId);
 
     var totalTicketsSold = existingSales
-        .Where(s => s.SaleStatus.ToString() != "Canceled") 
+        .Where(s => s.SaleStatus.ToString() == "Approved") 
         .Sum(s => s.SelectedTicketsUser);
 
     var remainingTickets = eventSale.TotalTicketQuantity.Value - totalTicketsSold;

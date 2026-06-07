@@ -9,11 +9,8 @@ import { getUser } from "../../api/users";
 export default function HeaderOrganizer() {
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
+	const [userData, setUserData] = useState({ firstName: '', profileImage: '' });
 	const dropdownRef = useRef(null);
-	const [userData, setUserData] = useState({
-		firstName: "Noah",
-		profileImage: "https://i.pravatar.cc/100?img=12",
-	});
 
     // IMPLEMENTAR PARA CLICAR NA LOGO E IR DIRETO PARA A PAGINA HOME
 	useEffect(() => {

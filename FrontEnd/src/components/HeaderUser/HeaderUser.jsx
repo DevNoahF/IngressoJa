@@ -8,12 +8,9 @@ import { getUser } from "../../api/users";
 
 export default function HeaderUser() {
   const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState({ firstName: '', profileImage: '' });
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({
-    firstName: "Noah",
-    profileImage: "https://i.pravatar.cc/100?img=12",
-  });
 
   // Fecha o dropdown ao clicar fora
   useEffect(() => {
@@ -41,8 +38,8 @@ export default function HeaderUser() {
         .then((data) => {
           if (data) {
             setUserData({
-              firstName: data.firstName || "Usuário",
-              profileImage: data.photoProfile?.value || data.photoProfile || "https://i.pravatar.cc/100?img=12",
+              firstName: data.firstName,
+              profileImage: data.photoProfile?.value || data.photoProfile,
             });
           }
         })
@@ -61,6 +58,15 @@ export default function HeaderUser() {
             onClick={() => navigate("/user/home")}
           />
         </div>
+
+        <button
+          type="button"
+          className="header-user-purchases"
+          onClick={() => navigate("/user/purchases")}
+        >
+          <Ticket size={18} />
+          Minhas compras
+        </button>
 
         <div className="header-user-profile" ref={dropdownRef}>
           <button
@@ -95,19 +101,6 @@ export default function HeaderUser() {
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  try { navigate('/user/purchases'); } catch(e) { console.error(e); }
-                }}
-                className="header-user-dropdown-item"
-              >
-                <Ticket size={18} />
-                Minhas compras
-              </button>
-
               <button
                 type="button"
                 onClick={() => {

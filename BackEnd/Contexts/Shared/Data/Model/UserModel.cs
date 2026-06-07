@@ -17,8 +17,8 @@ namespace IngressoJa.Data.Model
         public required EmailVO Email { get; set; }
         public PhotoProfileVO? PhotoProfile { get; set; }
         public required PasswordVO PasswordHash { get; set; }
-        public DateOnly DateBirth { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateOnly DateBirth { get; set; }
     }
-}
+}

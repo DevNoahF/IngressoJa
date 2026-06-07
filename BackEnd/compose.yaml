@@ -20,9 +20,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     env_file:
       - .env
-    depends_on:
-      database:
-        condition: service_healthy
 
   database:
     image: mysql:latest
@@ -34,10 +31,8 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      - initial-data:/docker-entrypoint-initdb.d:ro
 
 volumes:
   mysql_data:
+  initial-data:
