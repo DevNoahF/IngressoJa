@@ -86,12 +86,20 @@ function OrganizerEvents() {
   const [isRevenueLoading, setIsRevenueLoading] = useState(false);
   const [revenueError, setRevenueError] = useState("");
 
-  const handleEditClick = (event) => {
-    setSelectedEvent(event);
-    setEditForm(buildEditForm(event));
-    setEditFeedback({ type: "", message: "" });
-    setShowEditModal(true);
-  };
+const handleEditClick = async (event) => {
+  setShowEditModal(true);
+  setEditFeedback({ type: "", message: "" });
+  setSelectedEvent(event);
+  setEditForm(buildEditForm(event));
+
+  try {
+    const fullEvent = await getEventById(event.id);
+    const normalized = normalizeEvent(fullEvent);
+    setSelectedEvent(normalized);
+    setEditForm(buildEditForm(normalized));
+  } catch {
+  }
+};
 
   const handleRevenueClick = async (event) => {
     setSelectedEvent(event);
@@ -125,12 +133,12 @@ function OrganizerEvents() {
     }
   };
 
-  const handleStatusClick = (event) => {
-    setSelectedEvent(event);
-    setSelectedStatus(null);
-    setStatusFeedback({ type: "", message: "" });
-    setShowStatusModal(true);
-  };
+const handleStatusClick = (event) => {
+  setSelectedEvent(event);
+  setSelectedStatus(event.status ? Number(event.status) : null);
+  setStatusFeedback({ type: "", message: "" });
+  setShowStatusModal(true);
+};
 
   const handleDeleteClick = async (eventToDelete) => {
     if (!eventToDelete) return;
@@ -419,51 +427,6 @@ function OrganizerEvents() {
               )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 4: ALTERAR STATUS */}
-      {showStatusModal && selectedEvent && (
-        <div className="organizer-modal-overlay">
-          <div className="organizer-modal-card">
-            <div className="organizer-modal-header">
-              <h2 className="organizer-modal-title">Alterar Status do Evento</h2>
-              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
-            </div>
-            <div className="organizer-modal-body-scroll">
-              <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>{selectedEvent.name}</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {[
-                  { label: "Andamento", value: 1 },
-                  { label: "Cancelado", value: 2 },
-                  { label: "Encerrado", value: 3 },
-                ].map((option) => (
-                  <label key={option.value} style={{
-                    display: "flex", alignItems: "center", gap: "0.75rem",
-                    padding: "0.875rem 1rem",
-                    background: selectedStatus === option.value ? "#f0f0f0" : "#f9fafb",
-                    border: `1.5px solid ${selectedStatus === option.value ? "#0d0d0d" : "#e5e7eb"}`,
-                    borderRadius: "8px", cursor: "pointer"
-                  }}>
-                    <input type="radio" name="status" value={option.value}
-                      checked={selectedStatus === option.value}
-                      onChange={() => setSelectedStatus(option.value)} />
-                    <span>{option.label}</span>
-                  </label>
-                ))}
-              </div>
-              {statusFeedback.message ? (
-                <p style={{ marginTop: "1rem", textAlign: "center",
-                  color: statusFeedback.type === "success" ? "#16a34a" : "#dc2626" }}>
-                  {statusFeedback.message}
-                </p>
-              ) : null}
-            </div>
-            <button type="button" className="organizer-modal-save-btn"
-              onClick={handleStatusSubmit} disabled={selectedStatus === null || isSavingStatus}>
-              {isSavingStatus ? "Salvando..." : "Salvar Status"}
-            </button>
           </div>
         </div>
       )}

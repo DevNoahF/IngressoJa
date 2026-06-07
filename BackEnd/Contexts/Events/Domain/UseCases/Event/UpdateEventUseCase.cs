@@ -45,7 +45,7 @@ public class UpdateEventUseCase:IUpdateEventUseCase
         var ticketValue = dto.TicketValue ?? existing.TicketValue;
         var totalTicketQuantity = dto.TotalTicketQuantity ?? existing.TotalTicketQuantity;
         var bannerImage = dto.BannerImage ?? existing.BannerImage;
-        var EventStatus = dto.EventStatus ?? existing.Status;
+        var EventStatus = dto.Status ?? existing.Status;
 
         existing.Update(
             name,
