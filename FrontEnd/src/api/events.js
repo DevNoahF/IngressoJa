@@ -73,6 +73,7 @@ function buildUpdatePayload(payload) {
     ticketValue: wrapValue(Number(payload.ticketValue)),
     totalTicketQuantity: wrapValue(Number(payload.totalTicketQuantity)),
     bannerImage: wrapValue(payload.bannerImage),
+    status: payload.status ? Number(payload.status) : undefined,
   };
 }
 
