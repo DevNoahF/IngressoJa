@@ -30,9 +30,8 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - initial-data:/docker-entrypoint-initdb.d:ro
+    - mysql_data:/var/lib/mysql
+    - ./initial-data:/docker-entrypoint-initdb.d:ro
 
 volumes:
   mysql_data:
-  initial-data:
