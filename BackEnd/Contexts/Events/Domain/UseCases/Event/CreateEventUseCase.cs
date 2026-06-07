@@ -15,7 +15,7 @@ public class CreateEventUseCase : ICreateEventUseCase
 
     public async Task<EventCreateResponseDTO> CreateEvent(EventCreateRequestDTO dto)
     {
-        var eventEntity = dto.ToEntity(dto.UserId);
+        var eventEntity = dto.ToEntity(dto.UserId, Guid.NewGuid());
         var createdEvent = await _eventRepository.CreateEvent(eventEntity);
         return createdEvent.ToCreateResponse();
     }

@@ -89,10 +89,10 @@ public static class EventMapper
         );
     }
 
-    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId)
+    public static EventEntity ToEntity(this EventCreateRequestDTO dto, Guid userId, Guid id)
     {
         return new EventEntity(
-            Guid.NewGuid(),
+            id,
             dto.Name,
             dto.Description,
             dto.Street,

@@ -10,8 +10,7 @@ public class DateVO
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         if (value < today)
-            throw new EventDateInPastException(value.ToDateTime(TimeOnly.MinValue));//Arrumar o Exception
+            throw new EventDateInPastException(value.ToDateTime(TimeOnly.MinValue));
         Value = value;
     }
 }
-//Verificação- evento criado no dia atual, não pode ter horário no passado-ToDo
