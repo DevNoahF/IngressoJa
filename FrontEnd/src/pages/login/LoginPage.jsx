@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import { loginAndStoreSession, getStoredRole } from '../../utils/auth';
 
@@ -88,15 +88,15 @@ export default function LoginPage() {
         <div className="login-footer">
           <p>
             Não tem uma conta?{' '}
-            <a href="/cadastro/usuario" className="link">
+            <Link to="/user/register" className="link">
               Cadastre-se como usuário
-            </a>
+            </Link>
           </p>
           <p>
             É organizador?{' '}
-            <a href="/cadastro/organizador" className="link">
+            <Link to="/organizer/register" className="link">
               Cadastre-se aqui
-            </a>
+            </Link>
           </p>
         </div>
       </div>

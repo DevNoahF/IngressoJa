@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, LogOut, UserCircle2 } from "lucide-react";
+import { ChevronDown, LogOut, Ticket, UserCircle2 } from "lucide-react";
 import ingressoJaLogo from "../../assets/logo.png";
 import "./HeaderUser.css";
 import { useNavigate } from "react-router-dom";
@@ -8,12 +8,9 @@ import { getUser } from "../../api/users";
 
 export default function HeaderUser() {
   const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState({ firstName: '', profileImage: '' });
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({
-    firstName: "Noah",
-    profileImage: "https://i.pravatar.cc/100?img=12",
-  });
 
   // Fecha o dropdown ao clicar fora
   useEffect(() => {
@@ -41,8 +38,8 @@ export default function HeaderUser() {
         .then((data) => {
           if (data) {
             setUserData({
-              firstName: data.firstName || "Usuário",
-              profileImage: data.photoProfile?.value || data.photoProfile || "https://i.pravatar.cc/100?img=12",
+              firstName: data.firstName,
+              profileImage: data.photoProfile?.value || data.photoProfile,
             });
           }
         })
@@ -62,9 +59,19 @@ export default function HeaderUser() {
           />
         </div>
 
+        <button
+          type="button"
+          className="header-user-purchases"
+          onClick={() => navigate("/user/purchases")}
+        >
+          <Ticket size={18} />
+          Minhas compras
+        </button>
+
         <div className="header-user-profile" ref={dropdownRef}>
           <button
-            onClick={() => setOpen(!open)}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
             className="header-user-button"
           >
             <img
@@ -84,20 +91,21 @@ export default function HeaderUser() {
           {open && (
             <div className="header-user-dropdown">
               <button
+                type="button"
                 onClick={() => {
                   setOpen(false);
-                  navigate("/update");
+                  try { navigate("/update"); } catch(e) { console.error(e); }
                 }}
                 className="header-user-dropdown-item"
               >
                 <UserCircle2 size={18} />
                 Atualizar dados
               </button>
-
               <button
+                type="button"
                 onClick={() => {
                   clearAuthSession();
-                  navigate("/login");
+                  try { navigate("/login"); } catch(e) { console.error(e); }
                 }}
                 className="header-user-dropdown-item header-user-dropdown-logout"
               >

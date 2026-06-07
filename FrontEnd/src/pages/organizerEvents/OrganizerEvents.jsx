@@ -3,43 +3,31 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Calendar, Clock, Ticket } from "lucide-react";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import OrganizerEventCard from "../../components/OrganizerEvents/OrganizerEventCard";
-import { getEventsByOrganizerId, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventsByOrganizerId, getEventById, getStateCode, statesOptions, updateEvent, deleteEvent } from "../../api/events";
+import { getEventSalesSummary } from "../../api/sales";
 import { getStoredUserId } from "../../utils/auth";
 
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
-const PERMANENT_EVENT = {
-  id: "permanent-semanca-1",
-  name: "Show da SeManca e SeMata",
-  description: "Uma noite inesquecível onde a SeManca toca trompete com os pés e a SeMata ensina passos de dança proibidos até pela física. Riso garantido ou SeMata direto para sua casa.",
-  location: "Praça do Caos Glorioso - ZZ",
-  formattedDate: "31/12/2026",
-  hour: "23:59",
-  bannerImage: "https://i.pinimg.com/736x/c5/53/79/c55379996a160a72d08150c3b05db17d.jpg",
-  totalTicketQuantity: 420,
-  ticketValue: 99.9,
-  status: "upcoming",
-};
-
 function normalizeEvent(event) {
-  const city = event.city ?? "";
+  const city = event.city?.value ?? event.city ?? "";
   const stateCode = getStateCode(event.state);
   return {
     id: event.id,
-    name: event.name ?? "Evento sem nome",
-    description: event.description ?? "",
+    name: event.name?.value ?? event.name ?? "Evento sem nome",
+    description: event.description?.value ?? event.description ?? "",
     city,
     state: event.state ?? 0,
-    street: event.street ?? "",
+    street: event.street?.value ?? event.street ?? "",
     number: event.number ?? 0,
-    neighborhood: event.neighborhood ?? "",
+    neighborhood: event.neighborhood?.value ?? event.neighborhood ?? "",
     location: stateCode ? `${city} - ${stateCode}` : city,
     formattedDate: event.date ?? "Data não informada",
     date: event.date ?? "",
     hour: event.hour ?? "--:--",
-    bannerImage: event.bannerImage || fallbackImage,
-    totalTicketQuantity: event.totalTicketQuantity ?? 0,
-    ticketValue: event.ticketValue ?? 0,
+    bannerImage: event.bannerImage?.value ?? event.bannerImage ?? fallbackImage,
+    totalTicketQuantity: event.totalTicketQuantity?.value ?? event.totalTicketQuantity ?? 0,
+    ticketValue: event.ticketValue?.value ?? event.ticketValue ?? 0,
     status: event.status ?? "",
   };
 }
@@ -72,6 +60,7 @@ function buildEditForm(event) {
     ticketValue: String(event.ticketValue ?? ""),
     totalTicketQuantity: String(event.totalTicketQuantity ?? ""),
     bannerImage: event.bannerImage ?? "",
+    status: event.status ? String(event.status) : "",
   };
 }
 
@@ -80,6 +69,7 @@ function OrganizerEvents() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRevenueModal, setShowRevenueModal] = useState(false);
@@ -93,26 +83,61 @@ function OrganizerEvents() {
   const [statusFeedback, setStatusFeedback] = useState({ type: "", message: "" });
   const [isSavingStatus, setIsSavingStatus] = useState(false);
 
-  const handleEditClick = (event) => {
+  const [revenueSummary, setRevenueSummary] = useState(null);
+  const [isRevenueLoading, setIsRevenueLoading] = useState(false);
+  const [revenueError, setRevenueError] = useState("");
+
+  const handleEditClick = async (event) => {
+    setShowEditModal(true);
+    setEditFeedback({ type: "", message: "" });
     setSelectedEvent(event);
     setEditForm(buildEditForm(event));
-    setEditFeedback({ type: "", message: "" });
-    setShowEditModal(true);
+
+    try {
+      const fullEvent = await getEventById(event.id);
+      const normalized = normalizeEvent(fullEvent);
+      setSelectedEvent(normalized);
+      setEditForm(buildEditForm(normalized));
+    } catch {
+      // mantém o evento parcial se falhar
+    }
   };
 
-  const handleRevenueClick = (event) => {
+  const handleRevenueClick = async (event) => {
     setSelectedEvent(event);
+    setRevenueSummary(null);
+    setRevenueError("");
     setShowRevenueModal(true);
+    setIsRevenueLoading(true);
+
+    try {
+      const summary = await getEventSalesSummary(event.id);
+      setRevenueSummary(summary);
+    } catch {
+      setRevenueError("Não foi possível carregar o relatório de vendas.");
+    } finally {
+      setIsRevenueLoading(false);
+    }
   };
 
-  const handlePhotoClick = (event) => {
+  const handlePhotoClick = async (event) => {
     setSelectedEvent(event);
     setShowDescriptionModal(true);
+    setIsDetailLoading(true);
+
+    try {
+      const fullEvent = await getEventById(event.id);
+      setSelectedEvent(normalizeEvent(fullEvent));
+    } catch {
+      // mantém o evento parcial se falhar
+    } finally {
+      setIsDetailLoading(false);
+    }
   };
 
   const handleStatusClick = (event) => {
     setSelectedEvent(event);
-    setSelectedStatus(null);
+    setSelectedStatus(event.status ? Number(event.status) : null);
     setStatusFeedback({ type: "", message: "" });
     setShowStatusModal(true);
   };
@@ -141,6 +166,10 @@ function OrganizerEvents() {
     setSelectedStatus(null);
     setStatusFeedback({ type: "", message: "" });
     setIsSavingStatus(false);
+    setIsDetailLoading(false);
+    setRevenueSummary(null);
+    setIsRevenueLoading(false);
+    setRevenueError("");
   };
 
   function handleEditFormChange(event) {
@@ -167,14 +196,16 @@ function OrganizerEvents() {
         ticketValue: Number(editForm.ticketValue),
         totalTicketQuantity: Number(editForm.totalTicketQuantity),
         bannerImage: editForm.bannerImage,
+        status: editForm.status ? Number(editForm.status) : undefined,
       });
+      const normalizedUpdated = normalizeEvent(updatedEvent);
       setEvents((currentEvents) =>
         currentEvents.map((currentEvent) =>
-          currentEvent.id === selectedEvent.id ? updatedEvent : currentEvent
+          currentEvent.id === selectedEvent.id ? normalizedUpdated : currentEvent
         )
       );
-      setSelectedEvent(updatedEvent);
-      setEditForm(buildEditForm(updatedEvent));
+      setSelectedEvent(normalizedUpdated);
+      setEditForm(buildEditForm(normalizedUpdated));
       setEditFeedback({ type: "success", message: "Evento atualizado com sucesso." });
     } catch (requestError) {
       setEditFeedback({
@@ -190,14 +221,10 @@ function OrganizerEvents() {
     if (!selectedEvent || selectedStatus === null) return;
     setIsSavingStatus(true);
     try {
-      await fetch(`http://localhost:5000/events/${selectedEvent.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: selectedStatus }),
-      });
-      setStatusFeedback({ type: 'success', message: 'Status atualizado com sucesso!' });
+      await updateEvent(selectedEvent.id, { status: selectedStatus });
+      setStatusFeedback({ type: "success", message: "Status atualizado com sucesso!" });
     } catch {
-      setStatusFeedback({ type: 'error', message: 'Erro ao atualizar status.' });
+      setStatusFeedback({ type: "error", message: "Erro ao atualizar status." });
     } finally {
       setIsSavingStatus(false);
     }
@@ -220,7 +247,7 @@ function OrganizerEvents() {
         setEvents(Array.isArray(response) ? response.map(normalizeEvent) : []);
       } catch (requestError) {
         if (isMounted) {
-          setError("");
+          setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os eventos.");
           setEvents([]);
         }
       } finally {
@@ -244,15 +271,6 @@ function OrganizerEvents() {
           {!isLoading && !error && visibleEvents.length === 0 ? (
             <p className="organizer-events-state">Nenhum evento encontrado.</p>
           ) : null}
-
-          <OrganizerEventCard
-            key={PERMANENT_EVENT.id}
-            event={PERMANENT_EVENT}
-            onEdit={() => handleEditClick(PERMANENT_EVENT)}
-            onRevenue={() => handleRevenueClick(PERMANENT_EVENT)}
-            onPhotoClick={() => handlePhotoClick(PERMANENT_EVENT)}
-            onStatus={() => handleStatusClick(PERMANENT_EVENT)}
-          />
 
           {visibleEvents.map((event) => (
             <OrganizerEventCard
@@ -287,7 +305,7 @@ function OrganizerEvents() {
                   <textarea name="description" value={editForm?.description ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>RUA (STREET)</label>
+                  <label>RUA</label>
                   <input type="text" name="street" value={editForm?.street ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
@@ -295,15 +313,15 @@ function OrganizerEvents() {
                   <input type="number" min="0" name="number" value={editForm?.number ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>BAIRRO (NEIGHBORHOOD)</label>
+                  <label>BAIRRO</label>
                   <input type="text" name="neighborhood" value={editForm?.neighborhood ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>CIDADE (CITY)</label>
+                  <label>CIDADE</label>
                   <input type="text" name="city" value={editForm?.city ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>ESTADO (STATE)</label>
+                  <label>ESTADO</label>
                   <select name="state" value={editForm?.state ?? ""} onChange={handleEditFormChange} required>
                     <option value="">Selecione o estado</option>
                     {statesOptions.map((state) => (
@@ -312,11 +330,11 @@ function OrganizerEvents() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>DATA (DATE ONLY)</label>
+                  <label>DATA</label>
                   <input type="date" name="date" value={editForm?.date ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
-                  <label>HORA (TIME ONLY)</label>
+                  <label>HORA</label>
                   <input type="time" name="hour" value={editForm?.hour ?? ""} onChange={handleEditFormChange} required />
                 </div>
                 <div className="form-group">
@@ -331,6 +349,15 @@ function OrganizerEvents() {
                   <label>BANNER DO EVENTO</label>
                   <input type="url" name="bannerImage" value={editForm?.bannerImage ?? ""} onChange={handleEditFormChange} required />
                 </div>
+                <div className="form-group full-width">
+                  <label>STATUS DO EVENTO</label>
+                  <select name="status" value={editForm?.status ?? ""} onChange={handleEditFormChange}>
+                    <option value="">Selecione o status</option>
+                    <option value="1">Andamento</option>
+                    <option value="2">Encerrado</option>
+                    <option value="3">Cancelado</option>
+                  </select>
+                </div>
                 {editFeedback.message ? (
                   <p className={`form-feedback ${editFeedback.type}`}>{editFeedback.message}</p>
                 ) : null}
@@ -343,7 +370,7 @@ function OrganizerEvents() {
         </div>
       )}
 
-      {/* MODAL 2: VER RECEITA */}
+      {/* MODAL 2: RELATÓRIO DE VENDAS */}
       {showRevenueModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -353,21 +380,40 @@ function OrganizerEvents() {
             </div>
             <div className="revenue-stats">
               <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{selectedEvent.name}</h3>
-              <div className="stat-item">
-                <span className="stat-label">Ingressos Vendidos</span>
-                <span className="stat-value">124 / {selectedEvent.totalTicketQuantity || 0}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Receita Total Bruta</span>
-                <span className="stat-value">R$ 18.600,00</span>
-              </div>
+
+              {isRevenueLoading ? (
+                <p style={{ textAlign: "center" }}>Carregando relatório...</p>
+              ) : revenueError ? (
+                <p style={{ textAlign: "center", color: "#dc2626" }}>{revenueError}</p>
+              ) : revenueSummary ? (
+                <>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Vendidos</span>
+                    <span className="stat-value">{revenueSummary.ticketsSold} / {revenueSummary.totalTicketsPublished}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Ingressos Restantes</span>
+                    <span className="stat-value">{revenueSummary.ticketsRemaining}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Valor do Ingresso</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.ticketValue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Receita Total Bruta</span>
+                    <span className="stat-value">R$ {Number(revenueSummary.totalRevenue).toFixed(2).replace(".", ",")}</span>
+                  </div>
+                </>
+              ) : (
+                <p style={{ textAlign: "center" }}>Nenhum dado disponível.</p>
+              )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>
         </div>
       )}
 
-      {/* MODAL 3: VER DESCRIÇÃO DO EVENTO */}
+      {/* MODAL 3: DESCRIÇÃO DO EVENTO */}
       {showDescriptionModal && selectedEvent && (
         <div className="organizer-modal-overlay">
           <div className="organizer-modal-card">
@@ -376,63 +422,24 @@ function OrganizerEvents() {
               <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
             </div>
             <div className="organizer-description-modal-body">
-              <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
-              <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
-              <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
-              <div className="organizer-description-modal-details">
-                <span><MapPin size={16} />{selectedEvent.location}</span>
-                <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
-                <span><Clock size={16} />{selectedEvent.hour}</span>
-                <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
-                <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
-              </div>
-            </div>
-            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 4: ALTERAR STATUS */}
-      {showStatusModal && selectedEvent && (
-        <div className="organizer-modal-overlay">
-          <div className="organizer-modal-card">
-            <div className="organizer-modal-header">
-              <h2 className="organizer-modal-title">Alterar Status do Evento</h2>
-              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
-            </div>
-            <div className="organizer-modal-body-scroll">
-              <h3 style={{ textAlign: 'center', marginBottom: '1rem' }}>{selectedEvent.name}</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {[
-                  { label: 'Andamento', value: 1 },
-                  { label: 'Cancelado', value: 2 },
-                  { label: 'Encerrado', value: 3 },
-                ].map((option) => (
-                  <label key={option.value} style={{
-                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    padding: '0.875rem 1rem',
-                    background: selectedStatus === option.value ? '#f0f0f0' : '#f9fafb',
-                    border: `1.5px solid ${selectedStatus === option.value ? '#0d0d0d' : '#e5e7eb'}`,
-                    borderRadius: '8px', cursor: 'pointer'
-                  }}>
-                    <input type="radio" name="status" value={option.value}
-                      checked={selectedStatus === option.value}
-                      onChange={() => setSelectedStatus(option.value)} />
-                    <span>{option.label}</span>
-                  </label>
-                ))}
-              </div>
-              {statusFeedback.message && (
-                <p style={{ marginTop: '1rem', textAlign: 'center',
-                  color: statusFeedback.type === 'success' ? '#16a34a' : '#dc2626' }}>
-                  {statusFeedback.message}
-                </p>
+              {isDetailLoading ? (
+                <p style={{ textAlign: "center" }}>Carregando detalhes...</p>
+              ) : (
+                <>
+                  <img src={selectedEvent.bannerImage} alt={selectedEvent.name} className="organizer-description-modal-image" />
+                  <h3 className="organizer-description-modal-title">{selectedEvent.name}</h3>
+                  <p className="organizer-description-modal-text">{selectedEvent.description || "Nenhuma descrição disponível."}</p>
+                  <div className="organizer-description-modal-details">
+                    <span><MapPin size={16} />{selectedEvent.location}</span>
+                    <span><Calendar size={16} />{selectedEvent.formattedDate}</span>
+                    <span><Clock size={16} />{selectedEvent.hour}</span>
+                    <span><Ticket size={16} />{selectedEvent.totalTicketQuantity} Total de ingressos</span>
+                    <span><Ticket size={16} />R$ {Number(selectedEvent.ticketValue).toFixed(2)} por ingresso</span>
+                  </div>
+                </>
               )}
             </div>
-            <button type="button" className="organizer-modal-save-btn"
-              onClick={handleStatusSubmit} disabled={selectedStatus === null || isSavingStatus}>
-              {isSavingStatus ? 'Salvando...' : 'Salvar Status'}
-            </button>
+            <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
           </div>
         </div>
       )}

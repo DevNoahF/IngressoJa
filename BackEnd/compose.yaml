@@ -1,17 +1,25 @@
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ../FrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
   backend:
     container_name: backend
     build: .
     ports:
-      - "5000:80"
+      - "5202:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     env_file:
       - .env
-    depends_on:
-      database:
-        condition: service_healthy # <-- Agora o backend espera o MySQL ficar pronto!
 
   database:
     image: mysql:latest
@@ -20,15 +28,11 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ingressoja}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-ingressoja}
     ports:
-      - "3307:3307"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    # Adicionamos um teste para verificar se o banco já aceita conexões
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - initial-data:/docker-entrypoint-initdb.d:ro
 
 volumes:
   mysql_data:
+  initial-data:

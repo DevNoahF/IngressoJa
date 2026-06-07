@@ -18,28 +18,36 @@ public sealed class CreateSaleUseCase : ICreateSaleUseCase
 	}
 
 	public async Task<SaleEntity> ExecuteAsync(
-		Guid userId,
-		Guid eventId,
-		int selectedTicketsUser   )
-	{
-		var eventSale = await _eventSaleRepository.GetEventSaleById(eventId);
+    Guid userId,
+    Guid eventId,
+    int selectedTicketsUser)
+{
+    var eventSale = await _eventSaleRepository.GetEventSaleById(eventId);
 
-		if (eventSale is null)
-			throw new InvalidOperationException($"Event {eventId} not found.");
+    if (eventSale is null)
+        throw new InvalidOperationException($"Event {eventId} not found.");
 
-		if (selectedTicketsUser > eventSale.TotalTicketQuantity.Value)
-			throw new InvalidOperationException("There are not enough tickets available.");
+    var existingSales = await _saleRepository.GetByEventIdAsync(eventId);
 
-		var totalPrice = eventSale.TicketValue.Value * selectedTicketsUser;
+    var totalTicketsSold = existingSales
+        .Where(s => s.SaleStatus.ToString() == "Approved") 
+        .Sum(s => s.SelectedTicketsUser);
 
-		var sale = new SaleEntity(
-			userId,
-			eventId,
-			selectedTicketsUser,
-			totalPrice);
+    var remainingTickets = eventSale.TotalTicketQuantity.Value - totalTicketsSold;
 
-		await _saleRepository.AddAsync(sale);
+    if (selectedTicketsUser > remainingTickets)
+        throw new InvalidOperationException($"Não há ingressos suficientes disponíveis. Restam apenas {remainingTickets} ingressos.");
 
-		return sale;
-	}
+    var totalPrice = eventSale.TicketValue.Value * selectedTicketsUser;
+
+    var sale = new SaleEntity(
+        userId,
+        eventId,
+        selectedTicketsUser,
+        totalPrice);
+
+    await _saleRepository.AddAsync(sale);
+
+    return sale;
+}
 }

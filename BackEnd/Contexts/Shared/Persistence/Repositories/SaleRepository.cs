@@ -20,6 +20,8 @@ public class SaleRepository : ISaleRepository
         var model = sale.ToModel();
         await _context.Sales.AddAsync(model);
         await _context.SaveChangesAsync();
+
+        sale.Id = model.Id;
     }
 
     public async Task UpdateAsync(SaleEntity sale  )
@@ -55,6 +57,12 @@ public class SaleRepository : ISaleRepository
             .Where(s => s.EventId == eventId)
             .ToListAsync();
 
+        return models.Select(model => model.ToEntity());
+    }
+
+    public async Task<IEnumerable<SaleEntity>> GetByUserIdAsync(Guid userId)
+    {
+        var models = await _context.Sales.Where(s=>s.UserId==userId).ToListAsync();
         return models.Select(model => model.ToEntity());
     }
 }

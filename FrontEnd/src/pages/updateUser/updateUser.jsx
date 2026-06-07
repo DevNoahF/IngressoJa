@@ -1,6 +1,6 @@
 import "./updateUser.css";
 import { useState, useEffect } from "react";
-import { UserRound, Upload, Loader } from "lucide-react";
+import { UserRound, Loader } from "lucide-react";
 import HeaderUser from "../../components/HeaderUser/HeaderUser";
 import HeaderOrganizer from "../../components/headerOrganizer/HeaderOrganizer";
 import { getStoredRole, getStoredUserId } from "../../utils/auth";
@@ -57,21 +57,6 @@ export default function UpdateProfile() {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageString = event.target?.result;
-        setFormData((prev) => ({
-          ...prev,
-          photoProfile: imageString,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -139,40 +124,12 @@ export default function UpdateProfile() {
             </div>
           ) : (
             <>
-              <div className="photo-upload">
-                <label
-                  htmlFor="photo-input"
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                  }}
-                >
-                  {formData.photoProfile ? (
-                    <img
-                      src={formData.photoProfile}
-                      alt="Foto de Perfil"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
-                  ) : (
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                      <Upload size={36} />
-                      <span style={{ fontSize: "12px" }}>Enviar Foto</span>
-                    </div>
-                  )}
-                </label>
-                <input
-                  id="photo-input"
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  style={{ display: "none" }}
-                />
+              <div className="avatar-upload">
+                {formData.photoProfile ? (
+                  <img src={formData.photoProfile} alt="Preview da foto de perfil" />
+                ) : (
+                  <UserRound size={38} />
+                )}
               </div>
 
               <form className="update-form" onSubmit={handleSubmit}>
@@ -212,12 +169,24 @@ export default function UpdateProfile() {
                   />
                 </div>
 
+                <div className="input-group full-width">
+                  <label>URL da foto de perfil</label>
+                  <input
+                    type="url"
+                    name="photoProfile"
+                    placeholder="https://..."
+                    value={formData.photoProfile}
+                    onChange={handleInputChange}
+                  />
+                  <small className="field-hint">Cole o link direto da imagem para manter o cadastro simples por enquanto.</small>
+                </div>
+
                 <div className="input-group">
                   <label>Nova Senha</label>
                   <input
                     type="password"
                     name="newPassword"
-                    placeholder="Deixe em branco para não alterar"
+                    placeholder="Deixe em branco para manter a senha atual"
                     value={formData.newPassword}
                     onChange={handleInputChange}
                   />
@@ -228,7 +197,7 @@ export default function UpdateProfile() {
                   <input
                     type="password"
                     name="confirmPassword"
-                    placeholder="Deixe em branco para não alterar"
+                    placeholder="Deixe em branco para manter a senha atual"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                   />

@@ -4,7 +4,7 @@ using ValueObject;
 
 public class SaleEntity
 {
-    public int Id { get; private set; }
+    public int Id { get; internal set; }
     public Guid UserId { get; private set; }
     public Guid EventId { get; private set; }
     public Guid? TicketId { get; private set; }

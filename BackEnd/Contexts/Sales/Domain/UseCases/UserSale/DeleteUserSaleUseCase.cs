@@ -1,8 +1,9 @@
-﻿using IngressoJa.Contexts.Sales.Domain.IRepositories;
+﻿using IngressoJa.Contexts.Sales.Adapter.Interfaces;
+using IngressoJa.Contexts.Sales.Domain.IRepositories;
 
 namespace IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
 
-public class DeleteUserSaleUseCase
+public class DeleteUserSaleUseCase:IDeleteUserSaleUseCase
 {
     private readonly IUserSaleRepository _repository;
 
