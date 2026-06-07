@@ -186,7 +186,7 @@ export default function UpdateProfile() {
                   <input
                     type="password"
                     name="newPassword"
-                    placeholder="Deixe em branco para não alterar"
+                    placeholder="Deixe em branco para manter a senha atual"
                     value={formData.newPassword}
                     onChange={handleInputChange}
                   />
@@ -197,7 +197,7 @@ export default function UpdateProfile() {
                   <input
                     type="password"
                     name="confirmPassword"
-                    placeholder="Deixe em branco para não alterar"
+                    placeholder="Deixe em branco para manter a senha atual"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                   />

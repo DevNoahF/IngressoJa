@@ -225,8 +225,8 @@ const handleConfirmPayment = async () => {
             <div className="success-circle">✓</div>
             <span className="ticket-label">Venda aprovada com sucesso.</span>
             <div className="ticket-box">
-              <div className="ticket-code">{ticketCode ? `⚿ ${ticketCode}` : 'Ticket será gerado pelo back'}</div>
-              <span className="ticket-subtext">A confirmação da venda foi concluída no servidor.</span>
+              <span className="ticket-subtext">Código do ingresso.</span>
+              <div className="ticket-code">{ticketCode ? `${ticketCode}` : 'Ticket será gerado pelo back'}</div>
             </div>
             <div className="email-alert">
               Um e-mail de confirmação foi enviado com todos os detalhes do seu ingresso.
