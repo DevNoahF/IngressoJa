@@ -31,6 +31,7 @@ function normalizeEvent(event) {
     status: event.status ?? "",
   };
 }
+
 function toDateInputValue(dateValue) {
   if (!dateValue) return "";
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return dateValue;
@@ -62,6 +63,7 @@ function buildEditForm(event) {
     status: event.status ? String(event.status) : "",
   };
 }
+
 function OrganizerEvents() {
   const organizerId = getStoredUserId().trim();
   const [events, setEvents] = useState([]);
@@ -85,20 +87,21 @@ function OrganizerEvents() {
   const [isRevenueLoading, setIsRevenueLoading] = useState(false);
   const [revenueError, setRevenueError] = useState("");
 
-const handleEditClick = async (event) => {
-  setShowEditModal(true);
-  setEditFeedback({ type: "", message: "" });
-  setSelectedEvent(event);
-  setEditForm(buildEditForm(event));
+  const handleEditClick = async (event) => {
+    setShowEditModal(true);
+    setEditFeedback({ type: "", message: "" });
+    setSelectedEvent(event);
+    setEditForm(buildEditForm(event));
 
-  try {
-    const fullEvent = await getEventById(event.id);
-    const normalized = normalizeEvent(fullEvent);
-    setSelectedEvent(normalized);
-    setEditForm(buildEditForm(normalized));
-  } catch {
-  }
-};
+    try {
+      const fullEvent = await getEventById(event.id);
+      const normalized = normalizeEvent(fullEvent);
+      setSelectedEvent(normalized);
+      setEditForm(buildEditForm(normalized));
+    } catch {
+      // mantém o evento parcial se falhar
+    }
+  };
 
   const handleRevenueClick = async (event) => {
     setSelectedEvent(event);
@@ -132,12 +135,12 @@ const handleEditClick = async (event) => {
     }
   };
 
-const handleStatusClick = (event) => {
-  setSelectedEvent(event);
-  setSelectedStatus(event.status ? Number(event.status) : null);
-  setStatusFeedback({ type: "", message: "" });
-  setShowStatusModal(true);
-};
+  const handleStatusClick = (event) => {
+    setSelectedEvent(event);
+    setSelectedStatus(event.status ? Number(event.status) : null);
+    setStatusFeedback({ type: "", message: "" });
+    setShowStatusModal(true);
+  };
 
   const handleDeleteClick = async (eventToDelete) => {
     if (!eventToDelete) return;
@@ -195,13 +198,14 @@ const handleStatusClick = (event) => {
         bannerImage: editForm.bannerImage,
         status: editForm.status ? Number(editForm.status) : undefined,
       });
+      const normalizedUpdated = normalizeEvent(updatedEvent);
       setEvents((currentEvents) =>
         currentEvents.map((currentEvent) =>
-          currentEvent.id === selectedEvent.id ? updatedEvent : currentEvent
+          currentEvent.id === selectedEvent.id ? normalizedUpdated : currentEvent
         )
       );
-      setSelectedEvent(updatedEvent);
-      setEditForm(buildEditForm(updatedEvent));
+      setSelectedEvent(normalizedUpdated);
+      setEditForm(buildEditForm(normalizedUpdated));
       setEditFeedback({ type: "success", message: "Evento atualizado com sucesso." });
     } catch (requestError) {
       setEditFeedback({
@@ -345,18 +349,18 @@ const handleStatusClick = (event) => {
                   <label>BANNER DO EVENTO</label>
                   <input type="url" name="bannerImage" value={editForm?.bannerImage ?? ""} onChange={handleEditFormChange} required />
                 </div>
+                <div className="form-group full-width">
+                  <label>STATUS DO EVENTO</label>
+                  <select name="status" value={editForm?.status ?? ""} onChange={handleEditFormChange}>
+                    <option value="">Selecione o status</option>
+                    <option value="1">Andamento</option>
+                    <option value="2">Encerrado</option>
+                    <option value="3">Cancelado</option>
+                  </select>
+                </div>
                 {editFeedback.message ? (
                   <p className={`form-feedback ${editFeedback.type}`}>{editFeedback.message}</p>
                 ) : null}
-                <div className="form-group full-width">
-                <label>STATUS DO EVENTO</label>
-                <select name="status" value={editForm?.status ?? ""} onChange={handleEditFormChange}>
-                  <option value="">Selecione o status</option>
-                  <option value="1">Andamento</option>
-                  <option value="2">Encerrado</option>
-                  <option value="3">Cancelado</option>
-                </select>
-              </div>
               </form>
             </div>
             <button type="submit" form="edit-event-form" className="organizer-modal-save-btn" disabled={isSavingEdit}>
