@@ -10,24 +10,24 @@ import { getStoredUserId } from "../../utils/auth";
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
 function normalizeEvent(event) {
-  const city = event.city ?? "";
+  const city = event.city?.value ?? event.city ?? "";
   const stateCode = getStateCode(event.state);
   return {
     id: event.id,
-    name: event.name ?? "Evento sem nome",
-    description: event.description ?? "",
+    name: event.name?.value ?? event.name ?? "Evento sem nome",
+    description: event.description?.value ?? event.description ?? "",
     city,
     state: event.state ?? 0,
-    street: event.street ?? "",
+    street: event.street?.value ?? event.street ?? "",
     number: event.number ?? 0,
-    neighborhood: event.neighborhood ?? "",
+    neighborhood: event.neighborhood?.value ?? event.neighborhood ?? "",
     location: stateCode ? `${city} - ${stateCode}` : city,
     formattedDate: event.date ?? "Data não informada",
     date: event.date ?? "",
     hour: event.hour ?? "--:--",
-    bannerImage: event.bannerImage || fallbackImage,
-    totalTicketQuantity: event.totalTicketQuantity ?? 0,
-    ticketValue: event.ticketValue ?? 0,
+    bannerImage: event.bannerImage?.value ?? event.bannerImage ?? fallbackImage,
+    totalTicketQuantity: event.totalTicketQuantity?.value ?? event.totalTicketQuantity ?? 0,
+    ticketValue: event.ticketValue?.value ?? event.ticketValue ?? 0,
     status: event.status ?? "",
   };
 }
@@ -60,6 +60,7 @@ function buildEditForm(event) {
     ticketValue: String(event.ticketValue ?? ""),
     totalTicketQuantity: String(event.totalTicketQuantity ?? ""),
     bannerImage: event.bannerImage ?? "",
+    status: event.status ? String(event.status) : "",
   };
 }
 
@@ -86,11 +87,20 @@ function OrganizerEvents() {
   const [isRevenueLoading, setIsRevenueLoading] = useState(false);
   const [revenueError, setRevenueError] = useState("");
 
-  const handleEditClick = (event) => {
+  const handleEditClick = async (event) => {
+    setShowEditModal(true);
+    setEditFeedback({ type: "", message: "" });
     setSelectedEvent(event);
     setEditForm(buildEditForm(event));
-    setEditFeedback({ type: "", message: "" });
-    setShowEditModal(true);
+
+    try {
+      const fullEvent = await getEventById(event.id);
+      const normalized = normalizeEvent(fullEvent);
+      setSelectedEvent(normalized);
+      setEditForm(buildEditForm(normalized));
+    } catch {
+      // mantém o evento parcial se falhar
+    }
   };
 
   const handleRevenueClick = async (event) => {
@@ -127,7 +137,7 @@ function OrganizerEvents() {
 
   const handleStatusClick = (event) => {
     setSelectedEvent(event);
-    setSelectedStatus(null);
+    setSelectedStatus(event.status ? Number(event.status) : null);
     setStatusFeedback({ type: "", message: "" });
     setShowStatusModal(true);
   };
@@ -186,14 +196,16 @@ function OrganizerEvents() {
         ticketValue: Number(editForm.ticketValue),
         totalTicketQuantity: Number(editForm.totalTicketQuantity),
         bannerImage: editForm.bannerImage,
+        status: editForm.status ? Number(editForm.status) : undefined,
       });
+      const normalizedUpdated = normalizeEvent(updatedEvent);
       setEvents((currentEvents) =>
         currentEvents.map((currentEvent) =>
-          currentEvent.id === selectedEvent.id ? updatedEvent : currentEvent
+          currentEvent.id === selectedEvent.id ? normalizedUpdated : currentEvent
         )
       );
-      setSelectedEvent(updatedEvent);
-      setEditForm(buildEditForm(updatedEvent));
+      setSelectedEvent(normalizedUpdated);
+      setEditForm(buildEditForm(normalizedUpdated));
       setEditFeedback({ type: "success", message: "Evento atualizado com sucesso." });
     } catch (requestError) {
       setEditFeedback({
@@ -337,6 +349,15 @@ function OrganizerEvents() {
                   <label>BANNER DO EVENTO</label>
                   <input type="url" name="bannerImage" value={editForm?.bannerImage ?? ""} onChange={handleEditFormChange} required />
                 </div>
+                <div className="form-group full-width">
+                  <label>STATUS DO EVENTO</label>
+                  <select name="status" value={editForm?.status ?? ""} onChange={handleEditFormChange}>
+                    <option value="">Selecione o status</option>
+                    <option value="1">Andamento</option>
+                    <option value="2">Encerrado</option>
+                    <option value="3">Cancelado</option>
+                  </select>
+                </div>
                 {editFeedback.message ? (
                   <p className={`form-feedback ${editFeedback.type}`}>{editFeedback.message}</p>
                 ) : null}
@@ -419,51 +440,6 @@ function OrganizerEvents() {
               )}
             </div>
             <button type="button" className="organizer-modal-save-btn" onClick={handleCloseModals}>Fechar</button>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 4: ALTERAR STATUS */}
-      {showStatusModal && selectedEvent && (
-        <div className="organizer-modal-overlay">
-          <div className="organizer-modal-card">
-            <div className="organizer-modal-header">
-              <h2 className="organizer-modal-title">Alterar Status do Evento</h2>
-              <button type="button" className="organizer-modal-close-btn" onClick={handleCloseModals}>✕</button>
-            </div>
-            <div className="organizer-modal-body-scroll">
-              <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>{selectedEvent.name}</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {[
-                  { label: "Andamento", value: 1 },
-                  { label: "Cancelado", value: 2 },
-                  { label: "Encerrado", value: 3 },
-                ].map((option) => (
-                  <label key={option.value} style={{
-                    display: "flex", alignItems: "center", gap: "0.75rem",
-                    padding: "0.875rem 1rem",
-                    background: selectedStatus === option.value ? "#f0f0f0" : "#f9fafb",
-                    border: `1.5px solid ${selectedStatus === option.value ? "#0d0d0d" : "#e5e7eb"}`,
-                    borderRadius: "8px", cursor: "pointer"
-                  }}>
-                    <input type="radio" name="status" value={option.value}
-                      checked={selectedStatus === option.value}
-                      onChange={() => setSelectedStatus(option.value)} />
-                    <span>{option.label}</span>
-                  </label>
-                ))}
-              </div>
-              {statusFeedback.message ? (
-                <p style={{ marginTop: "1rem", textAlign: "center",
-                  color: statusFeedback.type === "success" ? "#16a34a" : "#dc2626" }}>
-                  {statusFeedback.message}
-                </p>
-              ) : null}
-            </div>
-            <button type="button" className="organizer-modal-save-btn"
-              onClick={handleStatusSubmit} disabled={selectedStatus === null || isSavingStatus}>
-              {isSavingStatus ? "Salvando..." : "Salvar Status"}
-            </button>
           </div>
         </div>
       )}

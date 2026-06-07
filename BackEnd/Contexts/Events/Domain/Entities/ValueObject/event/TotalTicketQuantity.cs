@@ -6,7 +6,7 @@ public class TotalTicketQuantity
 
     public TotalTicketQuantity(int value)
     {
-        if (value < 0)
+        if (value < 0.0)
             throw new Exception("Ticket value can't be negative");
         Value = value;
     }
