@@ -10,28 +10,27 @@ import { getStoredUserId } from "../../utils/auth";
 const fallbackImage = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f";
 
 function normalizeEvent(event) {
-  const city = event.city ?? "";
+  const city = event.city?.value ?? event.city ?? "";
   const stateCode = getStateCode(event.state);
   return {
     id: event.id,
-    name: event.name ?? "Evento sem nome",
-    description: event.description ?? "",
+    name: event.name?.value ?? event.name ?? "Evento sem nome",
+    description: event.description?.value ?? event.description ?? "",
     city,
     state: event.state ?? 0,
-    street: event.street ?? "",
+    street: event.street?.value ?? event.street ?? "",
     number: event.number ?? 0,
-    neighborhood: event.neighborhood ?? "",
+    neighborhood: event.neighborhood?.value ?? event.neighborhood ?? "",
     location: stateCode ? `${city} - ${stateCode}` : city,
     formattedDate: event.date ?? "Data não informada",
     date: event.date ?? "",
     hour: event.hour ?? "--:--",
-    bannerImage: event.bannerImage || fallbackImage,
-    totalTicketQuantity: event.totalTicketQuantity ?? 0,
-    ticketValue: event.ticketValue ?? 0,
+    bannerImage: event.bannerImage?.value ?? event.bannerImage ?? fallbackImage,
+    totalTicketQuantity: event.totalTicketQuantity?.value ?? event.totalTicketQuantity ?? 0,
+    ticketValue: event.ticketValue?.value ?? event.ticketValue ?? 0,
     status: event.status ?? "",
   };
 }
-
 function toDateInputValue(dateValue) {
   if (!dateValue) return "";
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return dateValue;
@@ -60,9 +59,9 @@ function buildEditForm(event) {
     ticketValue: String(event.ticketValue ?? ""),
     totalTicketQuantity: String(event.totalTicketQuantity ?? ""),
     bannerImage: event.bannerImage ?? "",
+    status: event.status ? String(event.status) : "",
   };
 }
-
 function OrganizerEvents() {
   const organizerId = getStoredUserId().trim();
   const [events, setEvents] = useState([]);
@@ -194,6 +193,7 @@ const handleStatusClick = (event) => {
         ticketValue: Number(editForm.ticketValue),
         totalTicketQuantity: Number(editForm.totalTicketQuantity),
         bannerImage: editForm.bannerImage,
+        status: editForm.status ? Number(editForm.status) : undefined,
       });
       setEvents((currentEvents) =>
         currentEvents.map((currentEvent) =>
@@ -348,6 +348,15 @@ const handleStatusClick = (event) => {
                 {editFeedback.message ? (
                   <p className={`form-feedback ${editFeedback.type}`}>{editFeedback.message}</p>
                 ) : null}
+                <div className="form-group full-width">
+                <label>STATUS DO EVENTO</label>
+                <select name="status" value={editForm?.status ?? ""} onChange={handleEditFormChange}>
+                  <option value="">Selecione o status</option>
+                  <option value="1">Andamento</option>
+                  <option value="2">Encerrado</option>
+                  <option value="3">Cancelado</option>
+                </select>
+              </div>
               </form>
             </div>
             <button type="submit" form="edit-event-form" className="organizer-modal-save-btn" disabled={isSavingEdit}>
