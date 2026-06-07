@@ -1,6 +1,7 @@
 using IngressoJa.Contexts.Eventos.Infrastructure.Config.Jwt;
 using IngressoJa.Contexts.Eventos.Application.Interfaces.User;
 using IngressoJa.Contexts.Eventos.Application.UseCases.User;
+using IngressoJa.Contexts.Eventos.Application.UseCases;
 using IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 using IngressoJa.Contexts.Sales.Application.UseCases.Sale;
 using IngressoJa.Contexts.Sales.Domain.IRepositories;
@@ -19,7 +20,6 @@ using IngressoJa.Contexts.Sales.Domain.UseCases.Ticket;
 using IngressoJa.Contexts.Sales.Adapter.Interfaces;
 using IngressoJa.Contexts.Sales.Adapter.DTOs.Mapper;
 using IngressoJa.Contexts.Sales.Domain.UseCases.UserSale;
-using IngressoJa.Contexts.Eventos.Application.UseCases;
 using IngressoJa.Contexts.Shared.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);

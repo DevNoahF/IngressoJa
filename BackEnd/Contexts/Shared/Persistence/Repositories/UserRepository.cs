@@ -167,6 +167,8 @@ namespace IngressoJa.Data.Persistence.Repositories
                 existingUser.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
+                existingUser.UpdatedAt = DateTime.UtcNow;
+
             }
             catch (Exception ex)
             {
