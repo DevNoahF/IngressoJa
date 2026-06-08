@@ -9,6 +9,10 @@ namespace IngressoJa.Contexts.Eventos.Application.DTOs.Mappers;
 
 public static class EventMapper
 {
+  
+
+ 
+    //Mapper é a classe responsável por converter um objeto em outro — no seu caso, entre DTOs e Entidades.
     public static EventDetailResponseDTO ToDetailResponse(this EventEntity eventEntity)
     {
         return new EventDetailResponseDTO(

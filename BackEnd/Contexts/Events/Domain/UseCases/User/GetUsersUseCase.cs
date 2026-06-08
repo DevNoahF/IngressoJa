@@ -25,7 +25,7 @@ namespace BackEnd.Contexts.Eventos.Domain.UseCases.User
             try
             {
                 var users = await _repository.getAllUsers();
-                return users.Select(u => _userMapper.EntityToRecordedResponse(u)).ToList();
+                return users.Select(u => _userMapper.EntityToRecordedResponse(u)).ToList();//Para cada usuário retornado, converte de UserEntity → UserRecordedResponseDTO usando o mapper
             }
             catch (Exception ex)
             {

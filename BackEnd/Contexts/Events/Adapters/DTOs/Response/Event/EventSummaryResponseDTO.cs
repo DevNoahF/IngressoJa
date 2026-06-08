@@ -14,3 +14,5 @@ public record EventSummaryResponseDTO(
     TotalTicketQuantity TotalTicketQuantity,
     BannerImageVO BannerImage
 );
+
+//objeto simples que serve apenas para transportar dados entre camadas da aplicação, sem lógica de negócio.

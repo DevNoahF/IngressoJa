@@ -10,6 +10,7 @@ namespace IngressoJa.Contexts.Eventos.Application.UseCases.User
 {
     public class GetUserUseCase : IGetUserUseCase
     {
+        //Injeção de dependência
         private readonly IUserRepository _repository;
         private readonly IUserMapper _userMapper;
 
